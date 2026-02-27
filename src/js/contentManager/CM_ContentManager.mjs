@@ -35,10 +35,16 @@ export class ContentManager {
         // Function replaces the current content of the page with new content
         
         // First, remove currently displayed page's HTML:
-        
+        this.displayedContent !== null ? this.displayedContent.removeContent() : null;
+
+        // Next, create an instance of the new page content
+        const PAGE = new _content()
+
+        // With this instance, call the displayContent Method to... display the content (duh)
+        PAGE.displayContent();
 
         // Update displayedContent 
-        this.displayedContent = _content;
+        this.displayedContent = PAGE;
     }
 
 }
