@@ -4,18 +4,41 @@
     Content Manager is a class made to manage the contents
     of the HTML page in this project.
 
-
+    Written in Term One 2026 for programming/database project
+    By: Idrees Munshi
 */
 
 export class ContentManager {
-    // Private Fields
+    /* Private Fields */
+    // The root <div> element's id, to be used for updating the page contents
+    #rootDiv
 
-    // Public Fields
+    /* Public Fields */
+    // I need to keep a record of the current content being displayed
+    displayedContent = null;
 
-    // Constructor
-    ContentManager() {
-
+    /* Constructor */
+    ContentManager(_root) {
+        this.#rootDiv = _root;
     }
 
+    /* Methods */   
+
+    /* 
+        CM_DisplayContent()
+
+        Displays content in the "CNT" class passed to it
+        Input(s): 
+        _content = CNT Class with instructions on how to display the required content
+    */
+    async CM_displayContent(_content) {
+        // Function replaces the current content of the page with new content
+        
+        // First, remove currently displayed page's HTML:
+        
+
+        // Update displayedContent 
+        this.displayedContent = _content;
+    }
 
 }

@@ -11,11 +11,15 @@
 </head>
 
 <body>
-    
+    <div id="d_content">
+
+    </div>
 </body>
 <!-- script -->
 <script type="module">
-    
+    import { ContentManager } from `./src/js/contentManager/CM_ContentManager.mjs`;
+    let ContentManager = new ContentManager(document.getElementById("d_content"));
+
 </script>
 
 </html>
