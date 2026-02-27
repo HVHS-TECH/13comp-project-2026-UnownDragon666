@@ -17,9 +17,10 @@
 </body>
 <!-- script -->
 <script type="module">
-    import { ContentManager } from `./src/js/contentManager/CM_ContentManager.mjs`;
-    let ContentManager = new ContentManager(document.getElementById("d_content"));
-
+    import ContentManager from './src/js/contentManager/CM_ContentManager.mjs'
+    import Welcome from './src/js/contentManager/CM_ContentManager.mjs';
+    let contentManager = new ContentManager(document.getElementById("d_content"));
+    await contentManager.CM_displayContent(Welcome);
 </script>
 
 </html>

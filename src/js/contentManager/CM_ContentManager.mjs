@@ -8,7 +8,7 @@
     By: Idrees Munshi
 */
 
-export class ContentManager {
+export default class ContentManager {
     /* Private Fields */
     // The root <div> element's id, to be used for updating the page contents
     #rootDiv
@@ -18,7 +18,7 @@ export class ContentManager {
     displayedContent = null;
 
     /* Constructor */
-    ContentManager(_root) {
+    constructor(_root) {
         this.#rootDiv = _root;
     }
 
@@ -38,13 +38,13 @@ export class ContentManager {
         this.displayedContent !== null ? this.displayedContent.removeContent() : null;
 
         // Next, create an instance of the new page content
-        const PAGE = new _content()
+        let page = new _content();
+        page.addHTML();
 
-        // With this instance, call the displayContent Method to... display the content (duh)
-        PAGE.displayContent();
+        // Now: Append this page to the DOM
+        this.#rootDiv.appendChild(page.contentSection);
 
-        // Update displayedContent 
+        // Update displayedContent
         this.displayedContent = PAGE;
     }
-
 }

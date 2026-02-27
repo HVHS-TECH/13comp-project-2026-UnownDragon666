@@ -8,19 +8,21 @@
     By: Idrees Munshi
 */
 
-export class Content {
+export default class Content {
     /* Private Fields */
     
     /* Public Fields */
+    section;
 
     /* Constructor 
     - Inherited as constructor for all content classes
     */
-    Content() {
-        let element = document.createElement('section') 
+    constructor(_secID) {
+        this.section = document.createElement('section');
+        this.section.id = _secID;
     }
 
     /* Abstract Methods */
-    removeContent(){ }
-
+    removeContent() { }
+    addHTML() { }
 }
