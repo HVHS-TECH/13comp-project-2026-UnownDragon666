@@ -20,19 +20,33 @@
     import * as ContentPages from './src/js/content/CNT_Index.mjs';
     import BaseStyles from './src/js/stylesheet/STY_BaseStyles.mjs';
     import ComponentStyles from './src/js/stylesheet/STY_ComponentStyles.mjs';
+    import FirebaseIO from './src/js/firebase/FB_IO.mjs';
+    import { initializeFirebase, firebaseIO } from './src/js/firebase/FB_instance.mjs'
 
+    let firebaseRefs;
     document.addEventListener('DOMContentLoaded', setup);
     async function setup() {
-        await initialiseStylesheets();
+        await initializeStylesheets();
         let contentManager = new ContentManager(document.getElementById("d_content"));
         await contentManager.CM_displayContent(ContentPages.Welcome);
+
+        initializeFirebase();
+        firebaseIO.helloWorld();
     }
+
     window.setup = setup;
 
-    async function initialiseStylesheets() {
-        BaseStyles.applyBaseStyles();
-        ComponentStyles.applyButtonStyles();
+    async function initializeStylesheets() {
+        try {
+            BaseStyles.applyBaseStyles();
+            ComponentStyles.applyButtonStyles();
+        } catch (error) {
+            throw new Error(`Stylesheet initialization failed: ${error}`)
+        }
+
     }
+
+
 </script>
 
 </html>
