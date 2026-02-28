@@ -2,19 +2,19 @@ import Content from "./CNT_Content.mjs";
 
 /**
  * @family CNT: Content
- * @description Welcome is a class for the content of the landing page
+ * @description Register is a class for the content of the registration page
  *
  * Written in Term One 2026 for programming/database project
  *
  * By: Idrees Munshi
  * @class
  */
-export default class Welcome extends Content {
+export default class Register extends Content {
     /* **************************************** Private Fields *****************************************/
-    static #secID = "s_landing";
+    static #secID = "s_register";
 
     /* **************************************** Public Fields *****************************************/
-    styleID = "WCSS";
+    styleID = "RGSS";
 
     /* **************************************** Constructor *****************************************/
     /**
@@ -22,7 +22,7 @@ export default class Welcome extends Content {
      * to its parent constuctor (using super())
      */
     constructor() {
-        super(Welcome.#secID);
+        super(Register.#secID);
     }
 
     /* ******************************** Parent Class Method Overrides *********************************/
@@ -34,20 +34,8 @@ export default class Welcome extends Content {
     buildContent() {
         // Page Title
         const TITLE = document.createElement("h1");
-        TITLE.textContent = "Welcome to my project!";
+        TITLE.textContent = "Registration Form";
 
-        // Create container for buttons
-        const BUTTON_CONTAINER = document.createElement("div");
-        BUTTON_CONTAINER.id = "d_buttonContainer";
-
-        // Button to navigate to login screen
-        const LOGIN_NAV = super.createButton("Login", "Login");
-        BUTTON_CONTAINER.appendChild(LOGIN_NAV);
-
-        // Button to navigate to registration screen
-        const REGISTER_NAV = super.createButton("Register", "Register");
-        BUTTON_CONTAINER.appendChild(REGISTER_NAV);
-
-        this.section.append(TITLE, BUTTON_CONTAINER);
+        this.section.append(TITLE);
     }
 }

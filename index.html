@@ -9,26 +9,30 @@
 </head>
 
 <body>
-    <div id="d_content">
+    <div id="d_content"></div>
 
-    </div>
-
-    <style id="componentLayerStyle"></style>
     <style id="contentLayerStyle"></style>
 </body>
+
 <!-- script -->
 <script type="module">
     import ContentManager from './src/js/contentManager/CM_ContentManager.mjs';
     import * as ContentPages from './src/js/content/CNT_Index.mjs';
     import BaseStyles from './src/js/stylesheet/STY_BaseStyles.mjs';
+    import ComponentStyles from './src/js/stylesheet/STY_ComponentStyles.mjs';
 
     document.addEventListener('DOMContentLoaded', setup);
     async function setup() {
-        BaseStyles.applyBaseStyles();
+        await initialiseStylesheets();
         let contentManager = new ContentManager(document.getElementById("d_content"));
         await contentManager.CM_displayContent(ContentPages.Welcome);
     }
     window.setup = setup;
+
+    async function initialiseStylesheets() {
+        BaseStyles.applyBaseStyles();
+        ComponentStyles.applyButtonStyles();
+    }
 </script>
 
 </html>

@@ -13,6 +13,13 @@ import BaseStyles from "../STY_BaseStyles.mjs";
  * @class
  */
 export default class WelcomeStyles {
+    /* **************************************** Public Methods *****************************************/
+    /**
+     * Apply the given style to the content layer style in index.html
+     * Styles are separated into base, component, and content layers to
+     * make the entire thing cleaner than a massive CSS file with
+     * all of them in the same thing.
+     */
     static applyStyle() {
         document.getElementById("contentLayerStyle").innerHTML = `
 #s_landing {
@@ -42,7 +49,6 @@ export default class WelcomeStyles {
 
 #s_landing button {
     font-size: 3vh;
-    padding: 0.6rem 1.5rem;
 }
         `;
     }
