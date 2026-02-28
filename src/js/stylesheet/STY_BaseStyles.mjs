@@ -21,13 +21,36 @@ export default class BaseStyles {
     /* **************************************** Public Fields *****************************************/
     static backgroundColor = "#f5ebec";
     static textColor = "#000000";
+    static fontURL = "./src/asssets/fonts/FunnelSans-VariableFont_wght.ttf";
 
     /* **************************************** Public Methods *****************************************/
     /**
      * Initialise the base styles for the pages
      */
-    static applyBaseStyles() {
+    static async applyBaseStyles() {
         document.body.style.backgroundColor = BaseStyles.backgroundColor;
         document.body.style.text = BaseStyles.textColor;
+
+        BaseStyles.initialiseFonts();
+    }
+
+    /**
+     * Initialise the main font for the page from the assets.
+     * Uses the "FontFace" API to interact with the .ttf file. (TrueType Font)
+     */
+    static async initialiseFonts() {
+        let font = new FontFace(
+            "FunnelSans",
+            `url(${BaseStyles.fontURL}) format('truetype')`,
+        );
+
+        await font.load();
+
+        try {
+            document.fonts.add(font);
+            document.body.style.fontFamily = "FunnelSans";
+        } catch (err) {
+            console.error(`Error loading font: ${err}`);
+        }
     }
 }
