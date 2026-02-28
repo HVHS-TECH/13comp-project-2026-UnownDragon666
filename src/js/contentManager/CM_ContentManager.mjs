@@ -11,7 +11,7 @@
 export default class ContentManager {
     /* Private Fields */
     // The root <div> element's id, to be used for updating the page contents
-    #rootDiv
+    #rootDiv;
 
     /* Public Fields */
     // I need to keep a record of the current content being displayed
@@ -22,29 +22,33 @@ export default class ContentManager {
         this.#rootDiv = _root;
     }
 
-    /* Methods */   
+    /* Methods */
 
     /* 
         CM_DisplayContent()
 
         Displays content in the "CNT" class passed to it
-        Input(s): 
+        Inputs: 
         _content = CNT Class with instructions on how to display the required content
+        Outputs:
+        N/A
     */
     async CM_displayContent(_content) {
         // Function replaces the current content of the page with new content
-        
+
         // First, remove currently displayed page's HTML:
-        this.displayedContent !== null ? this.displayedContent.removeContent() : null;
+        this.displayedContent !== null
+            ? this.displayedContent.removeContent()
+            : null;
 
         // Next, create an instance of the new page content
         let page = new _content();
-        page.addHTML();
+        page.buildContent();
 
         // Now: Append this page to the DOM
-        this.#rootDiv.appendChild(page.contentSection);
+        this.#rootDiv.appendChild(page.section);
 
         // Update displayedContent
-        this.displayedContent = PAGE;
+        this.displayedContent = page;
     }
 }

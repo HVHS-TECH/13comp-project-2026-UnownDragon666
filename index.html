@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="./src/css/landing.css">
 </head>
 
-<body>
+<body onload="document.addEventListener('DOMContentLoaded', setup())">
     <div id="d_content">
 
     </div>
@@ -18,9 +18,12 @@
 <!-- script -->
 <script type="module">
     import ContentManager from './src/js/contentManager/CM_ContentManager.mjs'
-    import Welcome from './src/js/contentManager/CM_ContentManager.mjs';
-    let contentManager = new ContentManager(document.getElementById("d_content"));
-    await contentManager.CM_displayContent(Welcome);
+    import Welcome from './src/js/content/CNT_Welcome.mjs';
+    async function setup() {
+        let contentManager = new ContentManager(document.getElementById("d_content"));
+        await contentManager.CM_displayContent(Welcome)
+    }
+    window.setup = setup;
 </script>
 
 </html>

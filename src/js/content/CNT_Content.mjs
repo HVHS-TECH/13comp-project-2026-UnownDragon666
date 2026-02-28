@@ -10,7 +10,7 @@
 
 export default class Content {
     /* Private Fields */
-    
+
     /* Public Fields */
     section;
 
@@ -18,11 +18,12 @@ export default class Content {
     - Inherited as constructor for all content classes
     */
     constructor(_secID) {
-        this.section = document.createElement('section');
+        this.section = document.createElement("section");
         this.section.id = _secID;
     }
 
     /* Abstract Methods */
-    removeContent() { }
-    addHTML() { }
+    removeContent() {}
+    buildContent() {}
+    insertNav() {}
 }
