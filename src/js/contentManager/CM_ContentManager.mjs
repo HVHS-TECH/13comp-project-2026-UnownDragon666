@@ -1,14 +1,14 @@
-/*
-    CM_ContentManager.mjs
-    
-    Content Manager is a class made to manage the contents
-    of the HTML page in this project.
-
-    Written in Term One 2026 for programming/database project
-    By: Idrees Munshi
-*/
 import * as ContentPages from "../content/CNT_Index.mjs";
 
+/**
+ * @description Content Manager is a class made to manage the contents
+ * of the HTML page in this project.
+ *
+ * Written in Term One 2026 for programming/database project
+ *
+ * By: Idrees Munshi
+ * @class
+ */
 export default class ContentManager {
     /* **************************************** Private Fields *****************************************/
     #rootDiv;
