@@ -4,7 +4,7 @@
  * @description Acts as a JS alternative to a .css file by dynamically styling elements
  * created by other classes
  *
- * This is essentially a static class for styling compoments of the page.
+ * This is essentially a static class for styling the base layout of the page.
  *
  * Written in Term One 2026 for programming/database project
  *

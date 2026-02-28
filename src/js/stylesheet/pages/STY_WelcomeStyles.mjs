@@ -15,10 +15,35 @@ import BaseStyles from "../STY_BaseStyles.mjs";
 export default class WelcomeStyles {
     static applyStyle() {
         document.getElementById("contentLayerStyle").innerHTML = `
-            .s_landing h1 {
-                text-align: center;
-            }
+#s_landing {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto auto auto;
+}
 
+#s_landing h1 {
+    padding-top: 10%;
+    font-size: 7vh;
+    grid-column: 1/4;
+    justify-self: center;
+    grid-row: 1;
+}
+
+#s_landing #d_buttonContainer {
+    margin: auto;
+    padding-top: 15vh;
+    padding-bottom: 15vh;
+    grid-column: 2;
+    justify-self: center;
+    grid-row: 2;
+    display: flex;
+    gap: 5rem;
+}
+
+#s_landing button {
+    font-size: 3vh;
+    padding: 0.6rem 1.5rem;
+}
         `;
     }
 }

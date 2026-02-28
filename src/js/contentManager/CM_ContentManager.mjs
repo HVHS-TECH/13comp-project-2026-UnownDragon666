@@ -44,25 +44,33 @@ export default class ContentManager {
             ? this.displayedContent.removeContent()
             : null;
 
-        // Next, create an instance of the new page content
-        let page = new _content();
-        page.buildContent();
+        try {
+            // Next, create an instance of the new page content
+            let page = new _content();
+            page.buildContent();
 
-        // Update displayedContent
-        this.displayedContent = page;
+            // Update displayedContent
+            this.displayedContent = page;
 
-        // Update Stylesheets before appending to DOM
-        this.updateStyles(this.displayedContent.styleID);
+            // Update Stylesheets before appending to DOM
+            this.updateStyles(this.displayedContent.styleID);
 
-        // Now: Append this page to the DOM
-        this.#rootDiv.appendChild(page.section);
+            // Now: Append this page to the DOM
+            this.#rootDiv.appendChild(page.section);
+        } catch (err) {
+            throw new Error(err);
+        }
     }
 
     /**
      * This method updates the stylesheet of the page to match the currently displayed content.
      */
     updateStyles(_styleID) {
-        StyleRef[_styleID].applyStyle();
+        try {
+            StyleRef[_styleID].applyStyle();
+        } catch (err) {
+            console.error(`Stylesheet not found: ${err}`);
+        }
     }
 
     /**
@@ -74,8 +82,12 @@ export default class ContentManager {
      * @param {object} _event - custom event object containing the navigation details for the page
      */
     async CM_navigate(_event) {
-        // Inside the "navigate" event is the name of the class I need to navigate to
-        let navTarget = _event.detail.content;
-        this.CM_displayContent(ContentPages[navTarget]);
+        try {
+            // Inside the "navigate" event is the name of the class I need to navigate to
+            let navTarget = _event.detail.content;
+            this.CM_displayContent(ContentPages[navTarget]);
+        } catch (err) {
+            console.error(err);
+        }
     }
 }
