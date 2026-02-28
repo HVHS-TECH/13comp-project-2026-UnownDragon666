@@ -14,8 +14,18 @@ export default class Content {
     /* Public Fields */
     section;
 
-    /* Constructor 
-    - Inherited as constructor for all content classes
+    /* 
+        Constructor 
+        - Inherited as constructor for all content classes
+    
+        Creates a section element to store the contents of the page, assigns
+        the section an ID based on a parameter passed by the child, used when 
+        the content is removed as an easy way to kill the content.
+
+        Inputs:
+        _secID: ID to assign to section element. 
+        Outputs:
+        N/A
     */
     constructor(_secID) {
         this.section = document.createElement("section");

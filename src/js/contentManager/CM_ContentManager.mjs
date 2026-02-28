@@ -7,6 +7,8 @@
     Written in Term One 2026 for programming/database project
     By: Idrees Munshi
 */
+import Content from "../content/CNT_Content.mjs";
+import * as ContentPages from "../content/CNT_Index.mjs";
 
 export default class ContentManager {
     /* Private Fields */
@@ -20,6 +22,7 @@ export default class ContentManager {
     /* Constructor */
     constructor(_root) {
         this.#rootDiv = _root;
+        document.addEventListener("navigate", this.CM_navigate.bind(this));
     }
 
     /* Methods */
@@ -29,7 +32,7 @@ export default class ContentManager {
 
         Displays content in the "CNT" class passed to it
         Inputs: 
-        _content = CNT Class with instructions on how to display the required content
+        _content: CNT Class with instructions on how to display the required content
         Outputs:
         N/A
     */
@@ -50,5 +53,23 @@ export default class ContentManager {
 
         // Update displayedContent
         this.displayedContent = page;
+    }
+
+    /*
+        CM_navigate() 
+
+        Called by Event Listener that listens for custom Event "navigate"
+        "navigate" contains a "detail" called "content" which tells this method
+        which page to navigate to.
+
+        Inputs:
+        _event: contains the "navigate" event that fired
+        Outputs:
+        N/A
+    */
+    async CM_navigate(_event) {
+        // Inside the "navigate" event is the name of the class I need to navigate to
+        let navTarget = _event.detail.content;
+        this.CM_displayContent(ContentPages[navTarget]);
     }
 }

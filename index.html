@@ -10,18 +10,20 @@
     <link rel="stylesheet" href="./src/css/landing.css">
 </head>
 
-<body onload="document.addEventListener('DOMContentLoaded', setup())">
+<body>
     <div id="d_content">
 
     </div>
 </body>
 <!-- script -->
 <script type="module">
-    import ContentManager from './src/js/contentManager/CM_ContentManager.mjs'
-    import Welcome from './src/js/content/CNT_Welcome.mjs';
+    import ContentManager from './src/js/contentManager/CM_ContentManager.mjs';
+    import * as ContentPages from './src/js/content/CNT_Index.mjs';
+
+    document.addEventListener('DOMContentLoaded', setup);
     async function setup() {
         let contentManager = new ContentManager(document.getElementById("d_content"));
-        await contentManager.CM_displayContent(Welcome)
+        await contentManager.CM_displayContent(ContentPages.Welcome);
     }
     window.setup = setup;
 </script>

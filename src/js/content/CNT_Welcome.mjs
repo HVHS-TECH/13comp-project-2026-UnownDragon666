@@ -14,6 +14,10 @@ export default class Welcome extends Content {
 
     /* Public Fields */
 
+    /*
+        constructor passes the secID (section ID) private field as a parameter 
+        to its parent constuctor (using super())
+    */
     constructor() {
         super(Welcome.#secID);
     }
@@ -42,17 +46,41 @@ export default class Welcome extends Content {
         const TITLE = document.createElement("h1");
         TITLE.textContent = "Welcome to my project!";
 
+        // Create container for buttons
+        const BUTTON_CONTAINER = document.createElement("div");
+
         // Button to navigate to login screen
         const LOGIN_NAV = document.createElement("button");
         LOGIN_NAV.textContent = "Login";
         LOGIN_NAV.addEventListener("click", () => {
-            const Event = customEvent("navigate", {
+            // Creates a custom event called "navigate" telling the
+            // Content Manager which Content to display next.
+            const event = new CustomEvent("navigate", {
                 detail: {
-                    content: "login",
+                    content: "Login",
                 },
             });
+            document.dispatchEvent(event);
         });
+        // Append to parent div
+        BUTTON_CONTAINER.appendChild(LOGIN_NAV);
 
-        this.section.appendChild(TITLE);
+        // Button to navigate to registration screen
+        const REGISTER_NAV = document.createElement("button");
+        REGISTER_NAV.textContent = "Register";
+        REGISTER_NAV.addEventListener("clcik", () => {
+            // Same as above, custom "navigate" event
+            // Except, this time, naviagte content is "Register"
+            const event = new CustomEvent("navigate", {
+                detail: {
+                    content: "Register",
+                },
+            });
+            document.dispatchEvent(event);
+        });
+        // Append to parent div
+        BUTTON_CONTAINER.appendChild(REGISTER_NAV);
+
+        this.section.append(TITLE, BUTTON_CONTAINER);
     }
 }
