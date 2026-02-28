@@ -16,8 +16,22 @@ export default class Login extends Content {
         super(Login.#secID);
     }
 
+    removeContent() {
+        document.getElementById(Login.#secID).remove();
+    }
+
     buildContent() {
         const TEMP_BACK_BUTTON = document.createElement("button");
         TEMP_BACK_BUTTON.textContent = "RUN IT BACK BOYS";
+        TEMP_BACK_BUTTON.addEventListener("click", () => {
+            const event = new CustomEvent("navigate", {
+                detail: {
+                    content: "Welcome",
+                },
+            });
+            document.dispatchEvent(event);
+        });
+
+        this.section.append(TEMP_BACK_BUTTON);
     }
 }
