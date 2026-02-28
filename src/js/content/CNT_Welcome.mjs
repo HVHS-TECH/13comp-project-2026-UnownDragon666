@@ -1,6 +1,8 @@
 import Content from "./CNT_Content.mjs";
+import WelcomeStyles from "../stylesheet/pages/STY_WelcomeStyles.mjs";
 
 /**
+ * @family CNT: Content
  * @description Welcome is a class for the content of the landing page
  *
  * Written in Term One 2026 for programming/database project
@@ -13,6 +15,7 @@ export default class Welcome extends Content {
     static #secID = "s_landing";
 
     /* **************************************** Public Fields *****************************************/
+    styleID = "WCSS";
 
     /* **************************************** Constructor *****************************************/
     /**
@@ -36,6 +39,7 @@ export default class Welcome extends Content {
 
         // Create container for buttons
         const BUTTON_CONTAINER = document.createElement("div");
+        BUTTON_CONTAINER.id = "d_buttonContainer";
 
         // Button to navigate to login screen
         const LOGIN_NAV = super.createButton("Login", "Login");

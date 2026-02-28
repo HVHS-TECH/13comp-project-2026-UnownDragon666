@@ -1,6 +1,8 @@
 import * as ContentPages from "../content/CNT_Index.mjs";
+import * as StyleRef from "../stylesheet/STY_StylesheetReference.mjs";
 
 /**
+ * @family CM: Content Manager
  * @description Content Manager is a class made to manage the contents
  * of the HTML page in this project.
  *
@@ -46,11 +48,21 @@ export default class ContentManager {
         let page = new _content();
         page.buildContent();
 
-        // Now: Append this page to the DOM
-        this.#rootDiv.appendChild(page.section);
-
         // Update displayedContent
         this.displayedContent = page;
+
+        // Update Stylesheets before appending to DOM
+        this.updateStyles(this.displayedContent.styleID);
+
+        // Now: Append this page to the DOM
+        this.#rootDiv.appendChild(page.section);
+    }
+
+    /**
+     * This method updates the stylesheet of the page to match the currently displayed content.
+     */
+    updateStyles(_styleID) {
+        StyleRef[_styleID].applyStyle();
     }
 
     /**
