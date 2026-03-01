@@ -53,10 +53,10 @@ export default class FirebaseIO {
 
             // Store result in variable, may come in handy later.
             let result = await signInWithPopup(this.auth, provider);
-            this.auth = getAuth().currentUser;
+            this.auth = getAuth();
 
             let record = await this.readRecord("/users");
-            if (this.auth.uid in record) {
+            if (this.auth.currentUser.uid in record) {
                 let event = new CustomEvent("navigate", {
                     detail: {
                         content: "Profile",

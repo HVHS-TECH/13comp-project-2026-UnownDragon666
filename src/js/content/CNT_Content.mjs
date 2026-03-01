@@ -80,4 +80,32 @@ export default class Content {
         });
         return button;
     }
+
+    /**
+     *
+     * @param {string} _text - Title's text
+     * @returns {object} - TITLE element
+     */
+    createTitle(_text) {
+        const TITLE = document.createElement("h1");
+        TITLE.textContent = _text;
+        return TITLE;
+    }
+
+    createInput(_labelText, _text, _type, _name, _id, _divID) {
+        const LABEL = document.createElement("label");
+        LABEL.htmlFor = _name;
+        LABEL.textContent = _labelText;
+
+        const INPUT = document.createElement("input");
+        INPUT.placeholder = _text;
+        INPUT.type = _type;
+        INPUT.name = _name;
+        INPUT.id = _id;
+
+        const CONTAINER = document.createElement("div");
+        CONTAINER.id = _divID;
+        CONTAINER.append(LABEL, INPUT);
+        return CONTAINER;
+    }
 }

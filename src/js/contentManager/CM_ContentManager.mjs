@@ -34,7 +34,6 @@ export default class ContentManager {
             this.CM_updatePageState.bind(this),
         );
         document.addEventListener("googleAuth", (event) => {
-            console.log(event);
             firebaseIO.authenticateWithGoogle();
         });
     }
@@ -116,7 +115,9 @@ export default class ContentManager {
         try {
             console.log(_event, this.currentContentClass);
             let methodRef = _event.detail.content;
-            this.currentContentClass[methodRef]();
+            console.log(this.displayedContent);
+            this.displayedContent.removeContent();
+            this.#rootDiv.appendChild(await this.displayedContent[methodRef]());
         } catch (error) {
             console.error(`Page update resulted in error: ${error}`);
         }
