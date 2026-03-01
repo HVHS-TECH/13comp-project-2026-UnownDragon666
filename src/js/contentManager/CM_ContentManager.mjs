@@ -1,5 +1,6 @@
 import * as ContentPages from "../content/CNT_Index.mjs";
 import * as StyleRef from "../stylesheet/STY_StylesheetReference.mjs";
+import { firebaseIO } from "../firebase/FB_instance.mjs";
 
 /**
  * @family CM: Content Manager
@@ -17,6 +18,7 @@ export default class ContentManager {
 
     /* **************************************** Public Fields *****************************************/
     displayedContent;
+    currentContentClass;
 
     /* **************************************** Constructor *****************************************/
     /**
@@ -27,6 +29,14 @@ export default class ContentManager {
     constructor(_root) {
         this.#rootDiv = _root;
         document.addEventListener("navigate", this.CM_navigate.bind(this));
+        document.addEventListener(
+            "updateState",
+            this.CM_updatePageState.bind(this),
+        );
+        document.addEventListener("googleAuth", (event) => {
+            console.log(event);
+            firebaseIO.authenticateWithGoogle();
+        });
     }
 
     /* **************************************** Public Methods *****************************************/
@@ -51,6 +61,7 @@ export default class ContentManager {
 
             // Update displayedContent
             this.displayedContent = page;
+            this.currentContentClass = _content;
 
             // Update Stylesheets before appending to DOM
             this.updateStyles(this.displayedContent.styleID);
@@ -88,6 +99,26 @@ export default class ContentManager {
             this.CM_displayContent(ContentPages[navTarget]);
         } catch (err) {
             console.error(err);
+        }
+    }
+
+    /**
+     * Different from CM_navigate as this does not change the class that the Content Manager reads
+     * from, rather the same class is being displayed, just a different portion of it. In this
+     * case, I have called it a different "pageState".
+     *
+     * @param {object} _event - The event containing the information for updateState i.e.
+     * which method to call to update the content of the page with the new content,
+     */
+    async CM_updatePageState(_event) {
+        // This function looks for the custom "updateState" event to update the
+        // state of the currently diplayed page
+        try {
+            console.log(_event, this.currentContentClass);
+            let methodRef = _event.detail.content;
+            this.currentContentClass[methodRef]();
+        } catch (error) {
+            console.error(`Page update resulted in error: ${error}`);
         }
     }
 }

@@ -23,15 +23,12 @@
     import FirebaseIO from './src/js/firebase/FB_IO.mjs';
     import { initializeFirebase, firebaseIO } from './src/js/firebase/FB_instance.mjs'
 
-    let firebaseRefs;
     document.addEventListener('DOMContentLoaded', setup);
     async function setup() {
         await initializeStylesheets();
+        await initializeFirebase();
         let contentManager = new ContentManager(document.getElementById("d_content"));
         await contentManager.CM_displayContent(ContentPages.Welcome);
-
-        initializeFirebase();
-        firebaseIO.helloWorld();
     }
 
     window.setup = setup;

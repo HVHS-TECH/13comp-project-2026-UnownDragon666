@@ -36,6 +36,16 @@ export default class Register extends Content {
         const TITLE = document.createElement("h1");
         TITLE.textContent = "Registration Form";
 
-        this.section.append(TITLE);
+        const SIGNUP_BUTTON = super.createButton(
+            "Sign up with Google",
+            "googleAuth",
+        );
+
+        this.section.append(TITLE, SIGNUP_BUTTON);
+    }
+
+    /* **************************************** Public Methods *****************************************/
+    static async buildRegistrationForm() {
+        console.log("PLEASE");
     }
 }

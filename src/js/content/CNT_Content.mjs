@@ -60,17 +60,18 @@ export default class Content {
      * Creates a button element for navigation
      *
      * @param {string} _name - The button's text content
+     * @param {string} _event - The name of the custom event to dispatch onclick
      * @param {string} _target - The redirect content to redirect to
      *
      * @returns {object} Returns the button the the function created
      */
-    createButton(_name, _target) {
+    createButton(_name, _event, _target = null) {
         const button = document.createElement("button");
         button.textContent = _name;
         button.addEventListener("click", () => {
             // Creates a custom event called "navigate" telling the
             // Content Manager which Content to display next.
-            const event = new CustomEvent("navigate", {
+            const event = new CustomEvent(_event, {
                 detail: {
                     content: _target,
                 },

@@ -8,7 +8,7 @@ import FirebaseIO from "./FB_IO.mjs";
  * By: Idrees Munshi
  */
 
-let firebaseIO;
+let firebaseIO = null;
 
 export async function initializeFirebase() {
     const FBCONFIG = {
@@ -22,6 +22,6 @@ export async function initializeFirebase() {
         measurementId: "G-PSEYN1X511",
     };
 
-    firebaseIO = new FirebaseIO(FBCONFIG);
+    return (firebaseIO = new FirebaseIO(FBCONFIG));
 }
 export { firebaseIO };
