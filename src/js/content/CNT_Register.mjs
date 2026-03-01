@@ -117,8 +117,6 @@ export default class Register extends Content {
         );
         this.section.appendChild(PRONOUNS);
 
-        const 
-
         return document.getElementById(Register.#secID);
     }
 }
