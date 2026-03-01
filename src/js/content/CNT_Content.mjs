@@ -92,20 +92,23 @@ export default class Content {
         return TITLE;
     }
 
-    createInput(_labelText, _text, _type, _name, _id, _divID) {
+    createInput(_labelText, _text = null, _type, _name, _id, _divID) {
         const LABEL = document.createElement("label");
         LABEL.htmlFor = _name;
         LABEL.textContent = _labelText;
+
+        const BREAK = document.createElement("br");
 
         const INPUT = document.createElement("input");
         INPUT.placeholder = _text;
         INPUT.type = _type;
         INPUT.name = _name;
         INPUT.id = _id;
+        INPUT.required = true;
 
         const CONTAINER = document.createElement("div");
         CONTAINER.id = _divID;
-        CONTAINER.append(LABEL, INPUT);
+        CONTAINER.append(LABEL, BREAK, INPUT);
         return CONTAINER;
     }
 }
