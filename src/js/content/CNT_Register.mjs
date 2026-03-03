@@ -72,8 +72,8 @@ export default class Register extends Content {
             "i_ageInput",
             "d_ageInput",
         );
-        AGE.min = 5;
-        AGE.max = 125;
+        AGE.querySelector("input").min = 5;
+        AGE.querySelector("input").max = 125;
         this.section.appendChild(AGE);
 
         const BIRTHDAY = super.createInput(
@@ -94,7 +94,10 @@ export default class Register extends Content {
             "i_telNumInput",
             "d_telNumInput",
         );
-        PHONENUMBER.setAttribute("pattern", "[0-9]{3}-[0-9]{3}}-[0-9]{4}");
+        PHONENUMBER.querySelector("input").setAttribute(
+            "pattern",
+            "[0-9]{3}-[0-9]{3}}-[0-9]{4}",
+        );
         this.section.appendChild(PHONENUMBER);
 
         const FAV_COLOR = super.createInput(
