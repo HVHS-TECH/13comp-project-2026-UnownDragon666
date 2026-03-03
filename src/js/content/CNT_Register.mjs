@@ -49,6 +49,7 @@ export default class Register extends Content {
         // Build Registration Form
         console.log("REG FORM");
         let REG_FORM = document.createElement("form");
+        REG_FORM.id = "f_regForm";
 
         const TITLE = super.createTitle("Registration Form");
         REG_FORM.appendChild(TITLE);
@@ -62,7 +63,7 @@ export default class Register extends Content {
             "i_nameInput",
             "d_nameInput",
         );
-        this.section.appendChild(DISPLAY_NAME);
+        REG_FORM.appendChild(DISPLAY_NAME);
 
         const AGE = super.createInput(
             "Please enter your age",
@@ -74,7 +75,7 @@ export default class Register extends Content {
         );
         AGE.querySelector("input").min = 5;
         AGE.querySelector("input").max = 125;
-        this.section.appendChild(AGE);
+        REG_FORM.appendChild(AGE);
 
         const BIRTHDAY = super.createInput(
             "Please enter your birthday",
@@ -84,7 +85,7 @@ export default class Register extends Content {
             "i_bdayInput",
             "d_bdayInput",
         );
-        this.section.appendChild(BIRTHDAY);
+        REG_FORM.appendChild(BIRTHDAY);
 
         const PHONENUMBER = super.createInput(
             "Please enter your phone number",
@@ -96,9 +97,9 @@ export default class Register extends Content {
         );
         PHONENUMBER.querySelector("input").setAttribute(
             "pattern",
-            "[0-9]{3}-[0-9]{3}}-[0-9]{4}",
+            "[0-9]{3}-[0-9]{3}-[0-9]{4}",
         );
-        this.section.appendChild(PHONENUMBER);
+        REG_FORM.appendChild(PHONENUMBER);
 
         const FAV_COLOR = super.createInput(
             "What is your favourite color?",
@@ -108,7 +109,7 @@ export default class Register extends Content {
             "i_favColorInput",
             "d_favColorInput",
         );
-        this.section.appendChild(FAV_COLOR);
+        REG_FORM.appendChild(FAV_COLOR);
 
         const PRONOUNS = super.createInput(
             "Please enter your preferred pronouns!",
@@ -118,8 +119,23 @@ export default class Register extends Content {
             "i_pronounInput",
             "d_pronounInput",
         );
-        this.section.appendChild(PRONOUNS);
+        REG_FORM.appendChild(PRONOUNS);
+
+        // Submit button
+        const SUBMIT = super.createButton("Register", "submitForm");
+        SUBMIT.type = "submit";
+        REG_FORM.appendChild(SUBMIT);
+
+        REG_FORM.addEventListener("submitForm", (e) => {
+            e.preventDefault();
+            this.validateForm();
+        });
 
         return document.getElementById(Register.#secID);
+    }
+
+    validateForm() {
+        let name = document.getElementById("i_nameInput");
+        console.log(name);
     }
 }
