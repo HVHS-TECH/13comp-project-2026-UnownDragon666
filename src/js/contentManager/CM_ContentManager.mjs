@@ -96,8 +96,8 @@ export default class ContentManager {
             // Inside the "navigate" event is the name of the class I need to navigate to
             let navTarget = _event.detail.content;
             this.CM_displayContent(ContentPages[navTarget]);
-        } catch (err) {
-            console.error(err);
+        } catch (error) {
+            console.error(error);
         }
     }
 
@@ -113,10 +113,9 @@ export default class ContentManager {
         // This function looks for the custom "updateState" event to update the
         // state of the currently diplayed page
         try {
-            console.log(_event, this.currentContentClass);
-            let methodRef = _event.detail.content;
-            console.log(this.displayedContent);
+            let methodRef = _event.detail.content; // Contains the name of the method to be called
             this.displayedContent.removeContent();
+            // Appends the updated page state to the new page state
             this.#rootDiv.appendChild(await this.displayedContent[methodRef]());
         } catch (error) {
             console.error(`Page update resulted in error: ${error}`);

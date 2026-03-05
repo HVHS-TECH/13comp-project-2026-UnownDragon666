@@ -14,6 +14,7 @@ export default class Register extends Content {
     static #secID = "s_register";
 
     /* **************************************** Public Fields *****************************************/
+    // The ID used to identify the stylesheet belonging to this page (ReGister Style Sheet)
     styleID = "RGSS";
 
     /* **************************************** Constructor *****************************************/
@@ -45,6 +46,11 @@ export default class Register extends Content {
     }
 
     /* **************************************** Public Methods *****************************************/
+    /**
+     * This function is responsible for building the registration form's <form> element and its various inputs/submit button.
+     *
+     * @returns {object} - The Node HMTL element to be appended to the DOM.
+     */
     async buildRegistrationForm() {
         // Build Registration Form
         console.log("REG FORM");
@@ -122,20 +128,27 @@ export default class Register extends Content {
         REG_FORM.appendChild(PRONOUNS);
 
         // Submit button
-        const SUBMIT = super.createButton("Register", "submitForm");
+        const SUBMIT = super.createButton("Register");
         SUBMIT.type = "submit";
         REG_FORM.appendChild(SUBMIT);
 
-        REG_FORM.addEventListener("submitForm", (e) => {
-            e.preventDefault();
+        REG_FORM.addEventListener("submit", (event) => {
+            event.preventDefault();
             this.validateForm();
         });
 
         return document.getElementById(Register.#secID);
     }
 
+    /**
+     *  Validate the registration form's input
+     */
     validateForm() {
-        let name = document.getElementById("i_nameInput");
-        console.log(name);
+        const textRegexTest = /^[a-zA-Z0-9]+$/; // Regular Expression to check if username is entirely alphanumeric
+        const numRegexTest = /^[0-9]+$/; // Regular expression to test if number IS a number
+
+        let name = document.getElementById("i_nameInput").value;
+        console.log(textRegexTest.test(name));
+        if (!textRegexTest.test(name)) return; // Return if username NOT alphanumeric (i.e. contains special characters)
     }
 }
