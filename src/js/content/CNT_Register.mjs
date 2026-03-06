@@ -146,10 +146,7 @@ export default class Register extends Content {
      *
      *  If the form inputs are valid, write user to database.
      *
-     * TODO:
-     *  - DISPLAY ERRORS
-     *  - On form validation, if pass, write user to DB
-     *  - Afterwards, navigate to profile page.
+     *  @returns {Promise<void>}
      */
     async validateForm() {
         let details = {};
@@ -158,31 +155,50 @@ export default class Register extends Content {
 
         // Test if name is acceptable (does not contain special characters)
         let name = document.getElementById("i_nameInput").value;
-        if (!textRegexTest.test(name)) return; // Return if username NOT alphanumeric (i.e. contains special characters)
+        if (!textRegexTest.test(name)) {
+            this.#displayError(
+                "Please ensure your name is purely alphanumeric! No spaces or special characters.",
+            );
+            return; // Return if username NOT alphanumeric (i.e. contains special characters)
+        }
 
         // Test if age between 5 and 125 inclusive
         let age = document.getElementById("i_ageInput").value;
-        if (!numRegexTest.test(age)) return;
-
+        if (!numRegexTest.test(age)) {
+            this.#displayError("Enter an age between 5 and 125!");
+            return;
+        }
         // If the birthday test function returns false,
-        if (!this.#testBDay(age)) {
-            Object.assign(details, { userBirthday: "Not Verified" });
+        if (this.#testBDay(age)) {
+            Object.assign(details, { userBirthday: "Valid" });
         } else {
-            Object.assign(details, { userBirthday: "" });
+            Object.assign(details, { userBirthday: "Invalid" });
         }
 
         // Here I will not be validating phone numbers, as this is a school project,
         // and... well I don't want to make people give me their real phone numbers.
         let telNum = document.getElementById("i_telNumInput").value;
-        if (!telNum) return;
-
+        if (!telNum) {
+            this.#displayError("Enter a phone number! (XXX XXX XXXX)");
+            return;
+        }
         // Get the favorite color
         let favColor = document.getElementById("i_favColorInput").value;
-        if (!favColor) return;
+        if (!favColor) {
+            this.#displayError(
+                "What's your favourite color? How did you... circumvent a color input???",
+            );
+            return;
+        }
 
         // Get user's pronouns
         let pronouns = document.getElementById("i_pronounInput").value;
-        if (!pronouns) return;
+        if (!pronouns) {
+            this.#displayError(
+                "Please share your pronouns! Or... don't. Just... you can't leave this empty, k?",
+            );
+            return;
+        }
 
         try {
             await firebaseIO.updateRecord(
@@ -200,7 +216,9 @@ export default class Register extends Content {
                     providerData: firebaseIO.auth.currentUser.providerData,
                 },
             );
-        } catch (error) {}
+        } catch (error) {
+            throw error;
+        }
 
         let event = new CustomEvent("navigate", {
             detail: {
@@ -210,7 +228,14 @@ export default class Register extends Content {
         document.dispatchEvent(event);
     }
 
-    #displayError() {}
+    /**
+     * Displays error message for invalid input
+     *
+     * @param {string} _errorText - Text to display in error message
+     */
+    #displayError(_errorText) {
+        window.alert(_error);
+    }
 
     /**
      * Function to validate birthday using user's age
@@ -218,6 +243,8 @@ export default class Register extends Content {
      * @returns {boolean} - whether the entered birthday is valid or not
      */
     #testBDay(_age) {
+        _age = Number(_age);
+
         // Test if BDay corresponds to age
         let bday = document.getElementById("i_bdayInput").value;
 
@@ -227,14 +254,20 @@ export default class Register extends Content {
         const CURRENT_DATE = new Date().getFullYear();
         const BDAY_DATE = new Date(bday[0], bday[1] - 1, bday[2]).getFullYear();
 
-        // Use age to check if bday is (age) or (age - 1) years before current date
+        // Use age to check if bday is correct
+        console.log(
+            CURRENT_DATE - BDAY_DATE,
+            _age - 1,
+            CURRENT_DATE - BDAY_DATE,
+        );
+
         if (
-            !(CURRENT_DATE - BDAY_DATE == _age - 1) &&
-            !(CURRENT_DATE - BDAY_DATE == _age)
+            CURRENT_DATE - BDAY_DATE == _age + 1 ||
+            CURRENT_DATE - BDAY_DATE == _age
         ) {
-            return false;
+            return true; // Valid
         } else {
-            return true;
+            return false; // Not valid
         }
     }
 }

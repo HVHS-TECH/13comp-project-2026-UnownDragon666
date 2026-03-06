@@ -33,7 +33,7 @@ export default class ContentManager {
             "updateState",
             this.CM_updatePageState.bind(this),
         );
-        document.addEventListener("googleAuth", (event) => {
+        document.addEventListener("googleAuth", () => {
             firebaseIO.authenticateWithGoogle();
         });
     }
@@ -69,8 +69,8 @@ export default class ContentManager {
 
             // Now: Append this page to the DOM
             this.#rootDiv.appendChild(page.section);
-        } catch (err) {
-            throw new Error(err);
+        } catch (error) {
+            throw new Error(error);
         }
     }
 

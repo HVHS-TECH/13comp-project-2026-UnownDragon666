@@ -7,5 +7,6 @@
  * By: Idrees Munshi
  */
 import WelcomeStyles from "./pages/STY_WelcomeStyles.mjs";
+import RegisterStyles from "./pages/STY_RegisterStyles.mjs";
 
-export { WelcomeStyles as WCSS };
+export { WelcomeStyles as WCSS, RegisterStyles as RGSS };
