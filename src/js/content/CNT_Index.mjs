@@ -1,9 +1,8 @@
 import Welcome from "./CNT_Welcome.mjs";
-import Login from "./CNT_Login.mjs";
 import Register from "./CNT_Register.mjs";
 import Profile from "./CNT_Profile.mjs";
 
-export { Welcome, Login, Register, Profile };
+export { Welcome, Register, Profile };
 
 /**
  * @family CNT: Content

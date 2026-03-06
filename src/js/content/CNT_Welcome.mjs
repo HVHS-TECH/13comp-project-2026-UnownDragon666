@@ -41,8 +41,8 @@ export default class Welcome extends Content {
         BUTTON_CONTAINER.id = "d_buttonContainer";
 
         // Button to navigate to login screen
-        const LOGIN_NAV = super.createButton("Login", "navigate", "Login");
-        BUTTON_CONTAINER.appendChild(LOGIN_NAV);
+        const LOGIN = super.createButton("Login", "googleAuth", "Login");
+        BUTTON_CONTAINER.appendChild(LOGIN);
 
         // Button to navigate to registration screen
         const REGISTER_NAV = super.createButton(

@@ -62,10 +62,11 @@ export default class Content {
      * @param {string} _name - The button's text content
      * @param {string} _event - The name of the custom event to dispatch onclick
      * @param {string} _target - The redirect content to redirect to
+     * @param {object} _extra - Any added details for the event
      *
      * @returns {object} Returns the button the the function created
      */
-    createButton(_name, _event, _target = null) {
+    createButton(_name, _event, _target = null, _extra = null) {
         const button = document.createElement("button");
         button.textContent = _name;
         button.addEventListener("click", () => {
@@ -75,6 +76,8 @@ export default class Content {
             const event = new CustomEvent(_event, {
                 detail: {
                     content: _target,
+                    button: button,
+                    _extra,
                 },
             });
             document.dispatchEvent(event);

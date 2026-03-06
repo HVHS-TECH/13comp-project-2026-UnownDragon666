@@ -33,8 +33,19 @@ export default class ContentManager {
             "updateState",
             this.CM_updatePageState.bind(this),
         );
-        document.addEventListener("googleAuth", () => {
-            firebaseIO.authenticateWithGoogle();
+        document.addEventListener("googleAuth", async (_event) => {
+            document.querySelectorAll("button").forEach((element) => {
+                element.disabled = true;
+            });
+            try {
+                await firebaseIO.authenticateWithGoogle();
+            } catch (error) {
+                throw error;
+            } finally {
+                document.querySelectorAll("button").forEach((element) => {
+                    element.disabled = false;
+                });
+            }
         });
     }
 
@@ -99,7 +110,11 @@ export default class ContentManager {
         try {
             // Inside the "navigate" event is the name of the class I need to navigate to
             let navTarget = _event.detail.content;
-            this.CM_displayContent(ContentPages[navTarget]);
+            await this.CM_displayContent(ContentPages[navTarget]);
+            console.log(
+                `%cCurrent displayed page: ${this.currentContentClass.name}`,
+                "background-color: lightpink; color: black",
+            );
         } catch (error) {
             console.error(error);
         }

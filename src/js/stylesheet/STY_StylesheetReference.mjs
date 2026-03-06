@@ -8,5 +8,6 @@
  */
 import WelcomeStyles from "./pages/STY_WelcomeStyles.mjs";
 import RegisterStyles from "./pages/STY_RegisterStyles.mjs";
+import ProfileStyles from "./pages/STY_ProfileStyles.mjs";
 
-export { WelcomeStyles as WCSS, RegisterStyles as RGSS };
+export { WelcomeStyles as WCSS, RegisterStyles as RGSS, ProfileStyles as PFSS };
