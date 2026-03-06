@@ -53,7 +53,6 @@ export default class Register extends Content {
      */
     async buildRegistrationForm() {
         // Build Registration Form
-        console.log("REG FORM");
         let REG_FORM = document.createElement("form");
         REG_FORM.id = "f_regForm";
 
@@ -142,13 +141,37 @@ export default class Register extends Content {
 
     /**
      *  Validate the registration form's input
+     *
+     * TODO:
+     *  - BDAY, phone number, fav color, pronouns
+     *  - DISPLAY ERRORS
+     *  - On form validation, if pass, write user to DB
+     *  - Afterwards, navigate to profile page.
      */
     validateForm() {
         const textRegexTest = /^[a-zA-Z0-9]+$/; // Regular Expression to check if username is entirely alphanumeric
         const numRegexTest = /^[0-9]+$/; // Regular expression to test if number IS a number
 
+        // Test if name is acceptable (does not contain special characters)
         let name = document.getElementById("i_nameInput").value;
-        console.log(textRegexTest.test(name));
         if (!textRegexTest.test(name)) return; // Return if username NOT alphanumeric (i.e. contains special characters)
+
+        // Test if age between 5 and 125 inclusive
+        let age = document.getElementById("i_ageInput").value;
+        if (!numRegexTest.test(age)) return;
+
+        // Test if BDay corresponds to age
+        let bday = document.getElementById("i_bdayInput").value;
+
+        // Split string into [day, month, year]
+        bday = bday.split("/");
+
+        const CURRENT_DATE = new Date().getFullYear();
+        const BDAY_DATE = new Date(bday[2], bday[1] - 1, bday[0]).getFullYear();
+
+        // Use age to check if bday is (age) years before current date
+        if (!(CURRENT_DATE - BDAY_DATE == age)) return;
     }
+
+    #displayError() {}
 }
