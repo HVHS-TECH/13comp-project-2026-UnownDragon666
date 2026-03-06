@@ -44,6 +44,8 @@ export default class ContentManager {
      *
      * @param {class} _content - The CNT Class to display, CNT Class is a class containing content information and
      * instructions on how to make the content to diplay on the page
+     *
+     * @returns {Promise<void>}
      */
     async CM_displayContent(_content) {
         // Function replaces the current content of the page with new content
@@ -90,6 +92,8 @@ export default class ContentManager {
      * which page to navigate to.
      *
      * @param {object} _event - custom event object containing the navigation details for the page
+     *
+     * @returns {Promise<void>}
      */
     async CM_navigate(_event) {
         try {
@@ -108,6 +112,8 @@ export default class ContentManager {
      *
      * @param {object} _event - The event containing the information for updateState i.e.
      * which method to call to update the content of the page with the new content,
+     *
+     * @returns {Promise<void>}
      */
     async CM_updatePageState(_event) {
         // This function looks for the custom "updateState" event to update the

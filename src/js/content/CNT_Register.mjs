@@ -1,4 +1,6 @@
 import Content from "./CNT_Content.mjs";
+import { firebaseIO } from "../firebase/FB_instance.mjs";
+import FirebaseIO from "../firebase/FB_IO.mjs";
 
 /**
  * @family CNT: Content
@@ -102,7 +104,7 @@ export default class Register extends Content {
         );
         PHONENUMBER.querySelector("input").setAttribute(
             "pattern",
-            "[0-9]{3}-[0-9]{3}-[0-9]{4}",
+            "[0-9]{3} [0-9]{3} [0-9]{4}",
         );
         REG_FORM.appendChild(PHONENUMBER);
 
@@ -142,13 +144,15 @@ export default class Register extends Content {
     /**
      *  Validate the registration form's input
      *
+     *  If the form inputs are valid, write user to database.
+     *
      * TODO:
-     *  - BDAY, phone number, fav color, pronouns
      *  - DISPLAY ERRORS
      *  - On form validation, if pass, write user to DB
      *  - Afterwards, navigate to profile page.
      */
-    validateForm() {
+    async validateForm() {
+        let details = {};
         const textRegexTest = /^[a-zA-Z0-9]+$/; // Regular Expression to check if username is entirely alphanumeric
         const numRegexTest = /^[0-9]+$/; // Regular expression to test if number IS a number
 
@@ -160,18 +164,77 @@ export default class Register extends Content {
         let age = document.getElementById("i_ageInput").value;
         if (!numRegexTest.test(age)) return;
 
+        // If the birthday test function returns false,
+        if (!this.#testBDay(age)) {
+            Object.assign(details, { userBirthday: "Not Verified" });
+        } else {
+            Object.assign(details, { userBirthday: "" });
+        }
+
+        // Here I will not be validating phone numbers, as this is a school project,
+        // and... well I don't want to make people give me their real phone numbers.
+        let telNum = document.getElementById("i_telNumInput").value;
+        if (!telNum) return;
+
+        // Get the favorite color
+        let favColor = document.getElementById("i_favColorInput").value;
+        if (!favColor) return;
+
+        // Get user's pronouns
+        let pronouns = document.getElementById("i_pronounInput").value;
+        if (!pronouns) return;
+
+        try {
+            await firebaseIO.updateRecord(
+                `/users/${firebaseIO.auth.currentUser.uid}`,
+                {
+                    username: name,
+                    age: age,
+                    dateOfBirth: document.getElementById("i_bdayInput").value,
+                    extradetails: details,
+                    telNum: telNum,
+                    favoriteColor: favColor,
+                    pronouns: pronouns,
+                    email: firebaseIO.auth.currentUser.email,
+                    photoURL: firebaseIO.auth.currentUser.photoURL,
+                    providerData: firebaseIO.auth.currentUser.providerData,
+                },
+            );
+        } catch (error) {}
+
+        let event = new CustomEvent("navigate", {
+            detail: {
+                content: "Profile",
+            },
+        });
+        document.dispatchEvent(event);
+    }
+
+    #displayError() {}
+
+    /**
+     * Function to validate birthday using user's age
+     *
+     * @returns {boolean} - whether the entered birthday is valid or not
+     */
+    #testBDay(_age) {
         // Test if BDay corresponds to age
         let bday = document.getElementById("i_bdayInput").value;
 
         // Split string into [day, month, year]
-        bday = bday.split("/");
+        bday = bday.split("-");
 
         const CURRENT_DATE = new Date().getFullYear();
-        const BDAY_DATE = new Date(bday[2], bday[1] - 1, bday[0]).getFullYear();
+        const BDAY_DATE = new Date(bday[0], bday[1] - 1, bday[2]).getFullYear();
 
-        // Use age to check if bday is (age) years before current date
-        if (!(CURRENT_DATE - BDAY_DATE == age)) return;
+        // Use age to check if bday is (age) or (age - 1) years before current date
+        if (
+            !(CURRENT_DATE - BDAY_DATE == _age - 1) &&
+            !(CURRENT_DATE - BDAY_DATE == _age)
+        ) {
+            return false;
+        } else {
+            return true;
+        }
     }
-
-    #displayError() {}
 }

@@ -69,8 +69,9 @@ export default class Content {
         const button = document.createElement("button");
         button.textContent = _name;
         button.addEventListener("click", () => {
-            // Creates a custom event called "navigate" telling the
-            // Content Manager which Content to display next.
+            // Creates a custom event and assigns any relevant
+            // custom details that the content manager needs to
+            // utilise the custom event.
             const event = new CustomEvent(_event, {
                 detail: {
                     content: _target,

@@ -3,6 +3,7 @@ import {
     getDatabase,
     ref,
     get,
+    update,
 } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
 import {
     getAuth,
@@ -31,6 +32,14 @@ export default class FirebaseIO {
     auth;
 
     /* **************************************** Constructor *****************************************/
+    /**
+     * Constructor for the FirebaseIO class.
+     * Creates an instance of the firebase app, initialises
+     * the realtime database, and finally gets Auth once
+     * the app is initialised.
+     *
+     * @param {Object} _fbConfig - Config of the firebase app to initialise
+     */
     constructor(_fbConfig) {
         try {
             this.#app = initializeApp(_fbConfig);
@@ -45,6 +54,8 @@ export default class FirebaseIO {
     /* **************************************** Public Methods *****************************************/
     /**
      * Authenticates the user's log in/registration with Google.
+     *
+     * @returns {Promise<void>}
      */
     async authenticateWithGoogle() {
         try {
@@ -93,6 +104,30 @@ export default class FirebaseIO {
             return snapshot.val();
         } catch (error) {
             console.error(`Read record failed: ${error}`);
+        }
+    }
+
+    /**
+     * Write/update a record to/in the Firebase realtime database
+     *
+     * @param {string} _path - Path to update
+     * @param {Object} _data - Object containing the data to update
+     * @param {Function} _callback - Optional callback after successful write
+     *
+     * @returns {Promise<void>}
+     */
+    async updateRecord(_path, _data, _callback = null) {
+        const REF = ref(this.#database, _path);
+        try {
+            await update(REF, _data);
+            if (typeof _callback === "function") {
+                _callback();
+            }
+        } catch (error) {
+            console.error(
+                `Failed to update record @ ${_path}, w/ ${JSON.stringify(_data)}. See error: ${error}`,
+            );
+            throw error;
         }
     }
 }
