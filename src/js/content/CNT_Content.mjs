@@ -86,6 +86,7 @@ export default class Content {
     }
 
     /**
+     * Create an HTML h1 element
      *
      * @param {string} _text - Title's text
      * @returns {object} - TITLE element
@@ -96,12 +97,23 @@ export default class Content {
         return TITLE;
     }
 
+    /**
+     * Creates an input element with the given parameters.
+     * For the registration form mainly.
+     *
+     * @param {string} _labelText - Text for the label of the input
+     * @param {string} _text - Placeholder text
+     * @param {string} _type - Type of input to make
+     * @param {string} _name - Name of the input
+     * @param {string} _id - HTML id of the input (for collecting the value of the input)
+     * @param {string} _divID - ID of the div to put the input into.
+     *
+     * @returns {Node} - HTML Node Element (div) with the input and label in it
+     */
     createInput(_labelText, _text = null, _type, _name, _id, _divID) {
         const LABEL = document.createElement("label");
         LABEL.htmlFor = _name;
         LABEL.textContent = _labelText;
-
-        const BREAK = document.createElement("br");
 
         const INPUT = document.createElement("input");
         INPUT.placeholder = _text;
@@ -114,5 +126,17 @@ export default class Content {
         CONTAINER.id = _divID;
         CONTAINER.append(LABEL, BREAK, INPUT);
         return CONTAINER;
+    }
+
+    createNavBar() {
+        // Make nav bar element
+        const NAV = document.createElement("nav");
+
+        // Create nav buttons!
+        // There's four to be made: Profile (a picture of the user's PFP that links to the current page),
+        // Games, Leaderboard, and ADMIN (if the user's adminStatus === true)
+
+        // First, leftmost button, the PFP
+        let PROFILE_NAV = document.createElement("button");
     }
 }

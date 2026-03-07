@@ -214,6 +214,7 @@ export default class Register extends Content {
                     email: firebaseIO.auth.currentUser.email,
                     photoURL: firebaseIO.auth.currentUser.photoURL,
                     providerData: firebaseIO.auth.currentUser.providerData,
+                    adminStatus: false,
                 },
             );
         } catch (error) {
@@ -227,6 +228,8 @@ export default class Register extends Content {
         });
         document.dispatchEvent(event);
     }
+
+    /* **************************************** Private Methods *****************************************/
 
     /**
      * Displays error message for invalid input
