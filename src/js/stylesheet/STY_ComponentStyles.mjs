@@ -40,5 +40,7 @@ export default class ComponentStyles {
         }
         `;
         document.body.appendChild(COMPONENT_LAYER_BUTTON_STYLE);
+
+        const COMPONENT_LAYER_NAV_STYLE = document.createElement("style");
     }
 }

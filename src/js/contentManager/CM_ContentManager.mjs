@@ -62,9 +62,9 @@ export default class ContentManager {
         // Function replaces the current content of the page with new content
 
         // First, remove currently displayed page's HTML:
-        this.displayedContent != undefined
-            ? this.displayedContent.removeContent()
-            : null;
+        try {
+            this.displayedContent.removeContent();
+        } catch (error) {}
 
         try {
             // Next, create an instance of the new page content

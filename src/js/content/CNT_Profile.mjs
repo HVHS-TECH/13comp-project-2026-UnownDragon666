@@ -32,10 +32,17 @@ export default class Profile extends Content {
 
     /* **************************************** Public Methods *****************************************/
     async removeContent() {
-        document.getElementById(Profile.#secID).innerHTML = ``;
+        document.querySelectorAll("section").forEach((section) => {
+            section.remove();
+        });
     }
 
-    async buildContent() {}
+    async buildContent() {
+        const NAV = super.createNavBar();
+        this.section.appendChild(NAV);
+
+        return document.getElementById(Profile.#secID);
+    }
 
     /* **************************************** Private Methods *****************************************/
 
