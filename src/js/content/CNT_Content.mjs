@@ -133,14 +133,16 @@ export default class Content {
     createNavBar() {
         // Make nav bar element
         const NAV = document.createElement("nav");
+        NAV.id = "n_navBar";
 
         // Create nav buttons!
         // There's four to be made: Profile (a picture of the user's PFP that links to the current page),
         // Games, Leaderboard, and ADMIN (if the user's adminStatus === true)
 
         // First, leftmost button, the PFP, which leads to the Profile page when clicked
-        let PROFILE_NAV = document.createElement("button");
+        const PROFILE_NAV = document.createElement("button");
         PROFILE_NAV.id = "b_profile";
+        PROFILE_NAV.classList.add("navButtons");
         PROFILE_NAV.type = "button";
         PROFILE_NAV.innerHTML = `
             <img src="${firebaseIO.auth.currentUser.photoURL}"></img>
@@ -156,6 +158,23 @@ export default class Content {
         NAV.appendChild(PROFILE_NAV);
 
         // Next, the games page:
+        const GAMES_NAV = this.createButton("Games", "navigate", "Games");
+        GAMES_NAV.id = "b_games";
+        GAMES_NAV.classList.add("navButtons");
+
+        NAV.appendChild(GAMES_NAV);
+
+        // Next, the Leaderboard page
+        const LEADERBOARD_NAV = this.createButton(
+            "Leaderboards",
+            "navigate",
+            "Leaderboard",
+        );
+        LEADERBOARD_NAV.id = "b_leaderboard";
+        LEADERBOARD_NAV.classList.add("navButtons");
+        NAV.appendChild(LEADERBOARD_NAV);
+
+        // Finally, this is if the user is an admin:
 
         return NAV;
     }
