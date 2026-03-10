@@ -1,5 +1,5 @@
 import { firebaseIO } from "../firebase/FB_instance.mjs";
-import { userRecord } from "../accountManager/AM_User.mjs";
+import { getRecord } from "../accountManager/AM_User.mjs";
 
 /**
  * @family CNT: Content
@@ -146,7 +146,7 @@ export default class Content {
         PROFILE_NAV.classList.add("navButtons");
         PROFILE_NAV.type = "button";
         PROFILE_NAV.innerHTML = `
-            <img src="${firebaseIO.auth.currentUser.photoURL}"></img>
+            <img src="${firebaseIO.auth.currentUser.photoURL}" id="i_pfpImage"></img>
         `;
         PROFILE_NAV.addEventListener("click", () => {
             const event = new CustomEvent("navigate", {
@@ -162,7 +162,6 @@ export default class Content {
         const GAMES_NAV = this.createButton("Games", "navigate", "Games");
         GAMES_NAV.id = "b_games";
         GAMES_NAV.classList.add("navButtons");
-
         NAV.appendChild(GAMES_NAV);
 
         // Next, the Leaderboard page
@@ -176,7 +175,13 @@ export default class Content {
         NAV.appendChild(LEADERBOARD_NAV);
 
         // Finally, this is if the user is an admin:
-        console.log(userRecord);
+        const USER = getRecord();
+        if (USER.adminStatus === true) {
+            const ADMIN_NAV = this.createButton("ADMIN", "navigate", "Admin");
+            ADMIN_NAV.id = "b_admin";
+            ADMIN_NAV.classList.add("navButtons");
+            NAV.appendChild(ADMIN_NAV);
+        }
 
         return NAV;
     }

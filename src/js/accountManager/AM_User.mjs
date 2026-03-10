@@ -12,22 +12,32 @@ import { initializeFirebase } from "../firebase/FB_instance.mjs";
 export default class User {
     /* **************************************** Private Fields *****************************************/
     /* **************************************** Public Fields *****************************************/
-    userRecord;
+    currentUserRecord;
 
     /* **************************************** Constructor *****************************************/
     constructor(_userRecord) {
-        this.userRecord = _userRecord;
+        this.currentUserRecord = _userRecord;
     }
 }
 
-let userRecord = null;
+let user = null;
 
+/**
+ * Function that initialises an instance of the User class
+ *
+ * @param {Object} _userRecord - An object containing the current user's database record
+ */
 export async function initializeUser(_userRecord) {
-    if (userRecord == null) {
-        userRecord = new User(_userRecord);
+    if (user == null) {
+        user = new User(_userRecord);
     }
 }
 
-export async function getRecord() {
-    return userRecord;
+/**
+ * A getter to return the database record of the current user instance.
+ *
+ * @returns {Object} - Current user's database record.
+ */
+export function getRecord() {
+    return user.currentUserRecord;
 }
