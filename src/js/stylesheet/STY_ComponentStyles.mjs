@@ -42,5 +42,39 @@ export default class ComponentStyles {
         document.body.appendChild(COMPONENT_LAYER_BUTTON_STYLE);
 
         const COMPONENT_LAYER_NAV_STYLE = document.createElement("style");
+        COMPONENT_LAYER_NAV_STYLE.id = "componentLayerNavStyle";
+        COMPONENT_LAYER_NAV_STYLE.classList.add("componentLayerStyles");
+        COMPONENT_LAYER_NAV_STYLE.innerHTML = `
+        #n_navBar {
+            position: sticky;
+            top: 0;
+        }
+
+        .navButtons {
+            width: 20%;
+            height: 100%;
+            border: none;
+        }
+
+        #ul_nav {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        #ul_nav li {
+            float: left;
+        }
+
+        ul li {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        `;
+        document.body.appendChild(COMPONENT_LAYER_NAV_STYLE);
     }
 }
