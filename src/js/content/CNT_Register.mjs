@@ -1,6 +1,6 @@
 import Content from "./CNT_Content.mjs";
 import { firebaseIO } from "../firebase/FB_instance.mjs";
-import FirebaseIO from "../firebase/FB_IO.mjs";
+import { initializeUser } from "../accountManager/AM_User.mjs";
 
 /**
  * @family CNT: Content
@@ -220,6 +220,10 @@ export default class Register extends Content {
         } catch (error) {
             throw error;
         }
+        let record = await firebaseIO.readRecord(
+            `/users/${firebaseIO.auth.currentUser.uid}`,
+        );
+        await initializeUser(record);
 
         let event = new CustomEvent("navigate", {
             detail: {
@@ -237,7 +241,7 @@ export default class Register extends Content {
      * @param {string} _errorText - Text to display in error message
      */
     #displayError(_errorText) {
-        window.alert(_error);
+        window.alert(_errorText);
     }
 
     /**

@@ -1,4 +1,5 @@
 import { firebaseIO } from "../firebase/FB_instance.mjs";
+import { userRecord } from "../accountManager/AM_User.mjs";
 
 /**
  * @family CNT: Content
@@ -175,6 +176,7 @@ export default class Content {
         NAV.appendChild(LEADERBOARD_NAV);
 
         // Finally, this is if the user is an admin:
+        console.log(userRecord);
 
         return NAV;
     }

@@ -1,7 +1,7 @@
 import FirebaseIO from "./FB_IO.mjs";
 /**
  * @family FB: Firebase
- * @description This FB instamce is a common point for all classes in the
+ * @description This FB instance is a common point for all classes in the
  * project to get accesss to common FB methods they may need.
  *
  * Written in Term One 2026 for programming/database project
@@ -10,6 +10,11 @@ import FirebaseIO from "./FB_IO.mjs";
 
 let firebaseIO = null;
 
+/**
+ * Initialises firebase using the config.
+ *
+ * @returns - Instance of the FirebaseIO class
+ */
 export async function initializeFirebase() {
     const FBCONFIG = {
         apiKey: "AIzaSyCMMs5kHbSUMnPyf2UWcKSy19HvB-PcV1U",

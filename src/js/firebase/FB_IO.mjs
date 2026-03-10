@@ -10,6 +10,7 @@ import {
     GoogleAuthProvider,
     signInWithPopup,
 } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+import { initializeUser } from "../accountManager/AM_User.mjs";
 
 /**
  * @family FB: Firebase
@@ -68,6 +69,7 @@ export default class FirebaseIO {
 
             let record = await this.readRecord("/users");
             if (this.auth.currentUser.uid in record) {
+                await initializeUser(record[this.auth.currentUser.uid]);
                 let event = new CustomEvent("navigate", {
                     detail: {
                         content: "Profile",
