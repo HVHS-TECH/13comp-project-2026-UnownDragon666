@@ -146,13 +146,10 @@ export default class Content {
 
             // First, leftmost button, the PFP, which leads to the Profile page when clicked
             const LIST_ELEMENT_ONE = document.createElement("li");
-            const PROFILE_NAV = document.createElement("button");
-            PROFILE_NAV.id = "b_profile";
-            PROFILE_NAV.classList.add("navButtons");
+            const PROFILE_NAV = document.createElement("img");
+            PROFILE_NAV.id = "i_pfpImage";
             PROFILE_NAV.type = "button";
-            PROFILE_NAV.innerHTML = `
-            <img src="${firebaseIO.auth.currentUser.photoURL}" id="i_pfpImage"></img>
-        `;
+            PROFILE_NAV.src = `${firebaseIO.auth.currentUser.photoURL}`;
             PROFILE_NAV.addEventListener("click", () => {
                 const event = new CustomEvent("navigate", {
                     detail: {

@@ -1,3 +1,5 @@
+import Colors from "./STY_ColorReference.mjs";
+
 /**
  * @family STY: Stylesheet
  *
@@ -20,8 +22,6 @@
  */
 export default class ComponentStyles {
     /* **************************************** Public Fields *****************************************/
-    static buttonColour = "#edbfc5";
-    static buttonBorderColour = "#fc559a";
 
     /* **************************************** Public Methods *****************************************/
     /**
@@ -34,9 +34,15 @@ export default class ComponentStyles {
         COMPONENT_LAYER_BUTTON_STYLE.innerHTML = `    
         button {
             padding: 0.6rem 1.5rem;
-            background-color: ${ComponentStyles.buttonColour};
+            background-color: ${Colors.buttonColor};
             border-radius: 8px;
-            border-color: ${ComponentStyles.buttonBorderColour};
+            border-color: ${Colors.buttonBorderColor};
+        }
+
+        button:hover {
+            background-color: ${Colors.buttonHoverColor};
+            color: ${Colors.textHoverColor};
+            transition: background-color 0.25s, color 0.5s;
         }
         `;
         document.body.appendChild(COMPONENT_LAYER_BUTTON_STYLE);
@@ -50,28 +56,38 @@ export default class ComponentStyles {
             top: 0;
         }
 
+        #i_pfpImage {
+            max-width: 80%;
+            border-radius: 50%;
+            border-style: solid;
+            border-color: ${Colors.pfpBorderColor};
+        }
+
         .navButtons {
-            width: 20%;
+            padding: 1.25rem 4rem;
+            width: auto;
             height: 100%;
             border: none;
+            font-size: 2rem;
+            font-weight: bold;
         }
 
         #ul_nav {
+            display: flex;
+            align-items: center;
             list-style-type: none;
             margin: 0;
             padding: 0;
             overflow: hidden;
+            border-bottom: solid;
+            border-color: ${Colors.borderColor};
         }
 
         #ul_nav li {
+            margin: 1rem 3rem;
+            padding: auto;
             float: left;
-        }
-
-        ul li {
-            display: block;
-            color: white;
             text-align: center;
-            padding: 14px 16px;
             text-decoration: none;
         }
         `;

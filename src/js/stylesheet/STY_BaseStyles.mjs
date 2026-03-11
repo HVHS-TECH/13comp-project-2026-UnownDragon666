@@ -1,3 +1,5 @@
+import Colors from "./STY_ColorReference.mjs";
+
 /**
  * @family STY: Stylesheet
  *
@@ -28,8 +30,8 @@ export default class BaseStyles {
      * Initialise the base styles for the pages
      */
     static async applyBaseStyles() {
-        document.body.style.backgroundColor = BaseStyles.backgroundColor;
-        document.body.style.text = BaseStyles.textColor;
+        document.body.style.backgroundColor = Colors.backgroundColor;
+        document.body.style.text = Colors.textColor;
 
         BaseStyles.initialiseFonts();
     }
@@ -41,7 +43,7 @@ export default class BaseStyles {
     static async initialiseFonts() {
         let font = new FontFace(
             "FunnelSans",
-            `url(${BaseStyles.fontURL}) format('truetype')`,
+            `url(${Colors.fontURL}) format('truetype')`,
         );
 
         await font.load();
