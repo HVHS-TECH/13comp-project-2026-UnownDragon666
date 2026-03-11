@@ -37,11 +37,36 @@ export default class Profile extends Content {
     }
 
     async buildContent() {
+        // Create nav var
         const NAV = super.createNavBar();
         this.section.appendChild(NAV);
+
+        // Create main content container
+        const MAIN_CONTAINER = document.createElement("container");
+
+        // Inside container, there are 2 sections
+        // The "sidebar" (this is the profile bit)
+        // And the "content" (this is the user's stats and friends)
+        this.#buildProfileSideBar();
+
+        this.#buildProfileContent();
 
         return document.getElementById(Profile.#secID);
     }
 
     /* **************************************** Private Methods *****************************************/
+    /**
+     * There are 3 parts to the side bar:
+     * - the PFP (with a settings button in the corner)
+     * - the userInfo
+     * - the logout button
+     */
+    #buildProfileSideBar() {}
+
+    /**
+     * There are 2 parts to the content:
+     * - The user's stats (and leaderboard rankings)
+     * - and the user's friends container.
+     */
+    #buildProfileContent() {}
 }
