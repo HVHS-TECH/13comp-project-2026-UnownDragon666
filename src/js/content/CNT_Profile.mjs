@@ -61,7 +61,10 @@ export default class Profile extends Content {
      * - the userInfo
      * - the logout button
      */
-    #buildProfileSideBar() {}
+    #buildProfileSideBar() {
+        const PROFILE_CONTAINER = document.createElement("aside");
+        const PFP = document.createElement("img");
+    }
 
     /**
      * There are 2 parts to the content:
