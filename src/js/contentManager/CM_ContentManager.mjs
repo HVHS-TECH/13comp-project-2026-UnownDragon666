@@ -69,7 +69,7 @@ export default class ContentManager {
         try {
             // Next, create an instance of the new page content
             let page = new _content();
-            page.buildContent();
+            await page.buildContent();
 
             // Update displayedContent
             this.displayedContent = page;
@@ -87,6 +87,8 @@ export default class ContentManager {
 
     /**
      * This method updates the stylesheet of the page to match the currently displayed content.
+     *
+     * @param {String} _styleID - The stylesheet ID to be displayed.
      */
     updateStyles(_styleID) {
         try {

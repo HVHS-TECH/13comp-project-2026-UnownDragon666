@@ -29,7 +29,6 @@ export default class Register extends Content {
     }
 
     /* ******************************** Parent Class Method Overrides *********************************/
-
     removeContent() {
         document.getElementById(Register.#secID).innerHTML = ``;
     }
