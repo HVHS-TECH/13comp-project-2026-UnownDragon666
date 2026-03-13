@@ -2,8 +2,7 @@ import Welcome from "./CNT_Welcome.mjs";
 import Register from "./CNT_Register.mjs";
 import Profile from "./CNT_Profile.mjs";
 import Games from "./CNT_Games.mjs";
-
-export { Welcome, Register, Profile, Games };
+import GuessTheImpostor from "./games/guessTheImpostor/GTI_GameScreen.mjs";
 
 /**
  * @family CNT: Content
@@ -13,3 +12,5 @@ export { Welcome, Register, Profile, Games };
  * Written in Term One 2026 for programming/database project
  * By: Idrees Munshi
  */
+
+export { Welcome, Register, Profile, Games, GuessTheImpostor };

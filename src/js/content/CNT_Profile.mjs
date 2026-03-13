@@ -28,7 +28,7 @@ export default class Profile extends Content {
         this.#accountManager = new AccountManager(this.#currentUser);
     }
 
-    /* **************************************** Public Methods *****************************************/
+    /* ******************************** Parent Class Method Overrides *********************************/
     async removeContent() {
         document.querySelectorAll("section").forEach((section) => {
             section.remove();
@@ -52,6 +52,7 @@ export default class Profile extends Content {
 
         return document.getElementById(Profile.#secID);
     }
+    /* **************************************** Public Methods *****************************************/
 
     /* **************************************** Private Methods *****************************************/
     /**
