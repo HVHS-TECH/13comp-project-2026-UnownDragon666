@@ -11,6 +11,8 @@ import Content from "./CNT_Content.mjs";
 export default class Games extends Content {
     /* **************************************** Private Fields *****************************************/
     static #secID = "s_games";
+
+    #cards;
     /* **************************************** Public Fields *****************************************/
     // The ID used to identify the stylesheet belonging to this page (GaMe Style Sheet)
     styleID = "GMSS";
