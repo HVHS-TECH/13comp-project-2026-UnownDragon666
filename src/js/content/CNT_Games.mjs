@@ -14,4 +14,22 @@ export default class Games extends Content {
     /* **************************************** Public Fields *****************************************/
     // The ID used to identify the stylesheet belonging to this page (GaMe Style Sheet)
     styleID = "GMSS";
+
+    /* **************************************** Constructor *****************************************/
+    constructor() {
+        super(Games.#secID);
+    }
+
+    /* **************************************** Public Methods *****************************************/
+    async removeContent() {
+        document.querySelectorAll("section").forEach((section) => {
+            section.remove();
+        });
+    }
+
+    async buildContent() {
+        // Create nav var
+        const NAV = super.createNavBar();
+        this.section.appendChild(NAV);
+    }
 }

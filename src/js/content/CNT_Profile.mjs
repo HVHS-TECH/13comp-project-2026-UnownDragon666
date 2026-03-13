@@ -1,7 +1,6 @@
 import AccountManager from "../accountManager/AM_AccountManager.mjs";
 import { firebaseIO } from "../firebase/FB_instance.mjs";
 import Content from "./CNT_Content.mjs";
-import { initializeUser } from "../accountManager/AM_User.mjs";
 /**
  * @family CNT: Content
  * @description Profile is a class for the content of the profile page
