@@ -49,6 +49,7 @@ export default class Games extends Content {
 
         // Create section
         const GAMES_SECTION = document.createElement("section");
+        GAMES_SECTION.id = "s_gameSubSec";
 
         let cardElements = {};
         for (const game of this.#cards) {
@@ -58,12 +59,12 @@ export default class Games extends Content {
                 GAMES_SECTION,
             );
         }
-        this.section.appendChild(GAMES_SECTION);
 
         // Create modal blueprint
         const MODAL = this.#createModal();
+        GAMES_SECTION.appendChild(MODAL[0]);
 
-        this.section.appendChild(MODAL[0]);
+        this.section.appendChild(GAMES_SECTION);
         this.#modalListeners(MODAL, cardElements);
     }
 

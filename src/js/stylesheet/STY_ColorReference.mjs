@@ -15,8 +15,11 @@ export default class Colors {
     static borderColor = "#fc809f";
     static fontURL = "./src/asssets/fonts/FunnelSans-VariableFont_wght.ttf";
 
-    // Component colours
+    // Component colors
     static buttonColor = "#ffc9d7";
     static buttonBorderColor = "#ffbccd";
     static buttonHoverColor = "#ff9cb5";
+
+    // Card colors (Game selection page)
+    static cardBackgroundColor = "#ffc9d7";
 }
