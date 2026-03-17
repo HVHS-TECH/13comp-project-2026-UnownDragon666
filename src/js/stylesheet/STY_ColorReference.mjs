@@ -22,4 +22,10 @@ export default class Colors {
 
     // Card colors (Game selection page)
     static cardBackgroundColor = "#ffc9d7";
+    static modalOutsideColor = "#9666728a";
+    static modalBackgroundColor = "#8cd5a0";
+    static modalButtonColor = "#3a9e6c";
+    static modalButtonHoverColor = "#5cbf8a";
+    static modalCloseColor = "#153d3a";
+    static modalTextColor = "#153d3a";
 }

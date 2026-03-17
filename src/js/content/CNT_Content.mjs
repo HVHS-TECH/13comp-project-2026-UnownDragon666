@@ -76,14 +76,14 @@ export default class Content {
             // Creates a custom event and assigns any relevant
             // custom details that the content manager needs to
             // utilise the custom event.
-            const event = new CustomEvent(_event, {
+            const EVENT = new CustomEvent(_event, {
                 detail: {
                     content: _target,
                     button: button,
                     _extra,
                 },
             });
-            document.dispatchEvent(event);
+            document.dispatchEvent(EVENT);
         });
         return button;
     }

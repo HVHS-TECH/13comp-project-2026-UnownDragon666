@@ -91,6 +91,7 @@ export default class Games extends Content {
 
     /**
      * Builds the HTML for a modal
+     * This creates the modal's div, and its content like the play button, title, description, and close span.
      *
      * @returns {[HTMLDivElement, HTMLSpanElement, HTMLHeadingElement, HTMLParagraphElement, HTMLButtonElement]} - Array of node elements that make up the modal.
      */
@@ -114,8 +115,9 @@ export default class Games extends Content {
         MODAL_DESC.id = "p_modalDescription";
 
         const MODAL_PLAY = document.createElement("button");
+        MODAL_PLAY.id = "b_playButton";
         MODAL_PLAY.type = "button";
-        MODAL_PLAY.textContent = " Play Game ";
+        MODAL_PLAY.textContent = "Play Game";
 
         MODAL_CONTENT.append(MODAL_CLOSE, MODAL_TITLE, MODAL_DESC, MODAL_PLAY);
         MODAL.appendChild(MODAL_CONTENT);
@@ -147,7 +149,9 @@ export default class Games extends Content {
                     _modal[2].textContent = game.title;
                     _modal[3].textContent = game.description;
                     _modal[4].textContent = game.buttonContent;
-                    _modal[4].onclick = () => dispatchEvent(event);
+                    _modal[4].addEventListener("click", () => {
+                        dispatchEvent(event);
+                    });
                     _modal[0].style.display = "flex";
                 });
             });
