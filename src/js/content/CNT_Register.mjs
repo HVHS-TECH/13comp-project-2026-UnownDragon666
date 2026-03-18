@@ -214,6 +214,7 @@ export default class Register extends Content {
                     photoURL: firebaseIO.auth.currentUser.photoURL,
                     providerData: firebaseIO.auth.currentUser.providerData,
                     adminStatus: false,
+                    uid: firebaseIO.auth.currentUser.uid,
                 },
             );
         } catch (error) {

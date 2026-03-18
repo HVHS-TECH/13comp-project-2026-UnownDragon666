@@ -1,4 +1,5 @@
 import Content from "../../CNT_Content.mjs";
+import { getRecord } from "../../../accountManager/AM_User.mjs";
 /**
  * @family GTI: Guess the Impostor, an extension of CNT: Content
  * @description Guess the impostor game's lobby list.
@@ -30,11 +31,21 @@ export default class GuessTheImpostorLobbies extends Content {
     }
 
     async buildContent() {
+        // Button container
+        const BUTTON_CONTAINER = document.createElement("div");
+
         // Exit button
-        super.createButton("EXIT", "navigate", "Games");
+        const EXIT_BUTTON = super.createButton("EXIT", "navigate", "Games");
 
         // Host Lobby
-        super.createButton("Host Lobby", "host", null);
+        const HOST_BUTTON = super.createButton(
+            "Host Lobby",
+            "host",
+            getRecord(),
+        );
+
+        BUTTON_CONTAINER.append(EXIT_BUTTON, HOST_BUTTON);
+        this.section.appendChild(BUTTON_CONTAINER);
 
         /* Create server list table and subsection*/
         // Subsection

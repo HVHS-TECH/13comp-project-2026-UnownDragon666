@@ -132,4 +132,6 @@ export default class FirebaseIO {
             throw error;
         }
     }
+
+    async subsrcibeToRecord() {}
 }
