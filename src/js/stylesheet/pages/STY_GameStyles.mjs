@@ -25,9 +25,12 @@ export default class GamesStyles {
         /* Main content styling */
         #s_gameSubSec {
             font-size: 1.8rem;
+            box-sizing: border-box;
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(25%, 1fr));
-            gap: 1rem;
+            padding-top: 3rem;
+            padding-inline: 5rem;
+            gap: 3rem;
         }
 
         /* Game card styling */

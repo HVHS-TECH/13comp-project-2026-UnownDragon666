@@ -80,7 +80,7 @@ export default class ComponentStyles {
             padding: 0;
             overflow: hidden;
             border-bottom: solid;
-            border-color: ${Colors.borderColor};
+            border-color: ${Colors.navBorderColor};
         }
 
         #ul_nav li {

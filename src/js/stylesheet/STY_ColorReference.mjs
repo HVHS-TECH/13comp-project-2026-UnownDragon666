@@ -11,8 +11,8 @@ export default class Colors {
     static backgroundColor = "#ffe9ef";
     static textColor = "#000000";
     static textHoverColor = "#ffffff";
-    static pfpBorderColor = "#000";
-    static borderColor = "#fc809f";
+    static pfpBorderColor = "#ffffff";
+    static navBorderColor = "#fc809f";
     static fontURL = "./src/asssets/fonts/FunnelSans-VariableFont_wght.ttf";
 
     // Component colors
