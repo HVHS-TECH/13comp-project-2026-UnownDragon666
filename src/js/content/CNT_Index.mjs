@@ -2,6 +2,7 @@ import Welcome from "./CNT_Welcome.mjs";
 import Register from "./CNT_Register.mjs";
 import Profile from "./CNT_Profile.mjs";
 import Games from "./CNT_Games.mjs";
+import GuessTheImpostorLobbies from "./games/guessTheImpostor/GTI_Lobbies.mjs";
 import GuessTheImpostor from "./games/guessTheImpostor/GTI_GameScreen.mjs";
 
 /**
@@ -13,4 +14,11 @@ import GuessTheImpostor from "./games/guessTheImpostor/GTI_GameScreen.mjs";
  * By: Idrees Munshi
  */
 
-export { Welcome, Register, Profile, Games, GuessTheImpostor };
+export {
+    Welcome,
+    Register,
+    Profile,
+    Games,
+    GuessTheImpostorLobbies,
+    GuessTheImpostor,
+};

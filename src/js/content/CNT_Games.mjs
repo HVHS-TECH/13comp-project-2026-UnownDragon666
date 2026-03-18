@@ -22,7 +22,7 @@ export default class Games extends Content {
             title: "Who's lying?",
             description:
                 "Can you find out who the impostor is, based on their answer?",
-            target: "GuessTheImpostor",
+            target: "GuessTheImpostorLobbies",
             buttonContent: "Play Game",
         },
     };
@@ -126,6 +126,7 @@ export default class Games extends Content {
     }
 
     /**
+     * Deploy listeners on the cards which display modals when clicked.
      *
      * @param {Array<Node>} _modal - Array returned by modal, containing all the elements in the modal
      * @param {Object} _cards - object containing all the Card elements, div IDs mapped to their card elements
@@ -150,7 +151,7 @@ export default class Games extends Content {
                     _modal[3].textContent = game.description;
                     _modal[4].textContent = game.buttonContent;
                     _modal[4].addEventListener("click", () => {
-                        dispatchEvent(event);
+                        document.dispatchEvent(event);
                     });
                     _modal[0].style.display = "flex";
                 });
