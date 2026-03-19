@@ -1,5 +1,3 @@
-import { initializeFirebase } from "../firebase/FB_instance.mjs";
-
 /**
  * @family AM: Account Manager
  * @description User is just an singleton module, where User is a class that stores the user instance.

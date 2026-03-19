@@ -38,11 +38,18 @@ export default class GuessTheImpostorLobbies extends Content {
         const EXIT_BUTTON = super.createButton("EXIT", "navigate", "Games");
 
         // Host Lobby
-        const HOST_BUTTON = super.createButton(
-            "Host Lobby",
-            "host",
-            getRecord(),
-        );
+        const HOST_BUTTON = document.createElement("button");
+        HOST_BUTTON.type = "button";
+        HOST_BUTTON.textContent = "Host Lobby";
+        HOST_BUTTON.addEventListener("click", () => {
+            // Create new lobby
+            const EVENT = new CustomEvent("host", {
+                detail: {
+                    content: getRecord(),
+                },
+            });
+            document.dispatchEvent(EVENT);
+        });
 
         BUTTON_CONTAINER.append(EXIT_BUTTON, HOST_BUTTON);
         this.section.appendChild(BUTTON_CONTAINER);

@@ -1,4 +1,6 @@
 import { firebaseIO } from "../../../firebase/FB_instance.mjs";
+import { initializeLobbyReference } from "./GTI_LobbyReference.mjs";
+
 /**
  * @family GTI: Guess the Impostor, an extension of CNT: Content
  * @description A manager class for all game lobby related operations in the project.
@@ -26,14 +28,28 @@ export default class LobbyManager {
     /* **************************************** Public Methods *****************************************/
     /* **************************************** Private Methods *****************************************/
     async #hostLobby(_hostRecord) {
-        // go into database and update the server list to include the new server
-        firebaseIO.updateRecord(`${this.#rootPath}/${crypto.randomUUID()}`, {
-            host: `${_hostRecord.uid}`,
-            players: {
-                [_hostRecord.uid]: _hostRecord.username,
+        const lobbyData = {
+            [crypto.randomUUID()]: {
+                host: `${_hostRecord.uid}`,
+                players: {
+                    [_hostRecord.uid]: _hostRecord.username,
+                },
+                lobbyState: "private",
+                maxPlayers: 6,
             },
-            lobbyState: "private",
-            maxPlayers: 6,
+        };
+
+        // go into database and update the server list to include the new server
+        firebaseIO.updateRecord(`${this.#rootPath}/`, lobbyData);
+
+        // Redirect to the new lobby page
+        const EVENT = new CustomEvent("navigate", {
+            detail: {
+                content: "Lobby",
+            },
         });
+        document.dispatchEvent(EVENT);
+
+        initializeLobbyReference(lobbyData);
     }
 }
