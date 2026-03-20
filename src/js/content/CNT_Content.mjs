@@ -127,7 +127,7 @@ export default class Content {
 
         const CONTAINER = document.createElement("div");
         CONTAINER.id = _divID;
-        CONTAINER.append(LABEL, BREAK, INPUT);
+        CONTAINER.append(LABEL, INPUT);
         return CONTAINER;
     }
 
@@ -181,9 +181,9 @@ export default class Content {
             LIST_ELEMENT_THREE.appendChild(LEADERBOARD_NAV);
             LINK_LIST.appendChild(LIST_ELEMENT_THREE);
 
-            // Finally, this is if the user is an admin:
+            // Finally, if the user is an admin:
             const USER = getRecord();
-            if (USER.adminStatus === true) {
+            if (USER.isAdmin === true) {
                 const LIST_ELEMENT_FOUR = document.createElement("li");
                 const ADMIN_NAV = this.createButton(
                     "ADMIN",

@@ -79,14 +79,13 @@ export default class FirebaseIO {
                 });
                 document.dispatchEvent(event);
             } else {
-                let event = new CustomEvent("updateState", {
+                const NAVIGATE = new CustomEvent("navigate", {
                     detail: {
-                        content: "buildRegistrationForm",
-                        eventInfo:
-                            "User does not exist in database, continue registration",
+                        content: "Register",
+                        state: "buildRegistrationForm",
                     },
                 });
-                document.dispatchEvent(event);
+                document.dispatchEvent(NAVIGATE);
             }
         } catch (error) {
             console.error(`Google Authentication Error: ${error}`);

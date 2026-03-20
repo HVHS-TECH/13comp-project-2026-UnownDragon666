@@ -29,8 +29,10 @@ export default class Register extends Content {
     }
 
     /* ******************************** Parent Class Method Overrides *********************************/
-    removeContent() {
-        document.getElementById(Register.#secID).innerHTML = ``;
+    async removeContent() {
+        document.querySelectorAll("section").forEach((section) => {
+            section.remove();
+        });
     }
 
     buildContent() {
@@ -53,6 +55,8 @@ export default class Register extends Content {
      * @returns {object} - The Node HMTL element to be appended to the DOM.
      */
     async buildRegistrationForm() {
+        this.section.innerHTML = ``;
+
         // Build Registration Form
         let REG_FORM = document.createElement("form");
         REG_FORM.id = "f_regForm";
@@ -136,7 +140,6 @@ export default class Register extends Content {
             event.preventDefault();
             this.validateForm();
         });
-
         return document.getElementById(Register.#secID);
     }
 
@@ -203,17 +206,22 @@ export default class Register extends Content {
             await firebaseIO.updateRecord(
                 `/users/${firebaseIO.auth.currentUser.uid}`,
                 {
-                    username: name,
-                    age: age,
-                    dateOfBirth: document.getElementById("i_bdayInput").value,
-                    extradetails: details,
-                    telNum: telNum,
-                    favoriteColor: favColor,
-                    pronouns: pronouns,
-                    email: firebaseIO.auth.currentUser.email,
-                    photoURL: firebaseIO.auth.currentUser.photoURL,
-                    providerData: firebaseIO.auth.currentUser.providerData,
-                    adminStatus: false,
+                    private: {
+                        age: age,
+                        dateOfBirth:
+                            document.getElementById("i_bdayInput").value,
+                        extradetails: details,
+                        telNum: telNum,
+                        favoriteColor: favColor,
+                        email: firebaseIO.auth.currentUser.email,
+                        providerData: firebaseIO.auth.currentUser.providerData,
+                    },
+                    public: {
+                        username: name,
+                        pronouns: pronouns,
+                        photoURL: firebaseIO.auth.currentUser.photoURL,
+                    },
+                    isAdmin: false,
                     uid: firebaseIO.auth.currentUser.uid,
                 },
             );
@@ -262,12 +270,6 @@ export default class Register extends Content {
         const BDAY_DATE = new Date(bday[0], bday[1] - 1, bday[2]).getFullYear();
 
         // Use age to check if bday is correct
-        console.log(
-            CURRENT_DATE - BDAY_DATE,
-            _age - 1,
-            CURRENT_DATE - BDAY_DATE,
-        );
-
         if (
             CURRENT_DATE - BDAY_DATE == _age + 1 ||
             CURRENT_DATE - BDAY_DATE == _age

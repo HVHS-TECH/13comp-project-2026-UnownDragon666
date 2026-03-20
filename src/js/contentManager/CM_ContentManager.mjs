@@ -113,6 +113,12 @@ export default class ContentManager {
             // Inside the "navigate" event is the name of the class I need to navigate to
             let navTarget = _event.detail.content;
             await this.CM_displayContent(ContentPages[navTarget]);
+
+            // If the event carries a state, apply it after navigation settles
+            if (_event.detail.state) {
+                await this.displayedContent[_event.detail.state]();
+                this.#rootDiv.appendChild(this.displayedContent.section);
+            }
             console.log(
                 `%cCurrent displayed page: ${this.currentContentClass.name}`,
                 "background-color: lightpink; color: black",
@@ -137,9 +143,10 @@ export default class ContentManager {
         // state of the currently diplayed page
         try {
             let methodRef = _event.detail.content; // Contains the name of the method to be called
-            this.displayedContent.removeContent();
+            await this.displayedContent.removeContent();
             // Appends the updated page state to the new page state
-            this.#rootDiv.appendChild(await this.displayedContent[methodRef]());
+            this.displayedContent[methodRef]();
+            this.#rootDiv.appendChild(this.displayedContent.section);
         } catch (error) {
             console.error(`Page update resulted in error: ${error}`);
         }

@@ -41,6 +41,7 @@ export default class LobbyManager {
 
         // go into database and update the server list to include the new server
         firebaseIO.updateRecord(`${this.#rootPath}/`, lobbyData);
+        initializeLobbyReference(lobbyData);
 
         // Redirect to the new lobby page
         const EVENT = new CustomEvent("navigate", {
@@ -48,8 +49,7 @@ export default class LobbyManager {
                 content: "Lobby",
             },
         });
-        document.dispatchEvent(EVENT);
 
-        initializeLobbyReference(lobbyData);
+        document.dispatchEvent(EVENT);
     }
 }
