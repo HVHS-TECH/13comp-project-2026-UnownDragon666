@@ -141,7 +141,7 @@ export default class FirebaseIO {
      *
      * @returns {Function} - Unsubscribe function to remove the listener.
      */
-    async subscribeToRecord(_path, _callback) {
+    subscribeToRecord(_path, _callback) {
         const REF = ref(this.#database, _path);
         const UNSUBSCRIBE = onValue(REF, (snapshot) => {
             _callback(snapshot.val());

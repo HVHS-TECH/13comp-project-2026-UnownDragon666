@@ -35,8 +35,8 @@ export default class Lobby extends Content {
 
     /* ******************************** Parent Class Method Overrides *********************************/
     async removeContent() {
-        this.#unsubscribePlayers();
-        this.#unsubscribeRules();
+        this.#unsubscribePlayers?.();
+        // this.#unsubscribeRules?.();
 
         document.querySelectorAll("section").forEach((section) => {
             section.remove();
