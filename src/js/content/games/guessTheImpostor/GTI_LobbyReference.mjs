@@ -1,3 +1,4 @@
+import { firebaseIO } from "../../../firebase/FB_instance.mjs";
 /**
  * @family GTI: Guess the impostor
  * @description Lobby reference is just a singleton module, to store the instance of the lobby and caches of the db rec.
@@ -25,10 +26,8 @@ let currentLobby = null;
  *
  * @param {Object} _lobbyData - An object containing the current lobby's data
  */
-export async function initializeLobbyReference(_lobbyData) {
-    if (currentLobby == null) {
-        currentLobby = new LobbyReference(_lobbyData);
-    }
+export function initializeLobbyReference(_lobbyData) {
+    currentLobby = new LobbyReference(_lobbyData);
 }
 
 /**
@@ -36,6 +35,10 @@ export async function initializeLobbyReference(_lobbyData) {
  *
  * @returns {Object} - Current lobby's data.
  */
-export function getRecord() {
+export function getLobbyRecord() {
     return currentLobby.databaseCache;
+}
+
+export function updateDatabaseCache(_data) {
+    currentLobby.databaseCache = _data;
 }

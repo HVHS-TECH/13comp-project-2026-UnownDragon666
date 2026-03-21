@@ -1,5 +1,8 @@
 import { firebaseIO } from "../../../firebase/FB_instance.mjs";
-import { initializeLobbyReference } from "./GTI_LobbyReference.mjs";
+import {
+    initializeLobbyReference,
+    updateDatabaseCache,
+} from "./GTI_LobbyReference.mjs";
 
 /**
  * @family GTI: Guess the Impostor, an extension of CNT: Content
@@ -26,22 +29,49 @@ export default class LobbyManager {
     }
 
     /* **************************************** Public Methods *****************************************/
+    /**
+     * generate a cache of the current server (lobby) you're connected to.
+     *
+     * @param {string} _serverID - ID of the server
+     */
+    async generateCache(_serverID) {
+        let snapshot = await firebaseIO.readRecord(
+            `${this.#rootPath}/${_serverID}`,
+        );
+
+        updateDatabaseCache(snapshot);
+    }
+
     /* **************************************** Private Methods *****************************************/
     async #hostLobby(_hostRecord) {
+        const serverUUID = crypto.randomUUID();
         const lobbyData = {
-            [crypto.randomUUID()]: {
+            [serverUUID]: {
                 host: `${_hostRecord.uid}`,
                 players: {
-                    [_hostRecord.uid]: _hostRecord.username,
+                    [_hostRecord.uid]: {
+                        name: _hostRecord.public.username,
+                        photoURL: _hostRecord.public.photoURL,
+                        isHost: true,
+                    },
                 },
                 lobbyState: "private",
-                maxPlayers: 6,
+                rules: {
+                    maxPlayers: 6,
+                    roundLengthSeconds: 30,
+                    numberOfGames: 1,
+                },
             },
         };
 
         // go into database and update the server list to include the new server
         firebaseIO.updateRecord(`${this.#rootPath}/`, lobbyData);
-        initializeLobbyReference(lobbyData);
+
+        // Read database and initialise lobby reference
+        const RECORD = await firebaseIO.readRecord(
+            `${this.#rootPath}/${serverUUID}`,
+        );
+        initializeLobbyReference(RECORD);
 
         // Redirect to the new lobby page
         const EVENT = new CustomEvent("navigate", {

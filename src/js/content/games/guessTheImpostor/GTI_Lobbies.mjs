@@ -15,7 +15,7 @@ export default class GuessTheImpostorLobbies extends Content {
     static #secID = "s_lobbies";
 
     /* **************************************** Public Fields *****************************************/
-    // The ID used to identify the stylesheet belonging to this page (Game Lobby Style Sheet)
+    // The ID used to identify the stylesheet belonging to this page (Game Lobbies Style Sheet)
     styleID = "GLSS";
 
     /* **************************************** Constructor *****************************************/

@@ -57,7 +57,8 @@ export default class ComponentStyles {
         }
 
         #i_pfpImage {
-            max-width: 80%;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             border-style: solid;
             border-color: ${Colors.pfpBorderColor};

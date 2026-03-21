@@ -4,6 +4,7 @@ import {
     ref,
     get,
     update,
+    onValue,
 } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
 import {
     getAuth,
@@ -132,5 +133,19 @@ export default class FirebaseIO {
         }
     }
 
-    async subsrcibeToRecord() {}
+    /**
+     * Creates a listener that attaches to a record in the database
+     *
+     * @param {String} _path - Path to attach listener to.
+     * @param {Function} _callback - Callback function, upon onValue changing.
+     *
+     * @returns {Function} - Unsubscribe function to remove the listener.
+     */
+    async subscribeToRecord(_path, _callback) {
+        const REF = ref(this.#database, _path);
+        const UNSUBSCRIBE = onValue(REF, (snapshot) => {
+            _callback(snapshot.val());
+        });
+        return UNSUBSCRIBE;
+    }
 }
