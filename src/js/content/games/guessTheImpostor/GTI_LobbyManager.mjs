@@ -26,6 +26,10 @@ export default class LobbyManager {
         document.addEventListener("host", (event) => {
             this.#hostLobby(event.detail.content);
         });
+
+        document.addEventListener("kick", (event) => {
+            this.kickUser(event.detail.content);
+        });
     }
 
     /* **************************************** Public Methods *****************************************/
@@ -47,7 +51,10 @@ export default class LobbyManager {
         const serverUUID = crypto.randomUUID();
         const lobbyData = {
             [serverUUID]: {
-                host: `${_hostRecord.uid}`,
+                host: {
+                    uid: `${_hostRecord.uid}`,
+                    name: `_hostRecord.public.username`,
+                },
                 players: {
                     [_hostRecord.uid]: {
                         name: _hostRecord.public.username,
@@ -82,5 +89,9 @@ export default class LobbyManager {
         });
 
         document.dispatchEvent(EVENT);
+    }
+
+    async kickUser(_user) {
+        console.log(`User Kicked: ${_user}`);
     }
 }
