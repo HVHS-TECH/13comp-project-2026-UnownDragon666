@@ -1,7 +1,6 @@
-import { getRecord } from "../../../accountManager/AM_User.mjs";
 import { firebaseIO } from "../../../firebase/FB_instance.mjs";
 import Content from "../../CNT_Content.mjs";
-import { getLobbyRecord } from "./GTI_LobbyReference.mjs";
+import { getServerID } from "./GTI_LobbyReference.mjs";
 
 /**
  * @family GTI: Guess the Impostor, an extension of CNT: Content
@@ -15,6 +14,7 @@ import { getLobbyRecord } from "./GTI_LobbyReference.mjs";
 export default class Lobby extends Content {
     /* **************************************** Private Fields *****************************************/
     static #secID = "s_lobby";
+    #lobbyPath;
 
     // Unsubscribe to listener functions
     #unsubscribePlayers;
@@ -28,32 +28,67 @@ export default class Lobby extends Content {
     /* **************************************** Constructor *****************************************/
     constructor() {
         super(Lobby.#secID);
-        this.lobbyID = Object.keys(getLobbyRecord)[0];
-        // Set up listeners
+        this.lobbyID = getServerID();
+        this.#lobbyPath = `/games/guessTheImpostor/servers/${this.lobbyID}`;
     }
 
     /* ******************************** Parent Class Method Overrides *********************************/
     async removeContent() {
+        this.#unsubscribePlayers();
+        this.#unsubscribeRules();
+
         document.querySelectorAll("section").forEach((section) => {
             section.remove();
         });
     }
 
     async buildContent() {
-        // The left half of the page is a list of the players
+        // The left half of the page is a list of the players with an exit button over top.
         // It will contain the option to invite people, either friends, or by username.
         // and the option to kick a user (for the host)
         const PLAYER_SECTION = document.createElement("section");
+        const EXIT_BUTTON = super.createButton(
+            "EXIT",
+            "navigate",
+            "GuessTheImpostorLobbies",
+        );
 
         const PLAYER_LIST = document.createElement("ul");
         PLAYER_LIST.id = "u_playerList";
 
         // Add players to the player list.
-        this.#unsubscribePlayers = firebaseIO.subscribeToRecord();
-
+        // This will create an event listener with onValue, which always runs once when instantiated.
+        this.#unsubscribePlayers = firebaseIO.subscribeToRecord(
+            `${this.#lobbyPath}/players`,
+            (data) => {
+                this.#updatePlayerList(data, PLAYER_LIST);
+            },
+        );
+        PLAYER_SECTION.append(EXIT_BUTTON, PLAYER_LIST);
         // The right half of the page is a block containing a few tabs
         // The first tab will be the chat, just a simple chat system for the players in the lobby.
         // The second tab will be the host controls. i.e. controlling the max number of players,
         // the no. of rounds, and round length and stuff. (also the ability to make the lobby public)
+
+        this.section.append(PLAYER_SECTION);
+    }
+
+    /* **************************************** Private Methods *****************************************/
+    /**
+     * Creates a list of the players in the current lobby on the page.
+     *
+     * @param {Object} _players - Object containing players in this server.
+     * @param {Node<Element>} - The element to append players to.
+     */
+    #updatePlayerList(_players, _playerList) {
+        console.log(_players);
+        for (let [uid, playerData] of Object.entries(_players)) {
+            let name = playerData.name;
+            let pfpURL = playerData.photoURL;
+            // create a list element
+            const LIST = document.createElement("li");
+            LIST.textContent = name;
+            _playerList.appendChild(LIST);
+        }
     }
 }

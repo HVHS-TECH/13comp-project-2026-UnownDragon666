@@ -13,10 +13,12 @@ export default class LobbyReference {
     /* **************************************** Private Fields *****************************************/
     /* **************************************** Public Fields *****************************************/
     databaseCache;
+    serverID;
 
     /* **************************************** Constructor *****************************************/
-    constructor(_lobbyData) {
+    constructor(_lobbyData, _lobbyID) {
         this.databaseCache = _lobbyData;
+        this.serverID = _lobbyID;
     }
 }
 
@@ -26,8 +28,8 @@ let currentLobby = null;
  *
  * @param {Object} _lobbyData - An object containing the current lobby's data
  */
-export function initializeLobbyReference(_lobbyData) {
-    currentLobby = new LobbyReference(_lobbyData);
+export function initializeLobbyReference(_lobbyData, _lobbyID) {
+    currentLobby = new LobbyReference(_lobbyData, _lobbyID);
 }
 
 /**
@@ -39,6 +41,20 @@ export function getLobbyRecord() {
     return currentLobby.databaseCache;
 }
 
+/**
+ * A getter for the Server ID.
+ *
+ * @returns {String} - Current lobby's server ID
+ */
+export function getServerID() {
+    return currentLobby.serverID;
+}
+
+/**
+ * update's the database cache with whatever the input is.
+ *
+ * @param {Object} _data - record of the database to update the cache.
+ */
 export function updateDatabaseCache(_data) {
     currentLobby.databaseCache = _data;
 }

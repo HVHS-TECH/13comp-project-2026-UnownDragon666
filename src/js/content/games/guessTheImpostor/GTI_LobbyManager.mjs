@@ -65,13 +65,14 @@ export default class LobbyManager {
         };
 
         // go into database and update the server list to include the new server
-        firebaseIO.updateRecord(`${this.#rootPath}/`, lobbyData);
+        await firebaseIO.updateRecord(`${this.#rootPath}/`, lobbyData);
 
         // Read database and initialise lobby reference
         const RECORD = await firebaseIO.readRecord(
             `${this.#rootPath}/${serverUUID}`,
         );
-        initializeLobbyReference(RECORD);
+
+        initializeLobbyReference(RECORD, serverUUID);
 
         // Redirect to the new lobby page
         const EVENT = new CustomEvent("navigate", {
