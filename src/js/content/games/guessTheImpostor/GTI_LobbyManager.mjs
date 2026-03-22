@@ -49,11 +49,12 @@ export default class LobbyManager {
     /* **************************************** Private Methods *****************************************/
     async #hostLobby(_hostRecord) {
         const serverUUID = crypto.randomUUID();
+        console.log(_hostRecord);
         const lobbyData = {
             [serverUUID]: {
                 host: {
                     uid: `${_hostRecord.uid}`,
-                    name: `_hostRecord.public.username`,
+                    name: `${_hostRecord.public.username}`,
                 },
                 players: {
                     [_hostRecord.uid]: {
