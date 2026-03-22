@@ -22,7 +22,7 @@ export default class Lobby extends Content {
     #unsubscribeRules;
 
     /* **************************************** Public Fields *****************************************/
-    // The ID used to identify the stylesheet belonging to this page (Lobby Page Style Sheet)
+    // The ID used to identify the stylesheet belonging to this page (LoBby Style Sheet)
     styleID = "LBSS";
     lobbyID;
 
@@ -48,11 +48,13 @@ export default class Lobby extends Content {
         // It will contain the option to invite people, either friends, or by username.
         // and the option to kick a user (for the host)
         const PLAYER_SECTION = document.createElement("section");
+        PLAYER_SECTION.id = "s_playerSection";
         const EXIT_BUTTON = super.createButton(
             "EXIT",
             "navigate",
             "GuessTheImpostorLobbies",
         );
+        EXIT_BUTTON.id = "b_exitButton";
 
         const PLAYER_LIST = document.createElement("ul");
         PLAYER_LIST.id = "u_playerList";
@@ -67,12 +69,37 @@ export default class Lobby extends Content {
                 this.#updatePlayerList(data, PLAYER_LIST);
             },
         );
+
         // The right half of the page is a block containing a few tabs
         // The first tab will be the chat, just a simple chat system for the players in the lobby.
         // The second tab will be the host controls. i.e. controlling the max number of players,
         // the no. of rounds, and round length and stuff. (also the ability to make the lobby public)
+        const TABS_SECTION = document.createElement("section");
+        TABS_SECTION.id = "s_tabsSection";
 
-        this.section.append(PLAYER_SECTION);
+        const TABS_CONTAINER = document.createElement("div");
+        TABS_CONTAINER.classList.add("tab");
+
+        const CHAT_TAB_BUTTON = document.createElement("button");
+        CHAT_TAB_BUTTON.type = "button";
+        CHAT_TAB_BUTTON.textContent = "Chat";
+        CHAT_TAB_BUTTON.classList.add("tabLinks");
+        CHAT_TAB_BUTTON.addEventListener("click", () => {
+            this.#openChatTab();
+        });
+
+        const RULES_TAB_BUTTON = document.createElement("button");
+        RULES_TAB_BUTTON.type = "button";
+        RULES_TAB_BUTTON.textContent = "Rules";
+        RULES_TAB_BUTTON.classList.add("labLinks");
+        RULES_TAB_BUTTON.addEventListener("click", () => {
+            this.#openRulesTab();
+        });
+
+        TABS_CONTAINER.append(CHAT_TAB_BUTTON, RULES_TAB_BUTTON);
+        TABS_SECTION.append(TABS_CONTAINER);
+
+        this.section.append(PLAYER_SECTION, TABS_SECTION);
     }
 
     /* **************************************** Private Methods *****************************************/
@@ -124,4 +151,8 @@ export default class Lobby extends Content {
             _playerList.appendChild(LIST);
         }
     }
+
+    #openChatTab() {}
+
+    #openRulesTab() {}
 }

@@ -5,6 +5,8 @@ import {
     get,
     update,
     onValue,
+    onDisconnect,
+    remove,
 } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
 import {
     getAuth,
@@ -66,11 +68,13 @@ export default class FirebaseIO {
 
             // Store result in variable, may come in handy later.
             let result = await signInWithPopup(this.auth, provider);
-            this.auth = getAuth();
+            this.auth = await getAuth();
 
-            let record = await this.readRecord("/users");
-            if (this.auth.currentUser.uid in record) {
-                await initializeUser(record[this.auth.currentUser.uid]);
+            let record = await this.readRecord(
+                `/users/${this.auth.currentUser.uid}`,
+            );
+            if (record) {
+                await initializeUser(record);
                 let event = new CustomEvent("navigate", {
                     detail: {
                         content: "Profile",
@@ -147,5 +151,15 @@ export default class FirebaseIO {
             _callback(snapshot.val());
         });
         return UNSUBSCRIBE;
+    }
+
+    /**
+     * Function ot remove data when a user disconnects from a lobby
+     *
+     * @param {String} _path - Path to attach on disconnect to
+     */
+    removeDataOnDisconnect(_path) {
+        const REF = ref(this.#database, _path);
+        REF.onDisconnect().remove();
     }
 }

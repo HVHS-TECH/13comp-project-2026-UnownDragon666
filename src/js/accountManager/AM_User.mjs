@@ -25,7 +25,7 @@ let user = null;
  *
  * @param {Object} _userRecord - An object containing the current user's database record
  */
-export async function initializeUser(_userRecord) {
+export function initializeUser(_userRecord) {
     if (user == null) {
         user = new User(_userRecord);
     }

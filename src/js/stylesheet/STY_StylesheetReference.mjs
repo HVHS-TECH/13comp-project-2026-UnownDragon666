@@ -10,10 +10,12 @@ import WelcomeStyles from "./pages/STY_WelcomeStyles.mjs";
 import RegisterStyles from "./pages/STY_RegisterStyles.mjs";
 import ProfileStyles from "./pages/STY_ProfileStyles.mjs";
 import GamesStyles from "./pages/STY_GameStyles.mjs";
+import LobbyStyles from "./pages/STY_LobbyStyles.mjs";
 
 export {
     WelcomeStyles as WCSS,
     RegisterStyles as RGSS,
     ProfileStyles as PFSS,
     GamesStyles as GMSS,
+    LobbyStyles as LBSS,
 };

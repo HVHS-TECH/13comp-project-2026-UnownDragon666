@@ -7,7 +7,7 @@
  */
 export default class Colors {
     /* **************************************** Stylesheet Colours *****************************************/
-    // Base Fields
+    // Base fields
     static backgroundColor = "#ffe9ef";
     static textColor = "#000000";
     static textHoverColor = "#ffffff";
@@ -28,4 +28,10 @@ export default class Colors {
     static modalButtonHoverColor = "#5cbf8a";
     static modalCloseColor = "#153d3a";
     static modalTextColor = "#153d3a";
+
+    // Tabs colors
+    static tabBorderColor = "#ff4d6d";
+    static tabBackgroundColor = "#ff8fa3";
+    static tabButtonHover = "#c9184a";
+    static tabButtonFontColorHover = "#ffccd5";
 }

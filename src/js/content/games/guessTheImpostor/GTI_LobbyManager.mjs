@@ -95,4 +95,22 @@ export default class LobbyManager {
     async kickUser(_user) {
         console.log(`User Kicked: ${_user}`);
     }
+
+    async #joinServer(_serverID, _playerID, _playerData) {
+        // Create path to the players node in the server
+        const playerRefPath = `/games/guessTheImpostor/servers/${_serverID}/players/${_playerID}`;
+
+        // Inject the player's details into the node
+        await firebaseIO.updateRecord(playerRefPath, _playerData);
+
+        // When user leaves lobby: Kill them from the lobby
+        firebaseIO.removeDataOnDisconnect(playerRefPath);
+
+        // Navigate to lobby
+        const NAVIGATE_TO_LOBBY = new CustomEvent("navigate", {
+            detail: {
+                content: "Lobby",
+            },
+        });
+    }
 }
