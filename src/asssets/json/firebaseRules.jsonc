@@ -31,7 +31,24 @@
                 ".write": "$uid === auth.uid || root.child('users').child(auth.uid).child('isAdmin').val() === true",
             },
         },
-
+        "games": {
+            "guessTheImpostor": {
+                "servers": {
+                    ".read": "auth != null",
+                    "$serverID": {
+                        // Any authenticated user may create a NEW server
+                        // Only the HOST may edit anything else
+                        ".write": "auth != null && (!data.exists() || data.child('host/uid').val() === auth.uid)",
+                        "players": {
+                            // Players may edit their OWN node
+                            "$playerID": {
+                                ".write": "$playerID === auth.uid",
+                            },
+                        },
+                    },
+                },
+            },
+        },
         ".read": false,
         ".write": false,
     },
