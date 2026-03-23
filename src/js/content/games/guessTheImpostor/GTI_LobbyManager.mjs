@@ -47,6 +47,11 @@ export default class LobbyManager {
     }
 
     /* **************************************** Private Methods *****************************************/
+    /**
+     * Method to make a new lobby and write it to the DB 
+     * 
+     * @param {Object} _hostRecord 
+     */
     async #hostLobby(_hostRecord) {
         const serverUUID = crypto.randomUUID();
         console.log(_hostRecord);
@@ -69,6 +74,14 @@ export default class LobbyManager {
                     roundLengthSeconds: 30,
                     numberOfGames: 1,
                 },
+                messages: {
+                    1: {
+                        content: "Welcome to this game! Introduce yourself to the lobby!",
+                        senderName: "Server",
+                        uid: null,
+                        timestamp: Date.now()
+                    }
+                }
             },
         };
 
@@ -92,6 +105,8 @@ export default class LobbyManager {
         document.dispatchEvent(EVENT);
     }
 
+    /////////////////////////////////////// PLACE HOLDERS 
+    
     async kickUser(_user) {
         console.log(`User Kicked: ${_user}`);
     }

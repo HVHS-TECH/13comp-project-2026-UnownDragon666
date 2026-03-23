@@ -152,7 +152,22 @@ export default class Lobby extends Content {
         }
     }
 
-    #openChatTab() {}
+    #openChatTab() {
+        // Create a div with the tabContent class
+        const TAB = document.createElement("div");
+        TAB.classList.add("tabContent");
+
+        // Get messages from DB:
+        let messages = firebaseIO.readRecord(`/games/guessTheImpostor/servers/${this.lobbyID}/messages`);
+        for (let message of messages) {
+            let messageDiv = document.createElement("div");
+            if (firebaseIO.auth.currentUser.uid == message.senderName) {
+                messageDiv.classList.add("sentByCurrentUser");
+            } else {
+                messageDiv.classList.add("sentByOtherUser");
+            }
+        }
+    }
 
     #openRulesTab() {}
 }
