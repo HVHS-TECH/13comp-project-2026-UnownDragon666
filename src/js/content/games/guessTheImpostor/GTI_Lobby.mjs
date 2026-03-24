@@ -77,6 +77,9 @@ export default class Lobby extends Content {
         const TABS_SECTION = document.createElement("section");
         TABS_SECTION.id = "s_tabsSection";
 
+        const MESSAGE_SECTION = document.createElement("div");
+        MESSAGE_SECTION.classList.add("tabContent");
+
         const TABS_CONTAINER = document.createElement("div");
         TABS_CONTAINER.classList.add("tab");
 
@@ -152,20 +155,38 @@ export default class Lobby extends Content {
         }
     }
 
-    #openChatTab() {
+    async #openChatTab() {
         // Create a div with the tabContent class
         const TAB = document.createElement("div");
         TAB.classList.add("tabContent");
 
         // Get messages from DB:
-        let messages = firebaseIO.readRecord(`/games/guessTheImpostor/servers/${this.lobbyID}/messages`);
-        for (let message of messages) {
+        let messages = await firebaseIO.readRecord(
+            `/games/guessTheImpostor/servers/${this.lobbyID}/messages`,
+        );
+        for (let message of Object.values(messages)) {
             let messageDiv = document.createElement("div");
             if (firebaseIO.auth.currentUser.uid == message.senderName) {
                 messageDiv.classList.add("sentByCurrentUser");
             } else {
                 messageDiv.classList.add("sentByOtherUser");
             }
+
+            const SENDER = document.createElement("p");
+            SENDER.classList.add("senderNames");
+            SENDER.textContent = message.senderName;
+
+            const MESSAGE = document.createElement("p");
+            MESSAGE.textContent = message.content;
+
+            messageDiv.append(SENDER, MESSAGE);
+            TAB.append(messageDiv);
+        }
+
+        if (document.querySelector(".tabContent")) {
+            document.querySelector(".tabContent").replaceWith(TAB);
+        } else {
+            document.getElementById("s_tabsSection").appendChild(TAB);
         }
     }
 
