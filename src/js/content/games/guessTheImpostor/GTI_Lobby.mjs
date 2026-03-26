@@ -20,6 +20,7 @@ export default class Lobby extends Content {
     // Unsubscribe to listener functions
     #unsubscribePlayers;
     #unsubscribeRules;
+    #unsubscribeChat;
 
     /* **************************************** Public Fields *****************************************/
     // The ID used to identify the stylesheet belonging to this page (LoBby Style Sheet)
@@ -155,39 +156,51 @@ export default class Lobby extends Content {
         }
     }
 
+    /**
+     * Creates an event listener on the path that updates the tab whenever
+     * a message is uploaded to server.
+     *
+     * Creates the tab elements as well as messages.
+     */
     async #openChatTab() {
-        // Create a div with the tabContent class
-        const TAB = document.createElement("div");
-        TAB.classList.add("tabContent");
-
-        // Get messages from DB:
-        let messages = await firebaseIO.readRecord(
+        // Create event listener and assign unsubscribe function to the "this.#unsubscribeChat" private field.
+        this.#unsubscribeChat = firebaseIO.subscribeToRecord(
             `/games/guessTheImpostor/servers/${this.lobbyID}/messages`,
+            (messages) => {
+                // Create a div with the tabContent classx
+                const TAB = document.createElement("div");
+                TAB.classList.add("tabContent");
+
+                console.log(messages);
+                for (let message of Object.values(messages)) {
+                    console.log(message);
+                    let messageDiv = document.createElement("div");
+                    if (firebaseIO.auth.currentUser.uid == message.senderName) {
+                        messageDiv.classList.add("sentByCurrentUser");
+                    } else {
+                        messageDiv.classList.add("sentByOtherUser");
+                    }
+
+                    const SENDER = document.createElement("p");
+                    SENDER.classList.add("senderNames");
+                    SENDER.textContent = message.senderName;
+
+                    const MESSAGE = document.createElement("p");
+                    MESSAGE.textContent = message.content;
+
+                    messageDiv.append(SENDER, MESSAGE);
+                    TAB.append(messageDiv);
+                }
+
+                if (document.querySelector(".tabContent")) {
+                    document.querySelector(".tabContent").replaceWith(TAB);
+                } else {
+                    document.getElementById("s_tabsSection").appendChild(TAB);
+                }
+            },
         );
-        for (let message of Object.values(messages)) {
-            let messageDiv = document.createElement("div");
-            if (firebaseIO.auth.currentUser.uid == message.senderName) {
-                messageDiv.classList.add("sentByCurrentUser");
-            } else {
-                messageDiv.classList.add("sentByOtherUser");
-            }
 
-            const SENDER = document.createElement("p");
-            SENDER.classList.add("senderNames");
-            SENDER.textContent = message.senderName;
-
-            const MESSAGE = document.createElement("p");
-            MESSAGE.textContent = message.content;
-
-            messageDiv.append(SENDER, MESSAGE);
-            TAB.append(messageDiv);
-        }
-
-        if (document.querySelector(".tabContent")) {
-            document.querySelector(".tabContent").replaceWith(TAB);
-        } else {
-            document.getElementById("s_tabsSection").appendChild(TAB);
-        }
+        // Create input
     }
 
     #openRulesTab() {}
