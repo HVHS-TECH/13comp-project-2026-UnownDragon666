@@ -54,7 +54,6 @@ export default class LobbyManager {
      */
     async #hostLobby(_hostRecord) {
         const serverUUID = crypto.randomUUID();
-        console.log(_hostRecord);
         const lobbyData = {
             [serverUUID]: {
                 host: {

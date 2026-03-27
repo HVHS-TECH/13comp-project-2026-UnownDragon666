@@ -7,6 +7,7 @@ import {
     onValue,
     onDisconnect,
     remove,
+    push,
 } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
 import {
     getAuth,
@@ -151,6 +152,11 @@ export default class FirebaseIO {
             _callback(snapshot.val());
         });
         return UNSUBSCRIBE;
+    }
+
+    generateMessageKey(_path) {
+        const REF = ref(this.#database, _path);
+        return (KEY = push(REF));
     }
 
     /**

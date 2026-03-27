@@ -167,7 +167,7 @@ export default class Lobby extends Content {
         this.#unsubscribeChat = firebaseIO.subscribeToRecord(
             `/games/guessTheImpostor/servers/${this.lobbyID}/messages`,
             (messages) => {
-                // Create a div with the tabContent classx
+                // Create a div with the tabContent class
                 const TAB = document.createElement("div");
                 TAB.classList.add("tabContent");
 
@@ -191,6 +191,22 @@ export default class Lobby extends Content {
                     messageDiv.append(SENDER, MESSAGE);
                     TAB.append(messageDiv);
                 }
+                // Create input div
+                const MESSAGE_CONTAINER = document.createElement("div");
+                MESSAGE_CONTAINER.id = "d_messageInputContainer";
+
+                const INPUT = document.createElement("input");
+                INPUT.id = "i_sendMessages";
+
+                const BUTTON = document.createElement("button");
+                BUTTON.type = "button";
+                BUTTON.textContent = "submit";
+                BUTTON.addEventListener("click", () => {
+                    let messageKey = firebaseIO.generateMessageKey(
+                        document.getElementById("i_sendMessages").value,
+                    );
+                    firebaseIO.updateRecord(`/games/guessTheImpostor/`);
+                });
 
                 if (document.querySelector(".tabContent")) {
                     document.querySelector(".tabContent").replaceWith(TAB);
@@ -199,8 +215,6 @@ export default class Lobby extends Content {
                 }
             },
         );
-
-        // Create input
     }
 
     #openRulesTab() {}
