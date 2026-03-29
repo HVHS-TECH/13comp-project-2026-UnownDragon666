@@ -202,11 +202,18 @@ export default class Lobby extends Content {
                 BUTTON.type = "button";
                 BUTTON.textContent = "submit";
                 BUTTON.addEventListener("click", () => {
-                    let messageKey = firebaseIO.generateMessageKey(
-                        document.getElementById("i_sendMessages").value,
-                    );
-                    firebaseIO.updateRecord(`/games/guessTheImpostor/`);
+                    const EVENT = new CustomEvent("sendMessage", {
+                        detail: {
+                            content: this.lobbyID,
+                            message:
+                                document.getElementById("i_sendMessages").value,
+                        },
+                    });
+                    document.dispatchEvent(EVENT);
                 });
+
+                MESSAGE_CONTAINER.append(INPUT, BUTTON);
+                TAB.appendChild(MESSAGE_CONTAINER);
 
                 if (document.querySelector(".tabContent")) {
                     document.querySelector(".tabContent").replaceWith(TAB);

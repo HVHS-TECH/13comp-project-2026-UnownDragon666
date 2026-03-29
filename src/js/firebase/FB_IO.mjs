@@ -154,9 +154,17 @@ export default class FirebaseIO {
         return UNSUBSCRIBE;
     }
 
+    /**
+     * Creates a unique message key for the chat system
+     * Uses the timestamp to sort the keys.
+     *
+     * @param {String} _path Path to make a message ID for
+     * @returns {String} The generated message key
+     */
     generateMessageKey(_path) {
         const REF = ref(this.#database, _path);
-        return (KEY = push(REF));
+        const KEY = push(REF);
+        return KEY.key;
     }
 
     /**
