@@ -114,8 +114,6 @@ export default class Lobby extends Content {
      * @param {Node<Element>} - The element to append players to.
      */
     #updatePlayerList(_players, _playerList) {
-        console.log(_players);
-
         _playerList.innerHTML = ``;
 
         // const NEW_PLAYER_LIST = document.createElement("ul");
@@ -171,9 +169,7 @@ export default class Lobby extends Content {
                 const TAB = document.createElement("div");
                 TAB.classList.add("tabContent");
 
-                console.log(messages);
                 for (let message of Object.values(messages)) {
-                    console.log(message);
                     let messageDiv = document.createElement("div");
                     if (firebaseIO.auth.currentUser.uid == message.senderName) {
                         messageDiv.classList.add("sentByCurrentUser");
