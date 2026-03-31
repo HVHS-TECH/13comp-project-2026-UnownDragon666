@@ -11,10 +11,12 @@ export default class User {
     /* **************************************** Private Fields *****************************************/
     /* **************************************** Public Fields *****************************************/
     currentUserRecord;
+    unsubscribeToRecord;
 
     /* **************************************** Constructor *****************************************/
-    constructor(_userRecord) {
+    constructor(_userRecord, _unsubFunc) {
         this.currentUserRecord = _userRecord;
+        this.unsubscribeToRecord = _unsubFunc;
     }
 }
 
@@ -27,7 +29,7 @@ let user = null;
  */
 export function initializeUser(_userRecord) {
     if (user == null) {
-        user = new User(_userRecord);
+        user = new User(_userRecord.firebaseIO);
     }
 }
 
@@ -38,4 +40,11 @@ export function initializeUser(_userRecord) {
  */
 export function getRecord() {
     return user.currentUserRecord;
+}
+
+/**
+ * Generate new user cache
+ */
+export function generateUserRecordCache() {
+    user;
 }
