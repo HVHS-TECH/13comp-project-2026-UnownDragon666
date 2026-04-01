@@ -1,3 +1,5 @@
+import { firebaseIO } from "../firebase/FB_instance.mjs";
+
 /**
  * @family AM: Account Manager
  * @description User is just an singleton module, where User is a class that stores the user instance.
@@ -14,9 +16,14 @@ export default class User {
     unsubscribeToRecord;
 
     /* **************************************** Constructor *****************************************/
-    constructor(_userRecord, _unsubFunc) {
+    constructor(_userRecord) {
         this.currentUserRecord = _userRecord;
-        this.unsubscribeToRecord = _unsubFunc;
+        this.unsubscribeToRecord = firebaseIO.subscribeToRecord(
+            `/users/${this.currentUserRecord.uid}`,
+            (record) => {
+                this.currentUserRecord = record;
+            },
+        );
     }
 }
 
@@ -29,7 +36,7 @@ let user = null;
  */
 export function initializeUser(_userRecord) {
     if (user == null) {
-        user = new User(_userRecord.firebaseIO);
+        user = new User(_userRecord);
     }
 }
 
@@ -40,11 +47,4 @@ export function initializeUser(_userRecord) {
  */
 export function getRecord() {
     return user.currentUserRecord;
-}
-
-/**
- * Generate new user cache
- */
-export function generateUserRecordCache() {
-    user;
 }

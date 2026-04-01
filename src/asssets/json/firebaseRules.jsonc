@@ -3,6 +3,7 @@
     "rules": {
         // Rules for reading and writing in the users node
         "users": {
+            ".read": "root.child('users').child(auth.uid).child('isAdmin').val() === true",
             // Can read inside node if authenticated
             "$uid": {
                 "public": {

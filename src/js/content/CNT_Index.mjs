@@ -5,6 +5,7 @@ import Games from "./CNT_Games.mjs";
 import GuessTheImpostorLobbies from "./games/guessTheImpostor/GTI_Lobbies.mjs";
 import Lobby from "./games/guessTheImpostor/GTI_Lobby.mjs";
 import GuessTheImpostor from "./games/guessTheImpostor/GTI_GameScreen.mjs";
+import Admin from "./CNT_Admin.mjs";
 
 /**
  * @family CNT: Content
@@ -23,4 +24,5 @@ export {
     GuessTheImpostorLobbies,
     Lobby,
     GuessTheImpostor,
+    Admin,
 };
