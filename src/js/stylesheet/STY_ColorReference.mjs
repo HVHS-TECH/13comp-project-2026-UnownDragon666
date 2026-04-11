@@ -34,4 +34,9 @@ export default class Colors {
     static tabBackgroundColor = "#ff8fa3";
     static tabButtonHover = "#c9184a";
     static tabButtonFontColorHover = "#ffccd5";
+
+    // Admin player list colors
+    static playerListHoverBackgroundColor = "#f7aef8";
+    static playerListActiveBackgroundColor = "#b388eb";
+    static dangerColor = "crimson";
 }

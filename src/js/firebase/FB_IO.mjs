@@ -138,6 +138,15 @@ export default class FirebaseIO {
         }
     }
 
+    async deleteRecord(_path, _callback = null) {
+        const REF = ref(this.#database, _path);
+        try {
+            REF.remove();
+        } catch (error) {
+            console.error(`Failed to remove @ ${_path}: ${error}`);
+        }
+    }
+
     /**
      * Creates a listener that attaches to a record in the database
      *

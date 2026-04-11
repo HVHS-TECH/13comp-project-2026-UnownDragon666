@@ -22,18 +22,23 @@ export default class AdminStyles {
      */
     static applyStyle() {
         document.getElementById("contentLayerStyle").innerHTML = `
-            /* Split page into two sections, Player Sec on left, Tab sec on right */
+            body {
+                overflow: hidden;
+            }
+
             #m_content {
                 display: grid;
-                grid-template-columns: 1fr 3fr;
+                grid-template-columns: 1fr 5fr;
                 height: 100vh;
             }
 
             /* Player List */
-            #s_playerSection {
+            #d_playerList {
                 display: flex;
                 flex-direction: column;
-                padding: 1rem;
+                 padding: 1rem;
+                border-right: 1px solid #ccc;
+                overflow-y: auto;
             }
 
             #u_playerList {
@@ -41,17 +46,25 @@ export default class AdminStyles {
                 padding: 0;
                 margin: 0;
             }
-
+            
             #u_playerList li {
                 display: flex;
                 flex-direction: row;
                 align-items: center;
-                gap: 2rem;
+                gap: 0.75rem;
                 padding: 0.75rem;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: larger;
+            }
+            
+            .l_playerListElements:hover {
+                background-color: ${Colors.playerListHoverBackgroundColor};
+                transition: background-color 0.15s;
             }
 
-            #u_playerList li .active {
-
+            .l_playerListElements:active {
+                background-color: ${Colors.playerListActiveBackgroundColor}
             }
 
             .playerListPFPImages {
@@ -59,6 +72,7 @@ export default class AdminStyles {
                 height: 40px;
                 border-radius: 50%;
                 object-fit: cover;
+                flex-shrink: 0;
             }
 
             .playerListNameText {
@@ -66,37 +80,71 @@ export default class AdminStyles {
                 flex: 1;
             }
 
-            /* Tabs */
-            #s_tabsSection {
+            #s_playerListSection {
+                padding: 0.5vh;
+                border-right: solid 3px ${Colors.navBorderColor};
+            }
+
+            /* Controls Section */
+            #s_controlsSection {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 10%;
+                gap: 2rem;
+            }
+
+            #d_infoDiv {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 2rem;
+            }
+
+            #i_playerPFPImage {
+                width: 80px;
+                height: 80px;
+                border-radius: 50%;
+                object-fit: cover;
+                transform: scale(1.25);
+            }
+
+            #p_playerNameTitle {
+                margin: 0;
+                text-align: center;
+                padding-bottom: 1rem;
+                font-size: xxx-large;
+            }
+
+            #d_nameEditDiv {
+                gap: 0.5rem;
+            }
+
+            #d_removeAccountContainer {
+                margin-top: 5%;
+            }
+
+            #i_newUsername {
+                margin-left: 1rem;
+            }
+
+            #d_newUsernameInputDiv {
+                transform: scale(1.4);Zz
+            }
+
+            #b_deleteAccount {
+                background-color: ${Colors.dangerColor};
+                color: white;
+                border: none;
                 padding: 1rem;
-            }
-
-            .tab {
-                overflow: hidden;
-                border: none;
-                background-color: ${Colors.tabBackgroundColor};
-                font-size: 1.5rem;
-            }
-
-            .tab button {
-                background-color: inherit;
-                float: right;
-                border: none;
-                outline: none;
+                border-radius: 6px;
+                font-size: large;
                 cursor: pointer;
-                padding: 14px 16px;
-                transition: 0.15s;
             }
 
-            .tab button:hover {
-                color: ${Colors.tabButtonFontColorHover} !important;
-                background-color: ${Colors.tabButtonHover} !important; 
-            }
-
-            .tab button.active {
-            }
-
-            .tabcontent {
+            #b_deleteAccount:disabled {
+                opacity: 0.4;
+                cursor: not-allowed;
             }
         `;
     }

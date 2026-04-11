@@ -92,11 +92,13 @@ export default class Content {
      * Create an HTML h1 element
      *
      * @param {string} _text - Title's text
+     * @param {String} _id - Nullable, id to assign to the heading element
      * @returns {object} - TITLE element
      */
-    createTitle(_text) {
+    createTitle(_text, _id = null) {
         const TITLE = document.createElement("h1");
         TITLE.textContent = _text;
+        TITLE.id = _id;
         return TITLE;
     }
 

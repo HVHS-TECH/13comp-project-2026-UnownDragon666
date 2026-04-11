@@ -47,6 +47,11 @@ export default class ContentManager {
                 });
             }
         });
+        document.addEventListener("append", (event) => {
+            document
+                .getElementById(event.detail.host)
+                .appendChild(event.detail.addendum);
+        });
     }
 
     /* **************************************** Public Methods *****************************************/

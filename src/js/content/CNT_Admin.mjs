@@ -15,6 +15,7 @@ export default class Admin extends Content {
     /* **************************************** Private Fields *****************************************/
     static #secID = "s_admin";
     #unsubscribeToPlayers;
+    #unsubscribeToPlayer;
 
     /* **************************************** Public Fields *****************************************/
     // The ID used to identify the stylesheet belonging to this page (ADmin Style Sheet)
@@ -28,6 +29,7 @@ export default class Admin extends Content {
     /* ******************************** Parent Class Method Overrides *********************************/
     async removeContent() {
         this.#unsubscribeToPlayers?.();
+        this.#unsubscribeToPlayer?.();
 
         document.querySelectorAll("section").forEach((section) => {
             section.remove();
@@ -51,7 +53,12 @@ export default class Admin extends Content {
 
         // Create the player list
         const PLAYERL_LIST = await this.#createPlayerList();
+        PLAYERL_LIST.id = "s_playerListSection";
         MAIN_CONTENT.appendChild(PLAYERL_LIST);
+
+        const CONTROLS_SECTION = document.createElement("section");
+        CONTROLS_SECTION.id = "s_controlsSection";
+        MAIN_CONTENT.appendChild(CONTROLS_SECTION);
 
         this.section.append(MAIN_CONTENT);
     }
@@ -69,7 +76,6 @@ export default class Admin extends Content {
         this.#unsubscribeToPlayers = firebaseIO.subscribeToRecord(
             `/users`,
             (data) => {
-                console.log("subscribeToRecord callback fired:", data);
                 this.#updatePlayerList(data, PLAYER_LIST);
             },
         );
@@ -96,6 +102,10 @@ export default class Admin extends Content {
 
             // create a list element with pfp, name and kick button (if the current user is the host)
             const LIST = document.createElement("li");
+            LIST.classList.add("l_playerListElements");
+            LIST.addEventListener("click", () =>
+                this.#displayPlayerAdminControls(uid),
+            );
             const PFP = document.createElement("img");
             PFP.src = pfpURL;
             PFP.classList.add("playerListPFPImages");
@@ -108,4 +118,102 @@ export default class Admin extends Content {
             _playerList.appendChild(LIST);
         }
     }
+
+    /**
+     * Create the given user's admin controls and appends them to the DOM
+     *
+     * @param {String} _uid - UID of user whose controls to display
+     */
+    #displayPlayerAdminControls(_uid) {
+        this.#unsubscribeToPlayer?.();
+        let controls = null;
+        this.#unsubscribeToPlayer = firebaseIO.subscribeToRecord(
+            `/users/${_uid}`,
+            async () => {
+                let player = await firebaseIO.readRecord(`/users/${_uid}`);
+                controls = this.#buildAdminControls(
+                    player,
+                    document.getElementById("s_controlsSection"),
+                );
+
+                const EVENT = new CustomEvent("append", {
+                    detail: {
+                        addendum: controls,
+                        host: "m_content",
+                    },
+                });
+                document.dispatchEvent(EVENT);
+            },
+        );
+    }
+
+    #buildAdminControls(_playerRec, _controlsSection) {
+        _controlsSection.innerHTML = ``;
+
+        const INFO_DIV = document.createElement("div");
+        INFO_DIV.id = "d_infoDiv";
+
+        const NAME_TITLE = super.createTitle(
+            _playerRec.public.username,
+            "p_playerNameTitle",
+        );
+
+        const PFP_IMAGE = document.createElement("img");
+        PFP_IMAGE.src = _playerRec.public.photoURL;
+        PFP_IMAGE.id = "i_playerPFPImage";
+
+        INFO_DIV.append(NAME_TITLE, PFP_IMAGE);
+
+        const NAME_EDIT_DIV = document.createElement("div");
+        NAME_EDIT_DIV.id = "d_nameEditDiv";
+
+        const NAME_EDIT_INPUT = super.createInput(
+            "New username:",
+            "Enter new username",
+            "text",
+            "i_newUsername",
+            "i_newUsername",
+            "d_newUsernameInputDiv",
+        );
+
+        const NAME_EDIT_SUBMIT = document.createElement("button");
+        NAME_EDIT_SUBMIT.textContent = "Change";
+        NAME_EDIT_SUBMIT.type = "button";
+        NAME_EDIT_SUBMIT.style = "font-size: large;";
+        NAME_EDIT_SUBMIT.addEventListener("click", () => {
+            let newName = document.getElementById("i_newUsername").value;
+            if (newName) {
+                firebaseIO.updateRecord(`users/${_playerRec.uid}/public`, {
+                    username: newName,
+                });
+            }
+        });
+        NAME_EDIT_DIV.append(NAME_EDIT_INPUT);
+
+        const REMOVE_USER_ACCOUNT_DIV = document.createElement("div");
+        REMOVE_USER_ACCOUNT_DIV.id = "d_removeAccountContainer";
+
+        const REMOVE_USER_ACCOUNT_BUTTON = document.createElement("button");
+        REMOVE_USER_ACCOUNT_BUTTON.id = "b_deleteAccount";
+        REMOVE_USER_ACCOUNT_BUTTON.textContent = "DELETE USER";
+        REMOVE_USER_ACCOUNT_BUTTON.addEventListener("click", () =>
+            this.#confirmAccountDeletion(),
+        );
+        getRecord().uid == _playerRec.uid
+            ? (REMOVE_USER_ACCOUNT_BUTTON.disabled = true)
+            : (REMOVE_USER_ACCOUNT_BUTTON.disabled = false);
+
+        REMOVE_USER_ACCOUNT_DIV.appendChild(REMOVE_USER_ACCOUNT_BUTTON);
+
+        _controlsSection.append(
+            INFO_DIV,
+            NAME_EDIT_DIV,
+            NAME_EDIT_SUBMIT,
+            REMOVE_USER_ACCOUNT_DIV,
+        );
+
+        return _controlsSection;
+    }
+
+    #confirmAccountDeletion() {}
 }
