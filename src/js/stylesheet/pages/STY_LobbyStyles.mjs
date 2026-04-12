@@ -65,24 +65,30 @@ export default class GamesStyles {
             #b_exitButton {
                 width: 20%;
                 font-size: 1.5rem;
-                background-color: ${Colors.tabBackgroundColor};
+                background-color: ${Colors.Tabs.backgroundColor};
+                color: ${Colors.Tabs.textColor};
+                border: 2px solid ${Colors.Tabs.borderColor};
             }
 
             #b_exitButton:hover {
-                color: ${Colors.tabButtonFontColorHover} !important;
-                background-color: ${Colors.tabButtonHover} !important; 
+                background-color: ${Colors.Tabs.hoverBackgroundColor} !important;
+                color: ${Colors.Tabs.hoverTextColor} !important;
+                border-color: ${Colors.Tabs.borderColor} !important;
             }
 
             /* Tabs */
             #s_tabsSection {
                 padding: 1rem;
+                border-left: 3px solid ${Colors.Tabs.borderColor};
             }
 
             .tab {
                 overflow: hidden;
-                border: none;
-                background-color: ${Colors.tabBackgroundColor};
+                border: 2px solid ${Colors.Tabs.borderColor};
+                border-radius: 5px;
+                background-color: ${Colors.Tabs.backgroundColor};
                 font-size: 1.5rem;
+                color: ${Colors.Tabs.textColor};
             }
 
             .tab button {
@@ -96,17 +102,16 @@ export default class GamesStyles {
             }
 
             .tab button:hover {
-                color: ${Colors.tabButtonFontColorHover} !important;
-                background-color: ${Colors.tabButtonHover} !important; 
+                background-color: ${Colors.Tabs.hoverBackgroundColor} !important;
+                color: ${Colors.Tabs.hoverTextColor} !important;
             }
 
             .tab button.active {
+                border-bottom: 3px solid ${Colors.Tabs.borderColor};
             }
 
             .tabcontent {
             }
         `;
-
-        console.log("GRRRRRUNESSS ARRRR");
     }
 }
