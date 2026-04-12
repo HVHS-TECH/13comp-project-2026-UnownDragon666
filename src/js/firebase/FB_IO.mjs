@@ -13,8 +13,10 @@ import {
     getAuth,
     GoogleAuthProvider,
     signInWithPopup,
+    signOut,
 } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 import { initializeUser } from "../accountManager/AM_User.mjs";
+import AccountManager from "../accountManager/AM_AccountManager.mjs";
 
 /**
  * @family FB: Firebase
@@ -49,10 +51,12 @@ export default class FirebaseIO {
         try {
             this.#app = initializeApp(_fbConfig);
             this.#database = getDatabase(this.#app);
+            this.auth = getAuth(this.#app);
         } catch (error) {
             throw new Error(`Firebase failed to initialise: ${error}`);
         } finally {
-            this.auth = getAuth(this.#app);
+            // Initialise listeners for FB operations
+            document.addEventListener("signout", () => this.#signOut());
         }
     }
 
@@ -69,13 +73,13 @@ export default class FirebaseIO {
 
             // Store result in variable, may come in handy later.
             let result = await signInWithPopup(this.auth, provider);
-            this.auth = await getAuth();
 
             let record = await this.readRecord(
                 `/users/${this.auth.currentUser.uid}`,
             );
             if (record) {
                 await initializeUser(record);
+                new AccountManager(this.auth.currentUser);
                 let event = new CustomEvent("navigate", {
                     detail: {
                         content: "Profile",
@@ -138,10 +142,19 @@ export default class FirebaseIO {
         }
     }
 
+    /**
+     * Removes a record from the database
+     *
+     * @param {String} _path - Path to delete information from
+     * @param {Function} _callback - Optional callback function that runs after a successful delete
+     */
     async deleteRecord(_path, _callback = null) {
         const REF = ref(this.#database, _path);
         try {
-            REF.remove();
+            await remove(REF);
+            if (typeof _callback == "function") {
+                _callback();
+            }
         } catch (error) {
             console.error(`Failed to remove @ ${_path}: ${error}`);
         }
@@ -183,6 +196,21 @@ export default class FirebaseIO {
      */
     removeDataOnDisconnect(_path) {
         const REF = ref(this.#database, _path);
-        REF.onDisconnect().remove();
+        onDisconnect(REF).remove();
+    }
+
+    /* **************************************** Private Methods *****************************************/
+    /**
+     * Sign Out the current user
+     */
+    #signOut() {
+        signOut(this.auth);
+        console.log("Signed out");
+        const EVENT = new CustomEvent("navigate", {
+            detail: {
+                content: "Welcome",
+            },
+        });
+        document.dispatchEvent(EVENT);
     }
 }

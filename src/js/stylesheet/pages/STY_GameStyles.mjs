@@ -105,7 +105,7 @@ export default class GamesStyles {
             right: 1rem;
             font-size: 4rem;
             cursor: pointer;
-            color: ${Colors.modalCloseColor}};
+            color: ${Colors.modalCloseColor};
         }
         `;
     }

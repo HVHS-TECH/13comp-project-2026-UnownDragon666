@@ -158,16 +158,22 @@ export default class Games extends Content {
             });
 
             // Register listener to close modal
-            _modal[1].addEventListener("click", () => {
-                _modal[0].style.display = "none";
-            });
+            _modal[1].addEventListener(
+                "click",
+                () => {
+                    _modal[0].style.display = "none";
+                },
+                { once: true },
+            );
 
             // Close modal when you click outside of it
-            window.addEventListener("click", (event) => {
+            const OUTSIDE_CLICK_HANDLER = (event) => {
                 if (event.target === _modal[0]) {
                     _modal[0].style.display = "none";
+                    window.removeEventListener("click", OUTSIDE_CLICK_HANDLER);
                 }
-            });
+            };
+            window.addEventListener("click", OUTSIDE_CLICK_HANDLER);
         } catch (error) {
             console.error(error);
         }

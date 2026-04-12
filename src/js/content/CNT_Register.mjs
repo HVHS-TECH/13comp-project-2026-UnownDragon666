@@ -222,15 +222,18 @@ export default class Register extends Content {
                         photoURL: firebaseIO.auth.currentUser.photoURL,
                     },
                     isAdmin: false,
+                    deleted: false,
                     uid: firebaseIO.auth.currentUser.uid,
                 },
             );
         } catch (error) {
             throw error;
         }
+
         let record = await firebaseIO.readRecord(
             `/users/${firebaseIO.auth.currentUser.uid}`,
         );
+
         await initializeUser(record);
 
         let event = new CustomEvent("navigate", {

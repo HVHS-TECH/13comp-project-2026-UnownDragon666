@@ -90,7 +90,7 @@ export default class AdminStyles {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                padding: 10%;
+                padding: 5% 10%;
                 gap: 2rem;
             }
 
@@ -121,7 +121,9 @@ export default class AdminStyles {
             }
 
             #d_removeAccountContainer {
-                margin-top: 5%;
+                display: flex;
+                flex-direction: row;
+                gap: inherit;  
             }
 
             #i_newUsername {
@@ -129,10 +131,10 @@ export default class AdminStyles {
             }
 
             #d_newUsernameInputDiv {
-                transform: scale(1.4);Zz
+                transform: scale(1.4);
             }
 
-            #b_deleteAccount {
+            .accountManagementOptions {
                 background-color: ${Colors.dangerColor};
                 color: white;
                 border: none;
@@ -142,10 +144,73 @@ export default class AdminStyles {
                 cursor: pointer;
             }
 
-            #b_deleteAccount:disabled {
+            .accountManagementOptions:disabled {
                 opacity: 0.4;
                 cursor: not-allowed;
             }
+
+            /* Modal styling */
+            #d_modal {
+                display: none;
+                position: fixed;
+                z-index: 1000;
+                left: 0;
+                top: 0;
+                width: 100vw;
+                height: 100vh;
+                overflow: auto;
+                justify-content: center;
+                align-items: center;
+                background-color: ${Colors.modalOutsideColor};
+            }
+    
+            #d_modalContent {
+                background-color: ${Colors.modalBackgroundColor};
+                padding: 4rem;
+                margin-top: 15%;
+                margin-bottom: 15%;
+                border-radius: 10px;
+                max-width: 40%;
+                min-width: 33%;
+                width: 90%;
+                text-align: center;
+                position: relative;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+                color: ${Colors.modalTextColor};
+            }
+    
+            #d_modalContent button {
+                background-color: ${Colors.modalButtonColor};
+                border: none;
+                color: ${Colors.textHoverColor};
+            }
+    
+                #d_modalContent button:hover {
+                background-color: ${Colors.modalButtonHoverColor};
+                color: ${Colors.modalTextColor};
+                }
+    
+                #h_modalTitle {
+                font-weight: bold;
+                font-size: 3.5rem;
+                margin-bottom: 1.5rem;
+            }
+    
+            #p_modalDescription {
+                font-size: 1.25rem;
+                margin-bottom: 2rem;
+                text-align: center;
+            }
+    
+            #s_modalClose {
+                position: absolute;
+                top: 0rem;
+                right: 1rem;
+                font-size: 4rem;
+                cursor: pointer;
+                color: ${Colors.modalCloseColor};
+            }
+
         `;
     }
 }
