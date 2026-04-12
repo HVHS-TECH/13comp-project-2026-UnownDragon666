@@ -16,9 +16,11 @@ export default class Colors {
     static fontURL = "./src/asssets/fonts/FunnelSans-VariableFont_wght.ttf";
 
     // Component colors
-    static buttonColor = "#ffc9d7";
+    static buttonColor = "#ff9cb5";
     static buttonBorderColor = "#ffbccd";
-    static buttonHoverColor = "#ff9cb5";
+    static buttonHoverColor = "#ffc9d7";
+    static buttonTextColor = "#ffffff";
+    static buttonTextHoverColor = "#000000";
 
     // Card colors (Game selection page)
     static cardBackgroundColor = "#ffc9d7";
@@ -39,4 +41,11 @@ export default class Colors {
     static playerListHoverBackgroundColor = "#f7aef8";
     static playerListActiveBackgroundColor = "#b388eb";
     static dangerColor = "crimson";
+
+    // Registration colors
+    static registrationFormBackgroundColor = "#ffc9d7";
+    static registrationFormBorderColor = "#ffbccd";
+    static registrationInputBackgroundColor = "#ffe9ef";
+    static registrationInputFocusBorderColor = "#ff4d6d";
+    static registrationInputFocusBoxShadowColor = "rgba(252, 128, 159, 0.25)";
 }

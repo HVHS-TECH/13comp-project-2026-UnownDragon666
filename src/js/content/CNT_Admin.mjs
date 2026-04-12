@@ -234,9 +234,10 @@ export default class Admin extends Content {
         NAME_EDIT_SUBMIT.textContent = "Change";
         NAME_EDIT_SUBMIT.type = "button";
         NAME_EDIT_SUBMIT.style = "font-size: large;";
-        NAME_EDIT_SUBMIT.addEventListener("click", () => {
+        NAME_EDIT_SUBMIT.addEventListener("click", async () => {
             let newName = document.getElementById("i_newUsername").value;
-            if (!getRecord()) {
+            let record = await firebaseIO.readRecord(`users/${_playerRec.uid}`);
+            if (!record) {
                 alert("User does not exist.");
                 return;
             }

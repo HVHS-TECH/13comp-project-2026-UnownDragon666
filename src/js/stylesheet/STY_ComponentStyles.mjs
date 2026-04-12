@@ -37,12 +37,18 @@ export default class ComponentStyles {
             background-color: ${Colors.buttonColor};
             border-radius: 8px;
             border-color: ${Colors.buttonBorderColor};
+            border-style: none;
+            color: ${Colors.buttonTextColor};
+            letter-spacing: 0.02em;
+            cursor: pointer;
+
         }
 
         button:hover {
             background-color: ${Colors.buttonHoverColor};
             color: ${Colors.textHoverColor};
             transition: background-color 0.25s, color 0.5s;
+            color: ${Colors.buttonTextHoverColor};
         }
         `;
         document.body.appendChild(COMPONENT_LAYER_BUTTON_STYLE);
