@@ -41,13 +41,12 @@ export default class ComponentStyles {
             color: ${Colors.buttonTextColor};
             letter-spacing: 0.02em;
             cursor: pointer;
-
+            transition: background-color 0.25s, color 0.5s;
         }
 
         button:hover {
             background-color: ${Colors.buttonHoverColor};
             color: ${Colors.textHoverColor};
-            transition: background-color 0.25s, color 0.5s;
             color: ${Colors.buttonTextHoverColor};
         }
         `;
@@ -68,6 +67,11 @@ export default class ComponentStyles {
             border-radius: 50%;
             border-style: solid;
             border-color: ${Colors.pfpBorderColor};
+            transition: filter 0.3s ease-in-out; 
+        }
+
+        #i_pfpImage:hover {
+            filter: brightness(0.8); 
         }
 
         .navButtons {
@@ -97,6 +101,7 @@ export default class ComponentStyles {
             text-align: center;
             text-decoration: none;
         }
+
         `;
         document.body.appendChild(COMPONENT_LAYER_NAV_STYLE);
     }

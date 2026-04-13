@@ -14,11 +14,17 @@ export default class LobbyReference {
     /* **************************************** Public Fields *****************************************/
     databaseCache;
     serverID;
+    unsubscribeToLobby;
 
     /* **************************************** Constructor *****************************************/
-    constructor(_lobbyData, _lobbyID) {
-        this.databaseCache = _lobbyData;
+    constructor(_lobbyID) {
         this.serverID = _lobbyID;
+        this.unsubscribeToLobby = firebaseIO.subscribeToRecord(
+            `/games/guessTheImpostor/servers/${_lobbyID}`,
+            (data) => {
+                this.databaseCache = data;
+            },
+        );
     }
 }
 
@@ -28,8 +34,8 @@ let currentLobby = null;
  *
  * @param {Object} _lobbyData - An object containing the current lobby's data
  */
-export function initializeLobbyReference(_lobbyData, _lobbyID) {
-    currentLobby = new LobbyReference(_lobbyData, _lobbyID);
+export function initializeLobbyReference(_lobbyID) {
+    currentLobby = new LobbyReference(_lobbyID);
 }
 
 /**
@@ -48,13 +54,4 @@ export function getLobbyRecord() {
  */
 export function getServerID() {
     return currentLobby.serverID;
-}
-
-/**
- * update's the database cache with whatever the input is.
- *
- * @param {Object} _data - record of the database to update the cache.
- */
-export function updateDatabaseCache(_data) {
-    currentLobby.databaseCache = _data;
 }

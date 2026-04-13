@@ -1,8 +1,5 @@
 import { firebaseIO } from "../../../firebase/FB_instance.mjs";
-import {
-    initializeLobbyReference,
-    updateDatabaseCache,
-} from "./GTI_LobbyReference.mjs";
+import { initializeLobbyReference } from "./GTI_LobbyReference.mjs";
 import { getRecord } from "../../../accountManager/AM_User.mjs";
 
 /**
@@ -38,18 +35,6 @@ export default class LobbyManager {
     }
 
     /* **************************************** Public Methods *****************************************/
-    /**
-     * generate a cache of the current server (lobby) you're connected to.
-     *
-     * @param {string} _serverID - ID of the server
-     */
-    async generateCache(_serverID) {
-        let snapshot = await firebaseIO.readRecord(
-            `${this.#rootPath}/${_serverID}`,
-        );
-
-        updateDatabaseCache(snapshot);
-    }
 
     /* **************************************** Private Methods *****************************************/
     /**
@@ -64,21 +49,29 @@ export default class LobbyManager {
         // go into database and update the server list to include the new server
         await firebaseIO.updateRecord(`${this.#rootPath}/`, LOBBYDATA);
 
-        // Read database and initialise lobby reference
-        const RECORD = await firebaseIO.readRecord(
-            `${this.#rootPath}/${serverUUID}`,
+        // Initialise lobby reference with serverUUID
+        initializeLobbyReference(serverUUID);
+
+        // Join the created lobby
+        await this.#joinServer(
+            serverUUID,
+            _hostRecord.uid,
+            {
+                name: _hostRecord.public.username,
+                photoURL: _hostRecord.public.photoURL,
+                isHost: true,
+            },
+            false,
         );
 
-        initializeLobbyReference(RECORD, serverUUID);
-
-        // Redirect to the new lobby page
-        const EVENT = new CustomEvent("navigate", {
+        // Navigate to lobby
+        const NAVIGATE_TO_LOBBY = new CustomEvent("navigate", {
             detail: {
                 content: "Lobby",
             },
         });
 
-        document.dispatchEvent(EVENT);
+        document.dispatchEvent(NAVIGATE_TO_LOBBY);
     }
 
     /**
@@ -96,18 +89,10 @@ export default class LobbyManager {
                     uid: `${_hostRecord.uid}`,
                     name: `${_hostRecord.public.username}`,
                 },
-                players: {
-                    [_hostRecord.uid]: {
-                        name: _hostRecord.public.username,
-                        photoURL: _hostRecord.public.photoURL,
-                        isHost: true,
-                    },
-                },
                 lobbyState: "private",
                 rules: {
                     maxPlayers: 6,
                     roundLengthSeconds: 30,
-                    numberOfGames: 1,
                 },
                 messages: {
                     "!welcome": {
@@ -120,6 +105,31 @@ export default class LobbyManager {
                 },
             },
         };
+    }
+
+    /**
+     *
+     * @param {String} _serverID - ID of server to connect to
+     * @param {String} _playerID - ID of the player that is joining
+     * @param {Object} _playerData - Data of the player joining
+     */
+    async #joinServer(_serverID, _playerID, _playerData, _navigate = true) {
+        // Create path to the players node in the server
+        const playerRefPath = `/games/guessTheImpostor/servers/${_serverID}/players/${_playerID}`;
+
+        // Inject the player's details into the node
+        await firebaseIO.updateRecord(playerRefPath, _playerData);
+
+        // When user leaves lobby: Kill them from the lobby
+        firebaseIO.removeDataOnDisconnect(playerRefPath);
+
+        if (_navigate) {
+            document.dispatchEvent(
+                new CustomEvent("navigate", {
+                    detail: { content: "Lobby" },
+                }),
+            );
+        }
     }
 
     /**
@@ -157,23 +167,5 @@ export default class LobbyManager {
 
     async kickUser(_user) {
         console.log(`User Kicked: ${_user}`);
-    }
-
-    async #joinServer(_serverID, _playerID, _playerData) {
-        // Create path to the players node in the server
-        const playerRefPath = `/games/guessTheImpostor/servers/${_serverID}/players/${_playerID}`;
-
-        // Inject the player's details into the node
-        await firebaseIO.updateRecord(playerRefPath, _playerData);
-
-        // When user leaves lobby: Kill them from the lobby
-        firebaseIO.removeDataOnDisconnect(playerRefPath);
-
-        // Navigate to lobby
-        const NAVIGATE_TO_LOBBY = new CustomEvent("navigate", {
-            detail: {
-                content: "Lobby",
-            },
-        });
     }
 }

@@ -37,7 +37,7 @@ export default class Lobby extends Content {
     /* ******************************** Parent Class Method Overrides *********************************/
     async removeContent() {
         this.#unsubscribePlayers?.();
-        // this.#unsubscribeRules?.();
+        this.#unsubscribeRules?.();
 
         document.querySelectorAll("section").forEach((section) => {
             section.remove();
@@ -114,6 +114,8 @@ export default class Lobby extends Content {
      * @param {Node<Element>} - The element to append players to.
      */
     #updatePlayerList(_players, _playerList) {
+        if (!_players) return;
+
         _playerList.innerHTML = ``;
 
         // const NEW_PLAYER_LIST = document.createElement("ul");
@@ -161,6 +163,9 @@ export default class Lobby extends Content {
      * Creates the tab elements as well as messages.
      */
     async #openChatTab() {
+        // If rules were opened, unsubscribe to that listener and empty the tab.
+        this.#unsubscribeRules?.();
+
         // Create event listener and assign unsubscribe function to the "this.#unsubscribeChat" private field.
         this.#unsubscribeChat = firebaseIO.subscribeToRecord(
             `/games/guessTheImpostor/servers/${this.lobbyID}/messages`,
@@ -220,5 +225,64 @@ export default class Lobby extends Content {
         );
     }
 
-    #openRulesTab() {}
+    /**
+     * Opens the game rules tab
+     * This allows the host to edit the game's various options before the game starts.
+     *
+     * Rules:
+     *      - maxPlayers: max number of players allowed in lobby
+     *          - Greater than or equal to three
+     *          - Less than or equal to 12
+     *          - Must be greater than the current number of users in the lobby.
+     *          i.e. if a lobby has 7 players, you can't reduce maxPlayers to less than 7
+     *
+     *      - roundLengthSeconds: The max number of time a player has before they must submit an answer
+     *          - Greater than or equal to 15 seconds
+     *          - Less than or equal to 60 seconds
+     *
+     *
+     */
+    #openRulesTab() {
+        this.#unsubscribeChat?.();
+
+        this.#unsubscribeRules = firebaseIO.subscribeToRecord(
+            `/games/guessTheImpostor/servers/${this.lobbyID}/rules`,
+            (rules) => {
+                // Create a div with the tabContent class
+                const TAB = document.createElement("div");
+                TAB.classList.add("tabContent");
+
+                // MaxPlayers gamerule
+                const MAX_PLAYERS = super.createInput(
+                    "Max Players:",
+                    rules.maxPlayers,
+                    "number",
+                    "i_maxPlayers",
+                    "i_maxPlayers",
+                    "d_maxPlayers",
+                );
+                MAX_PLAYERS.querySelector("input").min = 3;
+                MAX_PLAYERS.querySelector("input").max = 12;
+
+                const ROUND_LENGTH = super.createInput(
+                    "Round Length:",
+                    rules.roundLengthSeconds,
+                    "number",
+                    "i_roundLength",
+                    "i_roundLength",
+                    "d_roundLength",
+                );
+                ROUND_LENGTH.querySelector("input").min = 15;
+                ROUND_LENGTH.querySelector("input").max = 60;
+
+                TAB.append(MAX_PLAYERS, ROUND_LENGTH);
+
+                if (document.querySelector(".tabContent")) {
+                    document.querySelector(".tabContent").replaceWith(TAB);
+                } else {
+                    document.getElementById("s_tabsSection").appendChild(TAB);
+                }
+            },
+        );
+    }
 }
