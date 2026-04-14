@@ -93,6 +93,9 @@ export default class LobbyManager {
                 rules: {
                     maxPlayers: 6,
                     roundLengthSeconds: 30,
+                    votingLengthSeconds: 30,
+                    numOfImpostors: 1,
+                    numberOfRounds: 5,
                 },
                 messages: {
                     "!welcome": {

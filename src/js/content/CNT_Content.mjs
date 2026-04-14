@@ -115,7 +115,15 @@ export default class Content {
      *
      * @returns {Node} - HTML Node Element (div) with the input and label in it
      */
-    createInput(_labelText, _text = null, _type, _name, _id, _divID) {
+    createInput(
+        _labelText,
+        _text = null,
+        _type,
+        _name,
+        _id,
+        _divID,
+        _prefill = "",
+    ) {
         const LABEL = document.createElement("label");
         LABEL.htmlFor = _name;
         LABEL.textContent = _labelText;
@@ -126,6 +134,7 @@ export default class Content {
         INPUT.name = _name;
         INPUT.id = _id;
         INPUT.required = true;
+        INPUT.value = _prefill;
 
         const CONTAINER = document.createElement("div");
         CONTAINER.id = _divID;

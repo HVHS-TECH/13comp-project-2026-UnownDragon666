@@ -22,6 +22,19 @@ export default class Lobby extends Content {
     #unsubscribeRules;
     #unsubscribeChat;
 
+    // Rules constraints
+    static #MIN_PLAYERS = 3;
+    static #MAX_PLAYERS = 12;
+    static #MIN_ROUND_LENGTH = 15;
+    static #MAX_ROUND_LENGTH = 60;
+    static #MIN_VOTING_LENGTH = 30;
+    static #MAX_VOTING_LENGTH = 60;
+    static #MIN_IMPOSTORS = 1;
+    static #MAX_IMPOSTORS = 3;
+    static #MIN_ROUNDS = 1;
+    static #MAX_ROUNDS = 10;
+    static #MIN_NON_IMPOSTOR_PLAYERS = 2;
+
     /* **************************************** Public Fields *****************************************/
     // The ID used to identify the stylesheet belonging to this page (LoBby Style Sheet)
     styleID = "LBSS";
@@ -95,9 +108,17 @@ export default class Lobby extends Content {
         const RULES_TAB_BUTTON = document.createElement("button");
         RULES_TAB_BUTTON.type = "button";
         RULES_TAB_BUTTON.textContent = "Rules";
-        RULES_TAB_BUTTON.classList.add("labLinks");
+        RULES_TAB_BUTTON.classList.add("tabLinks");
         RULES_TAB_BUTTON.addEventListener("click", () => {
             this.#openRulesTab();
+        });
+
+        const INSTRUCTIONS_TAB_BUTTON = document.createElement("button");
+        INSTRUCTIONS_TAB_BUTTON.type = "button";
+        INSTRUCTIONS_TAB_BUTTON.textContent = "Instructions";
+        INSTRUCTIONS_TAB_BUTTON.classList.add("tabLinks");
+        INSTRUCTIONS_TAB_BUTTON.addEventListener("click", () => {
+            this.#openInstructionsTab();
         });
 
         TABS_CONTAINER.append(CHAT_TAB_BUTTON, RULES_TAB_BUTTON);
@@ -236,10 +257,23 @@ export default class Lobby extends Content {
      *          - Must be greater than the current number of users in the lobby.
      *          i.e. if a lobby has 7 players, you can't reduce maxPlayers to less than 7
      *
-     *      - roundLengthSeconds: The max number of time a player has before they must submit an answer
+     *      - roundLengthSeconds: The max number of time a player has before they must submit an
+     *                            answer
      *          - Greater than or equal to 15 seconds
      *          - Less than or equal to 60 seconds
      *
+     *      - votingLengthSeconds: How long the players have to vote for the impostor
+     *          - Greater than or equal to 30 seconds
+     *          - Less than or equal to 60 seconds
+     *
+     *      - numOfImpostors:
+     *          - Greater than or equal to one
+     *          - less than or equal to 3 (for a lobby with more than 5 players)
+     *
+     *      - numberOfRounds: Number of times the game will be played before the game is completed
+     *                        and the scores are submitted
+     *          - Greater than or equal to 1
+     *          - Less than or equal to 10
      *
      */
     #openRulesTab() {
@@ -252,6 +286,9 @@ export default class Lobby extends Content {
                 const TAB = document.createElement("div");
                 TAB.classList.add("tabContent");
 
+                const FORM = document.createElement("form");
+                FORM.id = "f_rules";
+
                 // MaxPlayers gamerule
                 const MAX_PLAYERS = super.createInput(
                     "Max Players:",
@@ -260,9 +297,10 @@ export default class Lobby extends Content {
                     "i_maxPlayers",
                     "i_maxPlayers",
                     "d_maxPlayers",
+                    rules.maxPlayers,
                 );
-                MAX_PLAYERS.querySelector("input").min = 3;
-                MAX_PLAYERS.querySelector("input").max = 12;
+                MAX_PLAYERS.querySelector("input").min = Lobby.#MIN_PLAYERS;
+                MAX_PLAYERS.querySelector("input").max = Lobby.#MAX_PLAYERS;
 
                 const ROUND_LENGTH = super.createInput(
                     "Round Length:",
@@ -271,11 +309,73 @@ export default class Lobby extends Content {
                     "i_roundLength",
                     "i_roundLength",
                     "d_roundLength",
+                    rules.roundLengthSeconds,
                 );
-                ROUND_LENGTH.querySelector("input").min = 15;
-                ROUND_LENGTH.querySelector("input").max = 60;
+                ROUND_LENGTH.querySelector("input").min =
+                    Lobby.#MIN_ROUND_LENGTH;
+                ROUND_LENGTH.querySelector("input").max =
+                    Lobby.#MAX_ROUND_LENGTH;
 
-                TAB.append(MAX_PLAYERS, ROUND_LENGTH);
+                const VOTING_LENGTH = super.createInput(
+                    "Voting Length (seconds):",
+                    rules.votingLengthSeconds,
+                    "number",
+                    "i_votingLength",
+                    "i_votingLength",
+                    "d_votingLength",
+                    rules.votingLengthSeconds,
+                );
+                VOTING_LENGTH.querySelector("input").min =
+                    Lobby.#MIN_VOTING_LENGTH;
+                VOTING_LENGTH.querySelector("input").max =
+                    Lobby.#MAX_VOTING_LENGTH;
+
+                const NUM_IMPOSTORS = super.createInput(
+                    "Number of Impostors:",
+                    rules.numOfImpostors,
+                    "number",
+                    "i_numOfImpostors",
+                    "i_numOfImpostors",
+                    "d_numOfImpostors",
+                    rules.numOfImpostors,
+                );
+                NUM_IMPOSTORS.querySelector("input").min = Lobby.#MIN_IMPOSTORS;
+                NUM_IMPOSTORS.querySelector("input").max = Lobby.#MAX_IMPOSTORS;
+
+                const NUM_ROUNDS = super.createInput(
+                    "Number of Rounds:",
+                    rules.numberOfRounds,
+                    "number",
+                    "i_numberOfRounds",
+                    "i_numberOfRounds",
+                    "d_numberOfRounds",
+                    rules.numberOfRounds,
+                );
+                NUM_ROUNDS.querySelector("input").min = Lobby.#MIN_ROUNDS;
+                NUM_ROUNDS.querySelector("input").max = Lobby.#MAX_ROUNDS;
+
+                // Submit new rules button
+                const SUBMIT_NEW_RULES = document.createElement("button");
+                SUBMIT_NEW_RULES.type = "button";
+                SUBMIT_NEW_RULES.id = "b_submitRules";
+                SUBMIT_NEW_RULES.textContent = "Submit";
+                SUBMIT_NEW_RULES.addEventListener("click", () => {
+                    this.#validateNewRules(FORM, getLobbyRecord());
+                });
+
+                getRecord().uid == getLobbyRecord().host.uid
+                    ? (SUBMIT_NEW_RULES.disabled = false)
+                    : (SUBMIT_NEW_RULES.disabled = true);
+
+                FORM.append(
+                    MAX_PLAYERS,
+                    ROUND_LENGTH,
+                    VOTING_LENGTH,
+                    NUM_IMPOSTORS,
+                    NUM_ROUNDS,
+                );
+
+                TAB.append(FORM, SUBMIT_NEW_RULES);
 
                 if (document.querySelector(".tabContent")) {
                     document.querySelector(".tabContent").replaceWith(TAB);
@@ -285,4 +385,112 @@ export default class Lobby extends Content {
             },
         );
     }
+
+    #validateNewRules(_form, _lobbyRec) {
+        for (const rule of _form.querySelectorAll("input")) {
+            if (isNaN(rule.value) || rule.value === "") {
+                alert("All fields must be valid numbers!");
+                return;
+            }
+        }
+
+        // Get new values from
+        const NEW_RULES = {
+            maxPlayers: parseInt(_form.querySelector("#i_maxPlayers").value),
+            roundLengthSeconds: parseInt(
+                _form.querySelector("#i_roundLength").value,
+            ),
+            votingLengthSeconds: parseInt(
+                _form.querySelector("#i_votingLength").value,
+            ),
+            numOfImpostors: parseInt(
+                _form.querySelector("#i_numOfImpostors").value,
+            ),
+            numberOfRounds: parseInt(
+                _form.querySelector("#i_numberOfRounds").value,
+            ),
+        };
+
+        // Validate the inputs
+        if (
+            NEW_RULES.maxPlayers < Lobby.#MIN_PLAYERS ||
+            NEW_RULES.maxPlayers > Lobby.#MAX_PLAYERS
+        ) {
+            alert(
+                `Max Players must be between ${Lobby.#MIN_PLAYERS} and ${Lobby.#MAX_PLAYERS}`,
+            );
+            return;
+        }
+
+        if (NEW_RULES.maxPlayers < Object.keys(_lobbyRec.players).length) {
+            alert(
+                "Max Players cannot be reduced to below the current number of players!\nPlease try kicking someone before updating rules.",
+            );
+            return;
+        }
+
+        if (
+            NEW_RULES.roundLengthSeconds < Lobby.#MIN_ROUND_LENGTH ||
+            NEW_RULES.roundLengthSeconds > Lobby.#MAX_ROUND_LENGTH
+        ) {
+            alert(
+                `Round length must be between ${Lobby.#MIN_ROUND_LENGTH} and ${Lobby.#MAX_ROUND_LENGTH} seconds!`,
+            );
+            return;
+        }
+
+        if (
+            NEW_RULES.votingLengthSeconds < Lobby.#MIN_VOTING_LENGTH ||
+            NEW_RULES.votingLengthSeconds > Lobby.#MAX_VOTING_LENGTH
+        ) {
+            alert(
+                `Voting time must be between ${Lobby.#MIN_VOTING_LENGTH} and ${Lobby.#MAX_VOTING_LENGTH} seconds!`,
+            );
+            return;
+        }
+
+        if (
+            NEW_RULES.numOfImpostors < Lobby.#MIN_IMPOSTORS ||
+            NEW_RULES.numOfImpostors > Lobby.#MAX_IMPOSTORS
+        ) {
+            alert(
+                `There can only be between ${Lobby.#MIN_IMPOSTORS} and ${Lobby.#MAX_IMPOSTORS} impostors!`,
+            );
+            return;
+        }
+
+        if (
+            NEW_RULES.numOfImpostors >
+                Object.keys(_lobbyRec.players).length -
+                    Lobby.#MIN_NON_IMPOSTOR_PLAYERS &&
+            NEW_RULES.numOfImpostors != 1
+        ) {
+            alert(
+                `There must be at least ${Lobby.#MIN_NON_IMPOSTOR_PLAYERS} non impostor players!`,
+            );
+            return;
+        }
+
+        if (
+            NEW_RULES.numberOfRounds < Lobby.#MIN_ROUNDS ||
+            NEW_RULES.numberOfRounds > Lobby.#MAX_ROUNDS
+        ) {
+            alert(
+                `There can only be ${Lobby.#MIN_ROUNDS} to ${Lobby.#MAX_ROUNDS} rounds!`,
+            );
+            return;
+        }
+
+        this.#submitNewRules(NEW_RULES, _lobbyRec);
+    }
+
+    #submitNewRules(_newRules, _lobbyRec) {
+        // Only host can edit rules
+        if (!(_lobbyRec.host.uid == getRecord().uid)) return;
+
+        // Once the input is validated, write the new rules to the lobby
+        firebaseIO.updateRecord(`${this.#lobbyPath}/rules`, _newRules);
+    }
+
+    #openInstructionsTab() {}
 }
