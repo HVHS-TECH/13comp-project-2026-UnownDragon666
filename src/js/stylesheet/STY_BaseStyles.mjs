@@ -31,7 +31,7 @@ export default class BaseStyles {
      */
     static async applyBaseStyles() {
         document.body.style.backgroundColor = Colors.backgroundColor;
-        document.body.style.text = Colors.textColor;
+        document.body.style.color = Colors.textColor;
 
         BaseStyles.initialiseFonts();
     }

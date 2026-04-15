@@ -35,6 +35,46 @@ export default class Lobby extends Content {
     static #MAX_ROUNDS = 10;
     static #MIN_NON_IMPOSTOR_PLAYERS = 2;
 
+    // Instructions text
+    static instructions = `
+        <div id="d_instructions">
+            <h2>How to Play</h2>
+
+            <div class="instructionPhase">
+                <h3>Questions</h3>
+                <p>Everyone is given a question and must answer it in turn. One player, the impostor, is secretly given a <em>different</em> question.</p>
+            </div>
+
+            <div class="instructionPhase">
+                <h3>Reveal</h3>
+                <p>Once everyone has answered, go around and share your answers. Then the real question is revealed to the whole group.</p>
+            </div>
+
+            <div class="instructionPhase">
+                <h3>Vote</h3>
+                <p>The chat unlocks! Discuss everyone's answers and figure out who gave a suspiciously different one. Use what you know about your friends: would George <em>really</em> say that?</p>
+            </div>
+
+            <div class="tips"> 
+                <div class="instructionTip" id="d_instructionImpostor">
+                    <h3>If you're the impostor...</h3>
+                    <p>Blend in. Give an answer that sounds plausible and don't get caught.</p>
+                </div>
+
+                <div class="instructionTip" id="d_instructionInnocent">
+                    <h3>If you're an innocent...</h3>
+                    <p>Listen carefully during the reveal. Trust your gut.. is that <em>really</em> something Macklyn would say?</p>
+                </div>
+            </div>
+
+            <div class="goalTip" id="d_goals"> 
+                <h3> Goal: </h3>
+                <h4>Innocents win by correctly voting out the impostor. The impostor wins by blending in and getting someone else voted out.</h4>
+                <h4>Scores are based on points! If you win (whether as impostor or innocent) you will gain a point. Impostors will get impostor points and innocents will get detective points! At the very end, your points will all be added to the Global leaderboard!</h4>  
+            </div> 
+        </div>
+    `;
+
     /* **************************************** Public Fields *****************************************/
     // The ID used to identify the stylesheet belonging to this page (LoBby Style Sheet)
     styleID = "LBSS";
@@ -121,7 +161,11 @@ export default class Lobby extends Content {
             this.#openInstructionsTab();
         });
 
-        TABS_CONTAINER.append(CHAT_TAB_BUTTON, RULES_TAB_BUTTON);
+        TABS_CONTAINER.append(
+            CHAT_TAB_BUTTON,
+            RULES_TAB_BUTTON,
+            INSTRUCTIONS_TAB_BUTTON,
+        );
         TABS_SECTION.append(TABS_CONTAINER);
 
         this.section.append(PLAYER_SECTION, TABS_SECTION);
@@ -195,6 +239,9 @@ export default class Lobby extends Content {
                 const TAB = document.createElement("div");
                 TAB.classList.add("tabContent");
 
+                const MESSAGES_CONTAINER = document.createElement("div");
+                MESSAGES_CONTAINER.id = "d_messagesContainer";
+
                 for (let message of Object.values(messages)) {
                     let messageDiv = document.createElement("div");
                     if (firebaseIO.auth.currentUser.uid == message.senderName) {
@@ -205,14 +252,19 @@ export default class Lobby extends Content {
 
                     const SENDER = document.createElement("p");
                     SENDER.classList.add("senderNames");
-                    SENDER.textContent = message.senderName;
+                    message.senderName == getRecord().public.username
+                        ? (SENDER.textContent = "ME")
+                        : (SENDER.textContent = message.senderName);
 
                     const MESSAGE = document.createElement("p");
                     MESSAGE.textContent = message.content;
 
                     messageDiv.append(SENDER, MESSAGE);
-                    TAB.append(messageDiv);
+                    MESSAGES_CONTAINER.append(messageDiv);
                 }
+
+                TAB.append(MESSAGES_CONTAINER);
+
                 // Create input div
                 const MESSAGE_CONTAINER = document.createElement("div");
                 MESSAGE_CONTAINER.id = "d_messageInputContainer";
@@ -242,6 +294,11 @@ export default class Lobby extends Content {
                 } else {
                     document.getElementById("s_tabsSection").appendChild(TAB);
                 }
+
+                window.requestAnimationFrame(() => {
+                    MESSAGES_CONTAINER.scrollTop =
+                        MESSAGES_CONTAINER.scrollHeight;
+                });
             },
         );
     }
@@ -484,6 +541,13 @@ export default class Lobby extends Content {
         this.#submitNewRules(NEW_RULES, _lobbyRec);
     }
 
+    /**
+     * Write new rules to database once validated
+     *
+     * @param {Object} _newRules - Object containing new rules
+     * @param {Object} _lobbyRec - Record of lobby for validating host
+     * @returns
+     */
     #submitNewRules(_newRules, _lobbyRec) {
         // Only host can edit rules
         if (!(_lobbyRec.host.uid == getRecord().uid)) return;
@@ -492,5 +556,24 @@ export default class Lobby extends Content {
         firebaseIO.updateRecord(`${this.#lobbyPath}/rules`, _newRules);
     }
 
-    #openInstructionsTab() {}
+    #openInstructionsTab() {
+        this.#unsubscribeChat?.();
+        this.#unsubscribeRules?.();
+
+        // Create a div with the tabContent class
+        const TAB = document.createElement("div");
+        TAB.classList.add("tabContent");
+
+        const CONTAINER = document.createElement("div");
+        CONTAINER.id = "d_instructionsContainer";
+        CONTAINER.innerHTML = Lobby.instructions;
+
+        TAB.appendChild(CONTAINER);
+
+        if (document.querySelector(".tabContent")) {
+            document.querySelector(".tabContent").replaceWith(TAB);
+        } else {
+            document.getElementById("s_tabsSection").appendChild(TAB);
+        }
+    }
 }

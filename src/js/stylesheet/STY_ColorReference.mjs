@@ -6,52 +6,46 @@
  * By: Idrees Munshi
  */
 export default class Colors {
-    /* **************************************** Stylesheet Colours *****************************************/
-
-    // Base fields
-    static backgroundColor = "#fdf0f5";
-    static textColor = "#000000";
+    /* **************************************** Base *****************************************/
+    static backgroundColor = "#fef6ff";
+    static textColor = "#2b2d42";
     static textHoverColor = "#ffffff";
     static pfpBorderColor = "#ffffff";
-    static navBorderColor = "#f5c4d8";
+    static navBorderColor = "#ffe5ec";
     static fontURL = "./src/asssets/fonts/FunnelSans-VariableFont_wght.ttf";
 
-    // Component colors
-    static buttonColor = "#f9a8c4";
-    static buttonBorderColor = "#fce4ee";
-    static buttonHoverColor = "#f472a8";
-    static buttonTextColor = "#ffffff";
+    /* **************************************** Buttons *****************************************/
+    static buttonColor = "#a0c4ff";
+    static buttonBorderColor = "#c7dbff";
+    static buttonHoverColor = "#89b4fa";
+    static buttonTextColor = "#1a1025";
     static buttonTextHoverColor = "#ffffff";
 
-    // Card colors
-    static cardBackgroundColor = "#fde8dc";
-    static cardBorderColor = "#f9c4a8";
-    static modalOutsideColor = "rgba(30, 58, 95, 0.55)";
-    static modalBackgroundColor = "#dbeeff";
-    static modalButtonColor = "#3b82c4";
-    static modalButtonHoverColor = "#60a5e0";
-    static modalCloseColor = "#1e3a5f";
-    static modalTextColor = "#1e3a5f";
+    /* **************************************** Cards *****************************************/
+    static cardBackgroundColor = "#fff0f6";
+    static cardBorderColor = "#ffd6e7";
 
-    // Lobby Colors
-    static exitButtonColor = "";
-    static exitButtonHoverColor = "";
-    static exitButtonTextColor = "";
-    static exitButtonHoverTextColor = "";
+    /* **************************************** Modal *****************************************/
+    static modalOutsideColor = "rgba(40, 30, 70, 0.45)";
+    static modalBackgroundColor = "#f3e8ff";
+    static modalButtonColor = "#cdb4db";
+    static modalButtonHoverColor = "#b8a0d9";
+    static modalCloseColor = "#5a4b81";
+    static modalTextColor = "#2b2d42";
 
-    // Admin player list colors
-    static playerListHoverBackgroundColor = "#f3e8ff";
-    static playerListActiveBackgroundColor = "#a78bfa";
+    /* **************************************** Player list ****************************************/
+    static playerListHoverBackgroundColor = "#d8f3dc";
+    static playerListActiveBackgroundColor = "#bde0fe";
 
-    // Danger
-    static dangerColor = "#dc2626";
+    /* **************************************** Danger *****************************************/
+    static dangerColor = "#ffadad";
 
-    // Registration colors
-    static registrationFormBackgroundColor = "#fde8dc";
-    static registrationFormBorderColor = "#f9c4a8";
-    static registrationInputBackgroundColor = "#fdf0f5";
-    static registrationInputFocusBorderColor = "#7c6de0";
-    static registrationInputFocusBoxShadowColor = "rgba(124, 109, 224, 0.2)";
+    /* **************************************** Registration *****************************************/
+    static registrationFormBackgroundColor = "#fff7e6";
+    static registrationFormBorderColor = "#ffe0b2";
+    static registrationInputBackgroundColor = "#ffffff";
+    static registrationInputFocusBorderColor = "#ffd6a5";
+    static registrationInputFocusBoxShadowColor = "rgba(255, 214, 165, 0.35)";
 }
 
 /**
@@ -59,12 +53,11 @@ export default class Colors {
  * Colors for tabs
  */
 Colors.Tabs = class {
-    static backgroundColor = "#4c3d99";
-    static textColor = "#ede9fe";
-    static borderColor = "#7c6de0";
-
-    static hoverBackgroundColor = "#ede9fe";
-    static hoverTextColor = "#4c3d99";
+    static backgroundColor = "#e7c6ff";
+    static textColor = "#3a2e4d";
+    static borderColor = "#cdb4db";
+    static hoverBackgroundColor = "#bde0fe";
+    static hoverTextColor = "#1a1025";
 };
 
 /**
