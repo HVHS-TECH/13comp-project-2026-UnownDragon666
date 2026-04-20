@@ -32,6 +32,16 @@ export default class LobbyManager {
         document.addEventListener("sendMessage", (event) => {
             this.#sendMessage(event.detail.content, event.detail.message);
         });
+
+        document.addEventListener("updateLobbyState", (event) => {
+            firebaseIO.updateRecord(`${event.detail.content}`, {
+                lobbyState: event.detail.newState,
+            });
+        });
+
+        document.addEventListener("startGame", (event) => {
+            this.#startGame(event);
+        });
     }
 
     /* **************************************** Public Methods *****************************************/
@@ -170,5 +180,9 @@ export default class LobbyManager {
 
     async kickUser(_user) {
         console.log(`User Kicked: ${_user}`);
+    }
+
+    #startGame(_startEvent) {
+        console.log(_startEvent);
     }
 }

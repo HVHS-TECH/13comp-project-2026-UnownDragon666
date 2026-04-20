@@ -21,6 +21,7 @@ export default class Lobby extends Content {
     #unsubscribePlayers;
     #unsubscribeRules;
     #unsubscribeChat;
+    #unsubscribeStart;
 
     // Rules constraints
     static #MIN_PLAYERS = 3;
@@ -70,7 +71,7 @@ export default class Lobby extends Content {
             <div class="goalTip" id="d_goals"> 
                 <h3> Goal: </h3>
                 <h4>Innocents win by correctly voting out the impostor. The impostor wins by blending in and getting someone else voted out.</h4>
-                <h4>Scores are based on points! If you win (whether as impostor or innocent) you will gain a point. Impostors will get impostor points and innocents will get detective points! At the very end, your points will all be added to the Global leaderboard!</h4>  
+                <h4>Scores are based on points! If you win (whether as impostor or innocent) you will gain a point. Impostors will get impostor points and innocents will get detective points! At the very end, your points will all be added to the leaderboard!</h4>  
             </div> 
         </div>
     `;
@@ -85,12 +86,29 @@ export default class Lobby extends Content {
         super(Lobby.#secID);
         this.lobbyID = getServerID();
         this.#lobbyPath = `/games/guessTheImpostor/servers/${this.lobbyID}`;
+
+        // Setup listener for game start
+        this.#unsubscribeStart = firebaseIO.subscribeToRecord(
+            `${this.#lobbyPath}/lobbyState`,
+            (data) => {
+                if (data != "started") return;
+                const START = new CustomEvent("startGame", {
+                    detail: {
+                        content: this.lobbyID,
+                        newState: data,
+                    },
+                });
+                document.dispatchEvent(START);
+            },
+        );
     }
 
     /* ******************************** Parent Class Method Overrides *********************************/
     async removeContent() {
         this.#unsubscribePlayers?.();
         this.#unsubscribeRules?.();
+        this.#unsubscribeChat?.();
+        this.#unsubscribeStart?.();
 
         document.querySelectorAll("section").forEach((section) => {
             section.remove();
@@ -423,6 +441,36 @@ export default class Lobby extends Content {
                 getRecord().uid == getLobbyRecord().host.uid
                     ? (SUBMIT_NEW_RULES.disabled = false)
                     : (SUBMIT_NEW_RULES.disabled = true);
+
+                // Start the game button
+                const START_GAME_BUTTON = document.createElement("button");
+                START_GAME_BUTTON.type = "button";
+                START_GAME_BUTTON.id = "b_startGame";
+                START_GAME_BUTTON.textContent = "Start Game";
+                START_GAME_BUTTON.addEventListener("click", () => {
+                    // Get the current number of players in the lobby and check if there are enough players to start the game.
+                    let playerNum = Object.keys(
+                        getLobbyRecord().players,
+                    ).length;
+                    console.log("Number of players: ", playerNum);
+                    if (playerNum < Lobby.#MIN_PLAYERS) return;
+                    if (
+                        playerNum <
+                        getLobbyRecord().rules.numOfImpostors +
+                            Lobby.#MIN_NON_IMPOSTOR_PLAYERS
+                    )
+                        return;
+                    let UPDATE_LOBBY_STATE = new CustomEvent(
+                        "updateLobbyState",
+                        {
+                            detail: {
+                                content: this.#lobbyPath,
+                                newState: "started",
+                            },
+                        },
+                    );
+                    document.dispatchEvent(UPDATE_LOBBY_STATE);
+                });
 
                 FORM.append(
                     MAX_PLAYERS,
