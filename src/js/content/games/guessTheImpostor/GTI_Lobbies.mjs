@@ -59,6 +59,7 @@ export default class GuessTheImpostorLobbies extends Content {
         const SERVER_LIST_SUBSECTION = document.createElement("section");
         SERVER_LIST_SUBSECTION.id = "s_serverListSubSec";
 
+        this.#createServerList();
         // Table
         const SERVER_LIST_TABLE = document.createElement("table");
         SERVER_LIST_TABLE.id = "t_serverList";
@@ -70,4 +71,6 @@ export default class GuessTheImpostorLobbies extends Content {
 
         // Table datas
     }
+
+    #createServerList() {}
 }

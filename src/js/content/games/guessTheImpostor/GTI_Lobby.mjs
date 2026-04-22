@@ -437,41 +437,6 @@ export default class Lobby extends Content {
                 SUBMIT_NEW_RULES.addEventListener("click", () => {
                     this.#validateNewRules(FORM, getLobbyRecord());
                 });
-
-                getRecord().uid == getLobbyRecord().host.uid
-                    ? (SUBMIT_NEW_RULES.disabled = false)
-                    : (SUBMIT_NEW_RULES.disabled = true);
-
-                // Start the game button
-                const START_GAME_BUTTON = document.createElement("button");
-                START_GAME_BUTTON.type = "button";
-                START_GAME_BUTTON.id = "b_startGame";
-                START_GAME_BUTTON.textContent = "Start Game";
-                START_GAME_BUTTON.addEventListener("click", () => {
-                    // Get the current number of players in the lobby and check if there are enough players to start the game.
-                    let playerNum = Object.keys(
-                        getLobbyRecord().players,
-                    ).length;
-                    console.log("Number of players: ", playerNum);
-                    if (playerNum < Lobby.#MIN_PLAYERS) return;
-                    if (
-                        playerNum <
-                        getLobbyRecord().rules.numOfImpostors +
-                            Lobby.#MIN_NON_IMPOSTOR_PLAYERS
-                    )
-                        return;
-                    let UPDATE_LOBBY_STATE = new CustomEvent(
-                        "updateLobbyState",
-                        {
-                            detail: {
-                                content: this.#lobbyPath,
-                                newState: "started",
-                            },
-                        },
-                    );
-                    document.dispatchEvent(UPDATE_LOBBY_STATE);
-                });
-
                 FORM.append(
                     MAX_PLAYERS,
                     ROUND_LENGTH,
@@ -480,7 +445,42 @@ export default class Lobby extends Content {
                     NUM_ROUNDS,
                 );
 
-                TAB.append(FORM, SUBMIT_NEW_RULES);
+                getRecord().uid == getLobbyRecord().host.uid
+                    ? (SUBMIT_NEW_RULES.disabled = false)
+                    : (SUBMIT_NEW_RULES.disabled = true);
+
+                // Update page state to public
+                const MAKE_LOBBY_PUBLIC = document.createElement("button");
+                MAKE_LOBBY_PUBLIC.type = "button";
+                MAKE_LOBBY_PUBLIC.id = "b_publicLobby";
+                MAKE_LOBBY_PUBLIC.textContent = "Set Lobby To Public";
+                MAKE_LOBBY_PUBLIC.addEventListener("click", () =>
+                    this.#makeLobbyPublic(),
+                );
+
+                getRecord().uid == getLobbyRecord().host.uid
+                    ? (MAKE_LOBBY_PUBLIC.disabled = false)
+                    : (MAKE_LOBBY_PUBLIC.disabled = true);
+
+                // Start the game button
+                const START_GAME_BUTTON = document.createElement("button");
+                START_GAME_BUTTON.type = "button";
+                START_GAME_BUTTON.id = "b_startGame";
+                START_GAME_BUTTON.textContent = "Start Game";
+                START_GAME_BUTTON.addEventListener("click", () =>
+                    this.#startGame(),
+                );
+
+                getRecord().uid == getLobbyRecord().host.uid
+                    ? (START_GAME_BUTTON.disabled = false)
+                    : (START_GAME_BUTTON.disabled = true);
+
+                TAB.append(
+                    FORM,
+                    SUBMIT_NEW_RULES,
+                    START_GAME_BUTTON,
+                    MAKE_LOBBY_PUBLIC,
+                );
 
                 if (document.querySelector(".tabContent")) {
                     document.querySelector(".tabContent").replaceWith(TAB);
@@ -491,6 +491,51 @@ export default class Lobby extends Content {
         );
     }
 
+    /**
+     * Makes the lobby state public by sending an event to the lobbyManager
+     */
+    #makeLobbyPublic() {
+        const PUBLICIZE_EVENT = new CustomEvent("updatePageState", {
+            detail: {
+                content: this.#lobbyPath,
+                newState: "public",
+            },
+        });
+        document.dispatchEvent(PUBLICIZE_EVENT);
+    }
+
+    /**
+     *  Updates the lobby state to started if the conditions to start are met
+     */
+    #startGame() {
+        // Get the current number of players in the lobby and check if there are enough players to start the game.
+        let playerNum = Object.keys(getLobbyRecord().players).length;
+        console.log("Number of players: ", playerNum);
+        if (playerNum < Lobby.#MIN_PLAYERS) return;
+        if (
+            playerNum <
+            getLobbyRecord().rules.numOfImpostors +
+                Lobby.#MIN_NON_IMPOSTOR_PLAYERS
+        )
+            return;
+
+        // If validation is successful, update the page state to started and start the game
+        let UPDATE_LOBBY_STATE = new CustomEvent("updateLobbyState", {
+            detail: {
+                content: this.#lobbyPath,
+                newState: "started",
+            },
+        });
+        document.dispatchEvent(UPDATE_LOBBY_STATE);
+    }
+
+    /**
+     * Validates the rules inputted based on the parameters I've set up.
+     *
+     * @param {HTMLFormElement} _form - Form to pull values from
+     * @param {Object} _lobbyRec - Record of the lobby to update
+     * @returns
+     */
     #validateNewRules(_form, _lobbyRec) {
         for (const rule of _form.querySelectorAll("input")) {
             if (isNaN(rule.value) || rule.value === "") {
@@ -604,6 +649,9 @@ export default class Lobby extends Content {
         firebaseIO.updateRecord(`${this.#lobbyPath}/rules`, _newRules);
     }
 
+    /**
+     * Creates the instruction tab's contents and updates the DOM with the new information.
+     */
     #openInstructionsTab() {
         this.#unsubscribeChat?.();
         this.#unsubscribeRules?.();

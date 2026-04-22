@@ -151,7 +151,6 @@ export default class LobbyManager {
      * @param {String} _lobbyID
      * @param {String} _message
      *
-     * @returns {void}
      */
     #sendMessage(_lobbyID, _message) {
         // Validate message
