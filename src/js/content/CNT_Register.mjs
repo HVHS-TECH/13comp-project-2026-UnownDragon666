@@ -152,16 +152,16 @@ export default class Register extends Content {
      */
     async validateForm() {
         let details = {};
-        const textRegexTest = /^[a-zA-Z0-9]+$/; // Regular Expression to check if username is entirely alphanumeric
+        const textRegexTest = /^[^\s]+$/; // Regular Expression to check if username is non whitespace
         const numRegexTest = /^[0-9]+$/; // Regular expression to test if number IS a number
 
         // Test if name is acceptable (does not contain special characters)
         let name = document.getElementById("i_nameInput").value;
         if (!textRegexTest.test(name)) {
             this.#displayError(
-                "Please ensure your name is purely alphanumeric! No spaces or special characters.",
+                "Please ensure your name has no spaces! Thank you!",
             );
-            return; // Return if username NOT alphanumeric (i.e. contains special characters)
+            return; // Return if username has whitespace (i.e. contains special characters)
         }
 
         // Test if age between 5 and 125 inclusive

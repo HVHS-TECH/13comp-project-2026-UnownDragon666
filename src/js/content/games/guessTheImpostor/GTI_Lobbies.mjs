@@ -1,5 +1,6 @@
 import Content from "../../CNT_Content.mjs";
 import { getRecord } from "../../../accountManager/AM_User.mjs";
+import { firebaseIO } from "../../../firebase/FB_instance.mjs";
 /**
  * @family GTI: Guess the Impostor, an extension of CNT: Content
  * @description Guess the impostor game's lobby list.
@@ -59,18 +60,33 @@ export default class GuessTheImpostorLobbies extends Content {
         const SERVER_LIST_SUBSECTION = document.createElement("section");
         SERVER_LIST_SUBSECTION.id = "s_serverListSubSec";
 
-        this.#createServerList();
         // Table
         const SERVER_LIST_TABLE = document.createElement("table");
         SERVER_LIST_TABLE.id = "t_serverList";
         SERVER_LIST_SUBSECTION.appendChild(SERVER_LIST_TABLE);
 
+        const TABLE_BODY = document.createElement("tbody");
+        TABLE_BODY.id = "tb_data";
+
         // Header row
         const HEADER_ROW = document.createElement("tr");
         HEADER_ROW.id = "tr_headers";
 
-        // Table datas
+        this.#populateServerList(TABLE_BODY);
     }
 
-    #createServerList() {}
+    async #populateServerList(_tableBody) {
+        // Read server list from the database
+        const SERVERS = await firebaseIO.readRecord(
+            `games/guessTheImpostor/servers`
+        );
+        console.log(SERVERS);
+
+        // Empty the table
+        _tableBody.innerHTML = "";
+
+        // Repopulate the table
+        for (S in Object.keys(SERVERS)) {
+        }
+    }
 }
