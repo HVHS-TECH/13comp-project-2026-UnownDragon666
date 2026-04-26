@@ -304,6 +304,13 @@ export default class Lobby extends Content {
                     document.dispatchEvent(EVENT);
                 });
 
+                INPUT.addEventListener("keydown", (event) => {
+                    if (event.key === "Enter") {
+                        BUTTON.click();
+                        INPUT.focus();
+                    }
+                });
+
                 MESSAGE_CONTAINER.append(INPUT, BUTTON);
                 TAB.appendChild(MESSAGE_CONTAINER);
 
