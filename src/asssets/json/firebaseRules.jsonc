@@ -37,12 +37,10 @@
                 "servers": {
                     ".read": "auth != null",
                     "$serverID": {
-                        // Any authenticated user may create a NEW server
-                        // Only the HOST may edit anything else
-                        ".write": "auth != null && (!data.exists() || data.child('host/uid').val() === auth.uid)",
+                        ".write": "auth != null && (!data.exists() || data.child('host/uid').val() === auth.uid || root.child('games/guessTheImpostor/servers').child($serverID).child('players').child(auth.uid).exists())",
                         "players": {
-                            // Players may edit their OWN node
                             "$playerID": {
+                                // A player may only write their own node, and only if the server exists
                                 ".write": "$playerID === auth.uid",
                             },
                         },

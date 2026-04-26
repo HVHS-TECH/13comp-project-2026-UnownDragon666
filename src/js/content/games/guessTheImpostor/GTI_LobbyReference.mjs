@@ -15,16 +15,20 @@ export default class LobbyReference {
     databaseCache;
     serverID;
     unsubscribeToLobby;
+    ready;
 
     /* **************************************** Constructor *****************************************/
     constructor(_lobbyID) {
         this.serverID = _lobbyID;
-        this.unsubscribeToLobby = firebaseIO.subscribeToRecord(
-            `/games/guessTheImpostor/servers/${_lobbyID}`,
-            (data) => {
-                this.databaseCache = data;
-            },
-        );
+        this.ready = new Promise((resolve) => {
+            this.unsubscribeToLobby = firebaseIO.subscribeToRecord(
+                `/games/guessTheImpostor/servers/${_lobbyID}`,
+                (data) => {
+                    this.databaseCache = data;
+                    resolve();
+                },
+            );
+        });
     }
 }
 
@@ -54,4 +58,14 @@ export function getLobbyRecord() {
  */
 export function getServerID() {
     return currentLobby.serverID;
+}
+
+/**
+ * A getter for the ready promise to deal with the GODDAMN RACE CONDITION THAT APPEARED FROM NOWHERE
+ *  :C
+ *
+ * @returns {Promise} - The ready promise
+ */
+export function getReadyStatus() {
+    return currentLobby.ready;
 }

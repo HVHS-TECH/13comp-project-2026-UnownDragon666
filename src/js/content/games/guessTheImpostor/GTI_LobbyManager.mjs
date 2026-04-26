@@ -42,6 +42,22 @@ export default class LobbyManager {
         document.addEventListener("startGame", (event) => {
             this.#startGame(event);
         });
+
+        document.addEventListener("joinServer", (event) => {
+            // Check if anything is null or undefined
+            const { serverID, playerID, playerData } = event.detail ?? {};
+
+            if (!serverID || !playerID || !playerData) {
+                console.error(
+                    "joinServer event is missing required detail properties",
+                    event.detail,
+                );
+                return;
+            }
+
+            console.log("PLEASE");
+            this.#joinServer(serverID, playerID, playerData);
+        });
     }
 
     /* **************************************** Public Methods *****************************************/
@@ -71,6 +87,7 @@ export default class LobbyManager {
                 photoURL: _hostRecord.public.photoURL,
                 isHost: true,
             },
+            false,
             false,
         );
 
@@ -107,6 +124,13 @@ export default class LobbyManager {
                     numOfImpostors: 1,
                     numberOfRounds: 5,
                 },
+                players: {
+                    [_hostRecord.uid]: {
+                        name: _hostRecord.public.username,
+                        photoURL: _hostRecord.public.photoURL,
+                        isHost: true,
+                    },
+                },
                 messages: {
                     "!welcome": {
                         content:
@@ -126,15 +150,35 @@ export default class LobbyManager {
      * @param {String} _playerID - ID of the player that is joining
      * @param {Object} _playerData - Data of the player joining
      */
-    async #joinServer(_serverID, _playerID, _playerData, _navigate = true) {
+    async #joinServer(
+        _serverID,
+        _playerID,
+        _playerData,
+        _navigate = true,
+        _addPlayer = true,
+    ) {
         // Create path to the players node in the server
         const playerRefPath = `/games/guessTheImpostor/servers/${_serverID}/players/${_playerID}`;
 
         // Inject the player's details into the node
-        await firebaseIO.updateRecord(playerRefPath, _playerData);
+        if (_addPlayer) {
+            await firebaseIO.updateRecord(playerRefPath, _playerData);
+        }
 
-        // When user leaves lobby: Kill them from the lobby
+        // If user disconnects: Kill them from the lobby
         firebaseIO.removeDataOnDisconnect(playerRefPath);
+
+        // create a listener to kill the lobby when everyone leaves
+        firebaseIO.subscribeToRecord(
+            `/games/guessTheImpostor/servers/${_serverID}/players`,
+            (players) => {
+                if (!players || Object.keys(players).length === 0) {
+                    firebaseIO.deleteRecord(
+                        `/games/guessTheImpostor/servers/${_serverID}`,
+                    );
+                }
+            },
+        );
 
         if (_navigate) {
             document.dispatchEvent(

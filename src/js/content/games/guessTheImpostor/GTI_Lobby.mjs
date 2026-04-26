@@ -1,7 +1,11 @@
 import { getRecord } from "../../../accountManager/AM_User.mjs";
 import { firebaseIO } from "../../../firebase/FB_instance.mjs";
 import Content from "../../CNT_Content.mjs";
-import { getLobbyRecord, getServerID } from "./GTI_LobbyReference.mjs";
+import {
+    getLobbyRecord,
+    getReadyStatus,
+    getServerID,
+} from "./GTI_LobbyReference.mjs";
 
 /**
  * @family GTI: Guess the Impostor, an extension of CNT: Content
@@ -133,6 +137,7 @@ export default class Lobby extends Content {
 
         PLAYER_SECTION.append(EXIT_BUTTON, PLAYER_LIST);
 
+        await getReadyStatus();
         // Add players to the player list.
         // This will create an event listener with onValue, which always runs once when instantiated.
         this.#unsubscribePlayers = firebaseIO.subscribeToRecord(

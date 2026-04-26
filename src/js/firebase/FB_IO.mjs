@@ -190,7 +190,7 @@ export default class FirebaseIO {
     }
 
     /**
-     * Function ot remove data when a user disconnects from a lobby
+     * Function to remove data when a user disconnects from a lobby
      *
      * @param {String} _path - Path to attach on disconnect to
      */
