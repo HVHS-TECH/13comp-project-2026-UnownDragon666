@@ -104,7 +104,7 @@ export default class GuessTheImpostorLobbies extends Content {
     async #populateServerList(_tableBody) {
         // Read server list from the database
         const SERVERS = await firebaseIO.readRecord(
-            `games/guessTheImpostor/servers`,
+            `games/guessTheImpostor/servers`
         );
 
         // Empty the table
@@ -148,17 +148,17 @@ export default class GuessTheImpostorLobbies extends Content {
         ROW.appendChild(
             this.#addTableData(
                 `${_serverDetails.host.name}'s Lobby`,
-                "lobbyNames",
-            ),
+                "lobbyNames"
+            )
         );
         ROW.appendChild(
-            this.#addTableData(`${_serverDetails.host.name}`, "hostNames"),
+            this.#addTableData(`${_serverDetails.host.name}`, "hostNames")
         );
         ROW.appendChild(
             this.#addTableData(
                 `${currentPlayers}/${_serverDetails.rules.maxPlayers}`,
-                "numberOfPlayers",
-            ),
+                "numberOfPlayers"
+            )
         );
 
         // PLACEHOLDER FOR PFP DISPLAY
@@ -176,28 +176,31 @@ export default class GuessTheImpostorLobbies extends Content {
 
         JOIN_BUTTON.addEventListener("click", async () => {
             // join the selected server (if the currentPlayer count is less than the maxPlayer count)
+            console.log("joined lobby");
             const SERVER = await firebaseIO.readRecord(
-                `games/guessTheImpostor/servers/${_serverID}`,
+                `games/guessTheImpostor/servers/${_serverID}`
             );
             let currentPlayers = Object.keys(SERVER.players).length;
 
             if (!(currentPlayers < SERVER.rules.maxPlayers)) {
-                alert("Sorry! This server is full.");
-                console.log("WHY???");
+                window.alert("Sorry! This server is full.");
+                console.log("Server is full mate.");
                 return;
             }
 
-            const EVENT = new CustomEvent("joinServer", {
-                detail: {
-                    serverID: _serverID,
-                    playerID: getRecord().uid,
-                    playerData: {
-                        name: getRecord().public.username,
-                        photoURL: getRecord().public.photoURL,
-                        isHost: false,
+            document.dispatchEvent(
+                new CustomEvent("joinServer", {
+                    detail: {
+                        serverID: _serverID,
+                        playerID: getRecord().uid,
+                        playerData: {
+                            name: getRecord().public.username,
+                            photoURL: getRecord().public.photoURL,
+                            isHost: false,
+                        },
                     },
-                },
-            });
+                })
+            );
         });
 
         return ROW;

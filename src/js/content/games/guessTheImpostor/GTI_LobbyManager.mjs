@@ -50,7 +50,7 @@ export default class LobbyManager {
             if (!serverID || !playerID || !playerData) {
                 console.error(
                     "joinServer event is missing required detail properties",
-                    event.detail,
+                    event.detail
                 );
                 return;
             }
@@ -88,7 +88,7 @@ export default class LobbyManager {
                 isHost: true,
             },
             false,
-            false,
+            false
         );
 
         // Navigate to lobby
@@ -149,13 +149,15 @@ export default class LobbyManager {
      * @param {String} _serverID - ID of server to connect to
      * @param {String} _playerID - ID of the player that is joining
      * @param {Object} _playerData - Data of the player joining
+     * @param {Boolean} _navigate - Flag of whether to navigate the user upon joining FOR DEBUG
+     * @param {Boolean} _addPlayer - Flag of whether to add player to the lobby FOR DEBUG
      */
     async #joinServer(
         _serverID,
         _playerID,
         _playerData,
         _navigate = true,
-        _addPlayer = true,
+        _addPlayer = true
     ) {
         // Create path to the players node in the server
         const playerRefPath = `/games/guessTheImpostor/servers/${_serverID}/players/${_playerID}`;
@@ -168,23 +170,25 @@ export default class LobbyManager {
         // If user disconnects: Kill them from the lobby
         firebaseIO.removeDataOnDisconnect(playerRefPath);
 
+        initializeLobbyReference(_serverID);
+
         // create a listener to kill the lobby when everyone leaves
         firebaseIO.subscribeToRecord(
             `/games/guessTheImpostor/servers/${_serverID}/players`,
             (players) => {
                 if (!players || Object.keys(players).length === 0) {
                     firebaseIO.deleteRecord(
-                        `/games/guessTheImpostor/servers/${_serverID}`,
+                        `/games/guessTheImpostor/servers/${_serverID}`
                     );
                 }
-            },
+            }
         );
 
         if (_navigate) {
             document.dispatchEvent(
                 new CustomEvent("navigate", {
                     detail: { content: "Lobby" },
-                }),
+                })
             );
         }
     }
@@ -204,7 +208,7 @@ export default class LobbyManager {
         }
 
         let messageKey = firebaseIO.generateMessageKey(
-            `/games/guessTheImpostor/servers/${_lobbyID}/messages`,
+            `/games/guessTheImpostor/servers/${_lobbyID}/messages`
         );
 
         firebaseIO.updateRecord(
@@ -215,7 +219,7 @@ export default class LobbyManager {
                     timestamp: Date.now(),
                     content: _message,
                 },
-            },
+            }
         );
     }
 
