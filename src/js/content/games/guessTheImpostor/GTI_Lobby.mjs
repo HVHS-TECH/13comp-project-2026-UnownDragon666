@@ -125,11 +125,20 @@ export default class Lobby extends Content {
         // and the option to kick a user (for the host)
         const PLAYER_SECTION = document.createElement("section");
         PLAYER_SECTION.id = "s_playerSection";
-        const EXIT_BUTTON = super.createButton(
-            "EXIT",
-            "navigate",
-            "GuessTheImpostorLobbies",
-        );
+
+        const EXIT_BUTTON = document.createElement("button");
+        EXIT_BUTTON.id = "b_exit";
+        EXIT_BUTTON.type = "button";
+        EXIT_BUTTON.textContent = "Leave";
+        EXIT_BUTTON.addEventListener("click", () => {
+            document.dispatchEvent(
+                new CustomEvent("leaveGame", {
+                    detail: {
+                        content: this.lobbyID,
+                    },
+                }),
+            );
+        });
         EXIT_BUTTON.id = "b_exitButton";
 
         const PLAYER_LIST = document.createElement("ul");

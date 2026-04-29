@@ -1,54 +1,54 @@
 {
-    // Rules written with JSONC
-    "rules": {
-        // Rules for reading and writing in the users node
-        "users": {
-            ".read": "root.child('users').child(auth.uid).child('isAdmin').val() === true",
-            // Can read inside node if authenticated
-            "$uid": {
-                "public": {
-                    // Anyone can read public info, so long as they're authenticated.
-                    ".read": "auth != null",
-                    ".write": "$uid === auth.uid || root.child('users').child(auth.uid).child('isAdmin').val() === true",
-                },
-                "private": {
-                    // Private details are unreadable to everyone except owners and admins
-                    ".read": "$uid === auth.uid || root.child('users').child(auth.uid).child('isAdmin').val() === true",
-                    ".write": "$uid === auth.uid || root.child('users').child(auth.uid).child('isAdmin').val() === true",
-                },
-                "isAdmin": {
-                    // Only an admin can change someone's admin status
-                    // But reading admin status is free to anyone that's authenticated.
-                    ".read": "auth != null",
-                    ".write": "root.child('users').child(auth.uid).child('isAdmin').val() === true",
-                },
-                "uid": {
-                    // Any authenticated user may read.
-                    // NO ONE MAY ALTER A USER'S UID. THAT WOULD BE VERY VERY ***VERY*** BAD.
-                    ".read": "auth != null",
-                    ".write": false,
-                },
-                ".read": "$uid === auth.uid || root.child('users').child(auth.uid).child('isAdmin').val() === true",
-                ".write": "$uid === auth.uid || root.child('users').child(auth.uid).child('isAdmin').val() === true",
-            },
+  // Rules written with JSONC
+  "rules": {
+    // Rules for reading and writing in the users node
+    "users": {
+      ".read": "root.child('users').child(auth.uid).child('isAdmin').val() === true",
+      // Can read inside node if authenticated
+      "$uid": {
+        "public": {
+          // Anyone can read public info, so long as they're authenticated.
+          ".read": "auth != null",
+          ".write": "$uid === auth.uid || root.child('users').child(auth.uid).child('isAdmin').val() === true",
         },
-        "games": {
-            "guessTheImpostor": {
-                "servers": {
-                    ".read": "auth != null",
-                    "$serverID": {
-                        ".write": "auth != null && (!data.exists() || data.child('host/uid').val() === auth.uid || root.child('games/guessTheImpostor/servers').child($serverID).child('players').child(auth.uid).exists())",
-                        "players": {
-                            "$playerID": {
-                                // A player may only write their own node, and only if the server exists
-                                ".write": "$playerID === auth.uid",
-                            },
-                        },
-                    },
-                },
-            },
+        "private": {
+          // Private details are unreadable to everyone except owners and admins
+          ".read": "$uid === auth.uid || root.child('users').child(auth.uid).child('isAdmin').val() === true",
+          ".write": "$uid === auth.uid || root.child('users').child(auth.uid).child('isAdmin').val() === true",
         },
-        ".read": false,
-        ".write": false,
+        "isAdmin": {
+          // Only an admin can change someone's admin status
+          // But reading admin status is free to anyone that's authenticated.
+          ".read": "auth != null",
+          ".write": "root.child('users').child(auth.uid).child('isAdmin').val() === true",
+        },
+        "uid": {
+          // Any authenticated user may read.
+          // NO ONE MAY ALTER A USER'S UID. THAT WOULD BE VERY VERY ***VERY*** BAD.
+          ".read": "auth != null",
+          ".write": false,
+        },
+        ".read": "$uid === auth.uid || root.child('users').child(auth.uid).child('isAdmin').val() === true",
+        ".write": "$uid === auth.uid || root.child('users').child(auth.uid).child('isAdmin').val() === true",
+      },
     },
+    "games": {
+      "guessTheImpostor": {
+        "servers": {
+          ".read": "auth != null",
+          "$serverID": {
+            ".write": "auth != null",
+            "players": {
+              "$playerID": {
+                // A player may only write their own node, and only if the server exists
+                ".write": "$playerID === auth.uid",
+              },
+            },
+          },
+        },
+      },
+    },
+    ".read": false,
+    ".write": false,
+  },
 }

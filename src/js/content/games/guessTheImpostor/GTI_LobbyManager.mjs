@@ -43,6 +43,10 @@ export default class LobbyManager {
             this.#startGame(event);
         });
 
+        document.addEventListener("leaveGame", (event) => {
+            this.#leaveGame(event.detail.content);
+        });
+
         document.addEventListener("joinServer", (event) => {
             // Check if anything is null or undefined
             const { serverID, playerID, playerData } = event.detail ?? {};
@@ -50,12 +54,10 @@ export default class LobbyManager {
             if (!serverID || !playerID || !playerData) {
                 console.error(
                     "joinServer event is missing required detail properties",
-                    event.detail
+                    event.detail,
                 );
                 return;
             }
-
-            console.log("PLEASE");
             this.#joinServer(serverID, playerID, playerData);
         });
     }
@@ -88,7 +90,7 @@ export default class LobbyManager {
                 isHost: true,
             },
             false,
-            false
+            false,
         );
 
         // Navigate to lobby
@@ -157,8 +159,9 @@ export default class LobbyManager {
         _playerID,
         _playerData,
         _navigate = true,
-        _addPlayer = true
+        _addPlayer = true,
     ) {
+        console.log("joined the server", _serverID, _playerID, _playerData);
         // Create path to the players node in the server
         const playerRefPath = `/games/guessTheImpostor/servers/${_serverID}/players/${_playerID}`;
 
@@ -178,17 +181,54 @@ export default class LobbyManager {
             (players) => {
                 if (!players || Object.keys(players).length === 0) {
                     firebaseIO.deleteRecord(
-                        `/games/guessTheImpostor/servers/${_serverID}`
+                        `/games/guessTheImpostor/servers/${_serverID}`,
                     );
                 }
-            }
+            },
         );
 
         if (_navigate) {
             document.dispatchEvent(
                 new CustomEvent("navigate", {
                     detail: { content: "Lobby" },
-                })
+                }),
+            );
+        }
+    }
+
+    /**
+     * removes user's record from the lobby's player list and
+     *
+     * @param {String} _lobbyID - Lobby to leave
+     */
+    async #leaveGame(_lobbyID) {
+        console.log("left lobby");
+        try {
+            // If user is the last player in the server, kill the server
+            let players = await firebaseIO.readRecord(
+                `games/guessTheImpostor/servers/${_lobbyID}/players`,
+            );
+            if (Object.keys(players).length <= 1) {
+                firebaseIO.deleteRecord(
+                    `games/guessTheImpostor/servers/${_lobbyID}`,
+                );
+                return;
+            }
+
+            // Remove player from the players list of the lobby
+            await firebaseIO.deleteRecord(
+                `games/guessTheImpostor/servers/${_lobbyID}/players/${getRecord().uid}`,
+            );
+        } catch (error) {
+            console.error(`Error leaving server: `, error);
+        } finally {
+            // Redirect to the lobbies page
+            document.dispatchEvent(
+                new CustomEvent("navigate", {
+                    detail: {
+                        content: "GuessTheImpostorLobbies",
+                    },
+                }),
             );
         }
     }
@@ -208,7 +248,7 @@ export default class LobbyManager {
         }
 
         let messageKey = firebaseIO.generateMessageKey(
-            `/games/guessTheImpostor/servers/${_lobbyID}/messages`
+            `/games/guessTheImpostor/servers/${_lobbyID}/messages`,
         );
 
         firebaseIO.updateRecord(
@@ -219,7 +259,7 @@ export default class LobbyManager {
                     timestamp: Date.now(),
                     content: _message,
                 },
-            }
+            },
         );
     }
 
