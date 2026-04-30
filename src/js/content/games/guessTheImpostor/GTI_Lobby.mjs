@@ -215,8 +215,6 @@ export default class Lobby extends Content {
 
         _playerList.innerHTML = ``;
 
-        // const NEW_PLAYER_LIST = document.createElement("ul");
-        // NEW_PLAYER_LIST.id = "u_playerList";
         for (let [uid, playerData] of Object.entries(_players)) {
             let name = playerData.name;
             let pfpURL = playerData.photoURL;
