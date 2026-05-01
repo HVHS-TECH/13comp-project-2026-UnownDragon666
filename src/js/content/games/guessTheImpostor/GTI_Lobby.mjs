@@ -514,7 +514,7 @@ export default class Lobby extends Content {
      * Makes the lobby state public by sending an event to the lobbyManager
      */
     #makeLobbyPublic() {
-        const PUBLICIZE_EVENT = new CustomEvent("updatePageState", {
+        const PUBLICIZE_EVENT = new CustomEvent("updateLobbyState", {
             detail: {
                 content: this.#lobbyPath,
                 newState: "public",

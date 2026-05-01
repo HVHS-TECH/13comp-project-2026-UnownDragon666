@@ -110,20 +110,22 @@ export default class GuessTheImpostorLobbies extends Content {
         // Empty the table
         _tableBody.innerHTML = "";
 
-        if (SERVERS == null) {
-            _tableBody.innerHTML = `<tr><td colspan="5">No live servers! Please make a new server.</td></tr>`;
-            document.getElementById("b_reloadServers").disabled = false;
-            return;
-        }
-
         // Repopulate the table
         for (let [UUID, server] of Object.entries(SERVERS)) {
             console.log(UUID, server);
+            if (server.lobbyState != "public") return;
 
             // Make the table row
             let row = this.#makeTableRow(UUID, server);
 
             row ? _tableBody.appendChild(row) : null;
+        }
+
+        // If there are no servers that are public TODO:
+        if (SERVERS == null) {
+            _tableBody.innerHTML = `<tr><td colspan="5">No live servers! Please make a new server.</td></tr>`;
+            document.getElementById("b_reloadServers").disabled = false;
+            return;
         }
 
         document.getElementById("b_reloadServers").disabled = false;
