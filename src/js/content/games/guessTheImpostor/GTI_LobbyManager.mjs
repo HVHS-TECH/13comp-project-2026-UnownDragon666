@@ -161,7 +161,6 @@ export default class LobbyManager {
         _navigate = true,
         _addPlayer = true,
     ) {
-        console.log("joined the server", _serverID, _playerID, _playerData);
         // Create path to the players node in the server
         const playerRefPath = `/games/guessTheImpostor/servers/${_serverID}/players/${_playerID}`;
 

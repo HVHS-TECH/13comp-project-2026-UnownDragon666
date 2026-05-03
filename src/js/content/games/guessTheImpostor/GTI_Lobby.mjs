@@ -473,9 +473,10 @@ export default class Lobby extends Content {
                 MAKE_LOBBY_PUBLIC.type = "button";
                 MAKE_LOBBY_PUBLIC.id = "b_publicLobby";
                 MAKE_LOBBY_PUBLIC.textContent = "Set Lobby To Public";
-                MAKE_LOBBY_PUBLIC.addEventListener("click", () =>
-                    this.#makeLobbyPublic(),
-                );
+                MAKE_LOBBY_PUBLIC.addEventListener("click", () => {
+                    this.#makeLobbyPublic();
+                    MAKE_LOBBY_PUBLIC.remove();
+                });
 
                 getRecord().uid == getLobbyRecord().host.uid
                     ? (MAKE_LOBBY_PUBLIC.disabled = false)

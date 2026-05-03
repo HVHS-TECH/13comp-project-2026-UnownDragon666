@@ -14,6 +14,7 @@ import { firebaseIO } from "../../../firebase/FB_instance.mjs";
 export default class GuessTheImpostorLobbies extends Content {
     /* **************************************** Private Fields *****************************************/
     static #secID = "s_lobbies";
+    #unsubscribeToServers;
 
     /* **************************************** Public Fields *****************************************/
     // The ID used to identify the stylesheet belonging to this page (Game Lobbies Style Sheet)
@@ -27,6 +28,8 @@ export default class GuessTheImpostorLobbies extends Content {
 
     /* ******************************** Parent Class Method Overrides *********************************/
     async removeContent() {
+        this.#unsubscribeToServers?.();
+
         document.querySelectorAll("section").forEach((section) => {
             section.remove();
         });
@@ -53,17 +56,30 @@ export default class GuessTheImpostorLobbies extends Content {
             document.dispatchEvent(EVENT);
         });
 
-        // Reload servers
-        const RELOAD_BUTTON = document.createElement("button");
-        RELOAD_BUTTON.type = "button";
-        RELOAD_BUTTON.textContent = "Reload Servers";
-        RELOAD_BUTTON.id = "b_reloadServers";
-        RELOAD_BUTTON.addEventListener("click", () => {
-            RELOAD_BUTTON.disabled = true;
-            this.#populateServerList(this.tableBody);
-        });
+        let previousSnapshot = null;
 
-        BUTTON_CONTAINER.append(EXIT_BUTTON, HOST_BUTTON, RELOAD_BUTTON);
+        this.#unsubscribeToServers = firebaseIO.subscribeToRecord(
+            `games/guessTheImpostor/servers`,
+            (servers) => {
+                if (!servers) {
+                    this.#populateServerList(this.tableBody);
+                    return;
+                }
+
+                // Creates a snapshot of servers and their states
+                const currentSnapshot = Object.entries(servers)
+                    .map(([id, server]) => `${id}:${server.lobbyState}`)
+                    .join("|");
+
+                // If the snapshot is the same as the previous snapshot, return
+                if (currentSnapshot == previousSnapshot) return;
+
+                previousSnapshot = currentSnapshot;
+                this.#populateServerList(this.tableBody);
+            },
+        );
+
+        BUTTON_CONTAINER.append(EXIT_BUTTON, HOST_BUTTON);
         this.section.appendChild(BUTTON_CONTAINER);
 
         /* Create server list table and subsection*/
@@ -110,25 +126,39 @@ export default class GuessTheImpostorLobbies extends Content {
         // Empty the table
         _tableBody.innerHTML = "";
 
-        // Repopulate the table
-        for (let [UUID, server] of Object.entries(SERVERS)) {
-            console.log(UUID, server);
-            if (server.lobbyState != "public") return;
-
-            // Make the table row
-            let row = this.#makeTableRow(UUID, server);
-
-            row ? _tableBody.appendChild(row) : null;
-        }
-
-        // If there are no servers that are public TODO:
-        if (SERVERS == null) {
+        if (!SERVERS) {
             _tableBody.innerHTML = `<tr><td colspan="5">No live servers! Please make a new server.</td></tr>`;
-            document.getElementById("b_reloadServers").disabled = false;
             return;
         }
 
-        document.getElementById("b_reloadServers").disabled = false;
+        // Delete empty servers
+        const DEAD_SERVERS = Object.entries(SERVERS).filter(
+            ([, s]) => !s.players || Object.keys(s.players).length == 0,
+        );
+
+        for (let [UUID] of DEAD_SERVERS) {
+            await firebaseIO.deleteRecord(
+                `/games/guessTheImpostor/servers/${UUID}`,
+            );
+        }
+
+        // If there are no servers or no public servers
+        const PUBLIC_SERVERS = SERVERS
+            ? Object.entries(SERVERS).filter(
+                  ([, server]) => server.lobbyState === "public",
+              )
+            : [];
+
+        if (PUBLIC_SERVERS.length === 0) {
+            _tableBody.innerHTML = `<tr><td colspan="5">No live servers! Please make a new server.</td></tr>`;
+            return;
+        }
+
+        // Repopulate the table
+        for (let [UUID, server] of PUBLIC_SERVERS) {
+            let row = this.#makeTableRow(UUID, server);
+            row ? _tableBody.appendChild(row) : null;
+        }
     }
 
     /**
@@ -178,7 +208,6 @@ export default class GuessTheImpostorLobbies extends Content {
 
         JOIN_BUTTON.addEventListener("click", async () => {
             // join the selected server (if the currentPlayer count is less than the maxPlayer count)
-            console.log("joined lobby");
             const SERVER = await firebaseIO.readRecord(
                 `games/guessTheImpostor/servers/${_serverID}`,
             );
