@@ -1,5 +1,8 @@
 import { firebaseIO } from "../../../firebase/FB_instance.mjs";
-import { initializeLobbyReference } from "./GTI_LobbyReference.mjs";
+import {
+    getLobbyRecord,
+    initializeLobbyReference,
+} from "./GTI_LobbyReference.mjs";
 import { getRecord } from "../../../accountManager/AM_User.mjs";
 
 /**
@@ -268,7 +271,16 @@ export default class LobbyManager {
         console.log(`User Kicked: ${_user}`);
     }
 
-    #startGame(_startEvent) {
+    async #startGame(_startEvent) {
         console.log(_startEvent);
+        await setupGame();
+    }
+
+    #setupGame() {
+        let cache = getLobbyRecord();
+        // Decide the impostor
+
+        // Choose the questions (innocent and impostor)
+        // Write those to the database}
     }
 }
