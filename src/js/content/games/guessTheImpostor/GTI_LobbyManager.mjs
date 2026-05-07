@@ -278,9 +278,12 @@ export default class LobbyManager {
 
     #setupGame() {
         let cache = getLobbyRecord();
+        let getRandomIntIncl = (max) => {
+            const MIN = 0;
+        };
         // Decide the impostor
 
         // Choose the questions (innocent and impostor)
-        // Write those to the database}
+        // Write those to the database
     }
 }
