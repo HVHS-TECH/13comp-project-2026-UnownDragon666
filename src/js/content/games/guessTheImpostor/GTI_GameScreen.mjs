@@ -31,6 +31,6 @@ export default class GuessTheImpostor extends Content {
     }
 
     async buildContent() {
-        // Components: Chat, Players list (to vote), the question, impostor indicator
+        // Components: Chat, Players list (to vote), the question, impostor indicator, leave
     }
 }

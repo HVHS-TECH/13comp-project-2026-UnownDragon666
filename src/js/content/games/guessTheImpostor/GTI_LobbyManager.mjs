@@ -280,6 +280,7 @@ export default class LobbyManager {
         let cache = getLobbyRecord();
         let getRandomIntIncl = (max) => {
             const MIN = 0;
+            const MAX = Math.floor(max);
         };
         // Decide the impostor
 
