@@ -14,7 +14,7 @@ export default class Games extends Content {
 
     #cards = [
         { cardID: "d_guessTheImpostor", cardText: "Who's lying?" },
-        { cardID: "d_catchTheStars", cardText: "Catch the Stars!" },
+        { cardID: "d_minesweeper", cardText: "Minesweeper" },
     ];
 
     #games = {
@@ -23,6 +23,12 @@ export default class Games extends Content {
             description:
                 "Can you find out who the impostor is, based on their answer?",
             target: "GuessTheImpostorLobbies",
+            buttonContent: "Play Game",
+        },
+        d_minesweeper: {
+            title: "Minesweeper",
+            description: "The classic minesweeper experience!",
+            target: "ChooseMinesweeperDifficulty",
             buttonContent: "Play Game",
         },
     };
@@ -35,6 +41,7 @@ export default class Games extends Content {
     constructor() {
         super(Games.#secID);
     }
+
     /* ******************************** Parent Class Method Overrides *********************************/
     async removeContent() {
         document.querySelectorAll("section").forEach((section) => {
@@ -43,7 +50,7 @@ export default class Games extends Content {
     }
 
     async buildContent() {
-        // Create nav var
+        // Create nav bar
         const NAV = super.createNavBar();
         this.section.appendChild(NAV);
 
@@ -132,7 +139,19 @@ export default class Games extends Content {
      * @param {Object} _cards - object containing all the Card elements, div IDs mapped to their card elements
      */
     #modalListeners(_modal, _cards) {
+        const [modalDiv, modalClose, modalTitle, modalDesc, modalPlay] = _modal;
+        let currentTarget = "";
+
         try {
+            modalPlay.addEventListener("click", () => {
+                if (currentTarget) {
+                    const event = new CustomEvent("navigate", {
+                        detail: { content: currentTarget },
+                    });
+                    document.dispatchEvent(event);
+                }
+            });
+
             // Register listeners to the cards:
             Object.keys(this.#games).forEach((id) => {
                 // get the card element
@@ -141,39 +160,26 @@ export default class Games extends Content {
                 card.addEventListener("click", () => {
                     // get this card's info from the #games object
                     const game = this.#games[id];
-                    const event = new CustomEvent("navigate", {
-                        detail: {
-                            content: game.target,
-                        },
-                    });
 
-                    _modal[2].textContent = game.title;
-                    _modal[3].textContent = game.description;
-                    _modal[4].textContent = game.buttonContent;
-                    _modal[4].addEventListener("click", () => {
-                        document.dispatchEvent(event);
-                    });
-                    _modal[0].style.display = "flex";
+                    currentTarget = game.target;
+                    modalTitle.textContent = game.title;
+                    modalDesc.textContent = game.description;
+                    modalPlay.textContent = game.buttonContent;
+
+                    modalDiv.style.display = "flex";
                 });
             });
 
             // Register listener to close modal
-            _modal[1].addEventListener(
-                "click",
-                () => {
-                    _modal[0].style.display = "none";
-                },
-                { once: true },
-            );
+            modalClose.addEventListener("click", () => {
+                modalDiv.style.display = "none";
+            });
 
-            // Close modal when you click outside of it
-            const OUTSIDE_CLICK_HANDLER = (event) => {
-                if (event.target === _modal[0]) {
-                    _modal[0].style.display = "none";
-                    window.removeEventListener("click", OUTSIDE_CLICK_HANDLER);
+            window.addEventListener("click", (event) => {
+                if (event.target === modalDiv) {
+                    modalDiv.style.display = "none";
                 }
-            };
-            window.addEventListener("click", OUTSIDE_CLICK_HANDLER);
+            });
         } catch (error) {
             console.error(error);
         }

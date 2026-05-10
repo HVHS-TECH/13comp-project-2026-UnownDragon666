@@ -1,3 +1,6 @@
+import MinesweeperBoard from "./gameElements/MGE_Board.mjs";
+import MinesweeperRenderer from "./MSG_GameRenderer.mjs";
+
 /**
  * @family MSG: MineSweeper Game (NOT TO BE CONFUSED WITH MONOSODIUM GLUTAMATE)
  * @description The game manager for mine sweeper, communicates between the renderer and the board.
@@ -10,6 +13,50 @@
 
 export default class Minesweeper {
     /* **************************************** Private Fields *****************************************/
+    #grid;
+    #renderer;
+    #board;
+    #isFirstClick = true;
+
     /* **************************************** Public Fields *****************************************/
+
     /* **************************************** Constructor *****************************************/
+    /**
+     * Constuctor, initialises the board's reference
+     *
+     * @param {HTMLDivElement} _grid - The game board
+     */
+    constructor(_grid) {
+        this.#grid = _grid;
+
+        // Instantiate the renderer
+        this.#renderer = new MinesweeperRenderer(this.#grid);
+    }
+
+    /* **************************************** Public Methods *****************************************/
+    startGame(_settings) {
+        this.#board = new MinesweeperBoard(
+            _settings.sizeX,
+            _settings.sizeY,
+            _settings.minesCount,
+        );
+
+        this.#renderer.generateGrid(
+            this.#board,
+            this.#onReveal.bind(this),
+            this.#onFlag.bind(this),
+        );
+    }
+
+    /* **************************************** Private Methods *****************************************/
+    #onReveal(_x, _y) {
+        // Get the cell
+        if (this.#isFirstClick) {
+            this.#board.placeMines(_x, _y);
+            // Start timer once I have that logic
+            this.#isFirstClick = false;
+        }
+    }
+
+    #onFlag() {}
 }

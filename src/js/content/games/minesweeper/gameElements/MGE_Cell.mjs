@@ -8,4 +8,56 @@
  * @class
  */
 
-export default class MinesweeperCell {}
+export default class MinesweeperCell {
+    /* **************************************** Private Fields *****************************************/
+    #x;
+    #y;
+    #isMine = false;
+    #isRevealed = false;
+    #isFlagged = false;
+    #adjacentMines = 0;
+
+    /* **************************************** Constructor *****************************************/
+    constructor(_x, _y) {
+        this.#x = _x;
+        this.#y = _y;
+    }
+
+    // Getters
+    get x() {
+        return this.#x;
+    }
+    get y() {
+        return this.#y;
+    }
+    get isMine() {
+        return this.#isMine;
+    }
+    get isRevealed() {
+        return this.#isRevealed;
+    }
+    get isFlagged() {
+        return this.#isFlagged;
+    }
+    get adjacentMines() {
+        return this.#adjacentMines;
+    }
+
+    // Setters
+    set adjacentMines(_n) {
+        this.#adjacentMines = _n;
+    }
+
+    /* **************************************** Public Methods *****************************************/
+    placeMine() {
+        this.#isMine = true;
+    }
+
+    reveal() {
+        this.#isRevealed = true;
+    }
+
+    toggleFlag() {
+        this.#isFlagged = !this.#isFlagged;
+    }
+}

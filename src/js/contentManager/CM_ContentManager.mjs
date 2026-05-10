@@ -63,7 +63,7 @@ export default class ContentManager {
      *
      * @returns {Promise<void>}
      */
-    async CM_displayContent(_content) {
+    async CM_displayContent(_content, _params = null) {
         // Function replaces the current content of the page with new content
 
         // First, remove currently displayed page's HTML:
@@ -74,7 +74,7 @@ export default class ContentManager {
         try {
             // Next, create an instance of the new page content
             let page = new _content();
-            await page.buildContent();
+            await page.buildContent(_params);
 
             // Update displayedContent
             this.displayedContent = page;
@@ -117,7 +117,9 @@ export default class ContentManager {
         try {
             // Inside the "navigate" event is the name of the class I need to navigate to
             let navTarget = _event.detail.content;
-            await this.CM_displayContent(ContentPages[navTarget]);
+            let navParams = _event.detail.params || null;
+
+            await this.CM_displayContent(ContentPages[navTarget], navParams);
 
             // If the event carries a state, apply it after navigation settles
             if (_event.detail.state) {

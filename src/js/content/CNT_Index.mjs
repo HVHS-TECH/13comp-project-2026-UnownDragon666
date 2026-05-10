@@ -6,6 +6,8 @@ import GuessTheImpostorLobbies from "./games/guessTheImpostor/GTI_Lobbies.mjs";
 import Lobby from "./games/guessTheImpostor/GTI_Lobby.mjs";
 import GuessTheImpostor from "./games/guessTheImpostor/GTI_GameScreen.mjs";
 import Admin from "./CNT_Admin.mjs";
+import ChooseMinesweeperDifficulty from "./games/minesweeper/MSG_DifficultySelect.mjs";
+import MinesweeperGameScreen from "./games/minesweeper/MSG_GameScreen.mjs";
 
 /**
  * @family CNT: Content
@@ -25,4 +27,6 @@ export {
     Lobby,
     GuessTheImpostor,
     Admin,
+    ChooseMinesweeperDifficulty,
+    MinesweeperGameScreen,
 };
