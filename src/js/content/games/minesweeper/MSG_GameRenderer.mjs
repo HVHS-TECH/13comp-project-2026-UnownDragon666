@@ -24,13 +24,16 @@ export default class MinesweeperRenderer {
         const X_LIMIT = _board.sizeX;
         const Y_LIMIT = _board.sizeY;
         this.#cellElements = Array.from({ length: Y_LIMIT }, () => []); // Make array into a 2D array
-
+        this.#grid.addEventListener("contextmenu", (e) => e.preventDefault());
         for (let y = 0; y < Y_LIMIT; y++) {
             for (let x = 0; x < X_LIMIT; x++) {
                 this.#cellElements[y][x] = document.createElement("div");
-                this.#grid.addEventListener("contextmenu", (e) =>
-                    e.preventDefault(),
+                this.#cellElements[y][x].classList.add(
+                    "inactiveMinesweeperCell",
                 );
+
+                this.renderCell(_x, _y, _board.getCell(x, y));
+
                 this.#cellElements[y][x].addEventListener(
                     "mouseup",
                     (event) => {
@@ -43,5 +46,8 @@ export default class MinesweeperRenderer {
         }
     }
 
-    renderCell() {}
+    renderCell(_x, _y, _cell) {
+        // Find the relevant grid element and cell object, and render the cell based on the Cell object's data
+        // Get the element from the grid:
+    }
 }

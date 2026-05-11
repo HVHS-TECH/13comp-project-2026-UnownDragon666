@@ -56,7 +56,7 @@ export default class MinesweeperBoard {
     placeMines(_avoidX, _avoidY) {}
 
     reveal(_x, _y) {
-        // Flood fill logic
+        // Flood fill logic :<
     }
 
     toggleFlag(_x, _y) {}

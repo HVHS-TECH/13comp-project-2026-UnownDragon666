@@ -12,6 +12,7 @@ import ProfileStyles from "./pages/STY_ProfileStyles.mjs";
 import GamesStyles from "./pages/STY_GameStyles.mjs";
 import LobbyStyles from "./pages/STY_LobbyStyles.mjs";
 import AdminStyles from "./pages/STY_AdminStyles.mjs";
+import MinesweeperStyles from "./pages/STY_MinesweeperStyles.mjs";
 
 export {
     WelcomeStyles as WCSS,
@@ -20,4 +21,5 @@ export {
     GamesStyles as GMSS,
     LobbyStyles as LBSS,
     AdminStyles as ADSS,
+    MinesweeperStyles as MSGS,
 };

@@ -106,7 +106,7 @@ export default class FirebaseIO {
      * Reads a record in the database and returns it as an object.
      *
      * @param {string} _path - Path to read from in database
-     * @returns {object} snapshot.val() is an array containing the snippet of the DB that was read
+     * @returns {Object} snapshot.val() is an object containing the snippet of the DB that was read
      */
     async readRecord(_path) {
         const REF = ref(this.#database, _path);

@@ -17,6 +17,9 @@ export default class Minesweeper {
     #renderer;
     #board;
     #isFirstClick = true;
+    #sizeX;
+    #sizeY;
+    #mineCount;
 
     /* **************************************** Public Fields *****************************************/
 
@@ -35,10 +38,14 @@ export default class Minesweeper {
 
     /* **************************************** Public Methods *****************************************/
     startGame(_settings) {
+        this.#sizeX = _settings.sizeX;
+        this.#sizeY = _settings.sizeY;
+        this.#mineCount = _settings.minesCount;
+
         this.#board = new MinesweeperBoard(
-            _settings.sizeX,
-            _settings.sizeY,
-            _settings.minesCount,
+            this.#sizeX,
+            this.#sizeY,
+            this.#mineCount,
         );
 
         this.#renderer.generateGrid(
