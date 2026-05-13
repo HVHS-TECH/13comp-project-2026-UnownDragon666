@@ -63,6 +63,9 @@ export default class Minesweeper {
             // Start timer once I have that logic
             this.#isFirstClick = false;
         }
+
+        console.log(`Clicked: ${_x}_${_y}`);
+        document.getElementById(`${_x}_${_y}`).style.backgroundColor = "Black";
     }
 
     #onFlag() {}

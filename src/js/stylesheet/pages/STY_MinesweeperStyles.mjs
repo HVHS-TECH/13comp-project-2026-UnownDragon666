@@ -22,9 +22,18 @@ export default class MinesweeperStyles {
      */
     static applyStyle() {
         document.getElementById("contentLayerStyle").innerHTML = `
+        #s_minesweeper {
+            height: 100vh;
+        }
+        
         #s_minesweeperGrid {
             gap: 5px;
+            margin: auto;
         }
+
+        .inactiveMinesweeperCell {
+            background-color: #808080;
+        } 
         `;
     }
 }

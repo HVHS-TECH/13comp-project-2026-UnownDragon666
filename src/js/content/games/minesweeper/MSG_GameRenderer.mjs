@@ -13,6 +13,9 @@ export default class MinesweeperRenderer {
     #grid;
     #cellElements;
 
+    // Create an "AbortController" to kill all the event listeners after the game ends
+    #controller = new AbortController();
+
     /* **************************************** Public Fields *****************************************/
     /* **************************************** Constructor *****************************************/
     constructor(_grid) {
@@ -23,6 +26,7 @@ export default class MinesweeperRenderer {
     generateGrid(_board, _onReveal, _onFlag) {
         const X_LIMIT = _board.sizeX;
         const Y_LIMIT = _board.sizeY;
+        const { signal } = this.#controller.signal;
         this.#cellElements = Array.from({ length: Y_LIMIT }, () => []); // Make array into a 2D array
         this.#grid.addEventListener("contextmenu", (e) => e.preventDefault());
         for (let y = 0; y < Y_LIMIT; y++) {
@@ -31,8 +35,9 @@ export default class MinesweeperRenderer {
                 this.#cellElements[y][x].classList.add(
                     "inactiveMinesweeperCell",
                 );
+                this.#cellElements[y][x].id = `${x}_${y}`;
 
-                this.renderCell(_x, _y, _board.getCell(x, y));
+                this.renderCell(x, y, _board.getCell(x, y));
 
                 this.#cellElements[y][x].addEventListener(
                     "mouseup",
@@ -40,6 +45,7 @@ export default class MinesweeperRenderer {
                         event.button === 0 ? _onReveal(x, y) : null;
                         event.button === 2 ? _onFlag(x, y) : null;
                     },
+                    { signal },
                 );
                 this.#grid.appendChild(this.#cellElements[y][x]);
             }
@@ -49,5 +55,21 @@ export default class MinesweeperRenderer {
     renderCell(_x, _y, _cell) {
         // Find the relevant grid element and cell object, and render the cell based on the Cell object's data
         // Get the element from the grid:
+        const CELL_ELEMENT = document.getElementById(`${_x}_${_y}`);
+        const CELL_OBJ = _cell;
+
+        // Check if the cell has been revealed
+        if (CELL_OBJ.isRevealed) return;
+
+        // Check if the cell has been flagged
+        if (CELL_OBJ.isFlagged) return;
+
+        // If cell is a mine, make it red.
+        if (CELL_OBJ.isMine) {
+            CELL_ELEMENT.classList.toggle("inactiveMinesweeperCell");
+            CELL_ELEMENT.classList.add("clickedMineCell");
+            document.dispatchEvent(new CustomEvent("gameLost", { detail: {} }));
+            this.#controller.abort();
+        }
     }
 }
