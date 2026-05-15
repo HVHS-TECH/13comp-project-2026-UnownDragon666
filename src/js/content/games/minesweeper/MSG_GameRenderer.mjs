@@ -67,7 +67,7 @@ export default class MinesweeperRenderer {
         // If cell is a mine, make it red.
         if (CELL_OBJ.isMine) {
             CELL_ELEMENT.classList.toggle("inactiveMinesweeperCell");
-            CELL_ELEMENT.classList.add("clickedMineCell");
+            CELL_ELEMENT.classList.add("activeMineCell");
             document.dispatchEvent(new CustomEvent("gameLost", { detail: {} }));
             this.#controller.abort();
         }

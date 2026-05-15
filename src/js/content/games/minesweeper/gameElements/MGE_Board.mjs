@@ -53,7 +53,20 @@ export default class MinesweeperBoard {
     #getNeighbours(_x, _y) {}
 
     /* **************************************** Public Methods *****************************************/
-    placeMines(_avoidX, _avoidY) {}
+    placeMines(_avoidX, _avoidY) {
+        let minesToPlace = this.#mineCount;
+        while (minesToPlace > 0) {
+            // Choose a cell
+            let randX = Math.floor(Math.random() * this.#sizeX) + 1;
+            let randY = Math.floor(Math.random() * this.#sizeY) + 1;
+            let cell = this.#cells[randY][randX];
+            if (randX == _avoidX || randY == _avoidY) continue;
+            if (!cell.isMine) {
+                cell.placeMine();
+                minesToPlace--;
+            }
+        }
+    }
 
     reveal(_x, _y) {
         // Flood fill logic :<

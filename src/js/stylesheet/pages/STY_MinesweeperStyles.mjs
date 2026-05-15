@@ -34,6 +34,10 @@ export default class MinesweeperStyles {
         .inactiveMinesweeperCell {
             background-color: #808080;
         } 
+
+        .activeMineCell {
+            background-color: #FF0000;
+        }
         `;
     }
 }
