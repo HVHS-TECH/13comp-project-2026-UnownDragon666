@@ -1,6 +1,7 @@
 import { firebaseIO } from "../../../firebase/FB_instance.mjs";
 import {
     getLobbyRecord,
+    getServerID,
     initializeLobbyReference,
 } from "./GTI_LobbyReference.mjs";
 import { getRecord } from "../../../accountManager/AM_User.mjs";
@@ -273,18 +274,24 @@ export default class LobbyManager {
 
     async #startGame(_startEvent) {
         console.log(_startEvent);
-        await setupGame();
+        await this.#setupGame();
     }
 
-    #setupGame() {
+    async #setupGame() {
         let cache = getLobbyRecord();
         let getRandomIntIncl = (max) => {
-            const MIN = 0;
             const MAX = Math.floor(max);
+            return Math.floor(Math.random() * (MAX + 1));
         };
         // Decide the impostor
+        await firebaseIO.updateRecord(`${this.#rootPath}/${getServerID()}/`, {
+            impostor: Object.entries(cache.players)[
+                getRandomIntIncl(Object.entries(cache.players).length)
+            ],
+        });
 
         // Choose the questions (innocent and impostor)
+        const QUESTIONS;
         // Write those to the database
     }
 }
