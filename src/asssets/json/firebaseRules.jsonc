@@ -48,6 +48,10 @@
         },
       },
     },
+    "questions": {
+      ".read": "auth != null",
+      ".write": "false",
+    },
     ".read": false,
     ".write": false,
   },

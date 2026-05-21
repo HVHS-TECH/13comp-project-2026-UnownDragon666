@@ -284,14 +284,22 @@ export default class LobbyManager {
             return Math.floor(Math.random() * (MAX + 1));
         };
         // Decide the impostor
-        await firebaseIO.updateRecord(`${this.#rootPath}/${getServerID()}/`, {
+        await firebaseIO.updateRecord(`${this.#rootPath}/${getServerID()}`, {
             impostor: Object.entries(cache.players)[
                 getRandomIntIncl(Object.entries(cache.players).length)
             ],
         });
 
         // Choose the questions (innocent and impostor)
-        const QUESTIONS;
-        // Write those to the database
+        let questions = await firebaseIO.readRecord(`/questions`);
+        questions = Object.entries(questions);
+        let question = questions[getRandomIntIncl(questions.length)];
+        await firebaseIO.updateRecord(`${this.#rootPath}/${getServerID()}/`, {
+            questions: {
+                question,
+            },
+        });
+
+        console.log("SETUP COMPLETE");
     }
 }

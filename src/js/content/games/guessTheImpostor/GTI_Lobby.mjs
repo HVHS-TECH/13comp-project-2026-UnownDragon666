@@ -95,7 +95,8 @@ export default class Lobby extends Content {
         this.#unsubscribeStart = firebaseIO.subscribeToRecord(
             `${this.#lobbyPath}/lobbyState`,
             (data) => {
-                if (data != "started") return;
+                if (data != "starting") return;
+                console.log("STARTING GAME");
                 const START = new CustomEvent("startGame", {
                     detail: {
                         content: this.lobbyID,
@@ -543,7 +544,7 @@ export default class Lobby extends Content {
         let UPDATE_LOBBY_STATE = new CustomEvent("updateLobbyState", {
             detail: {
                 content: this.#lobbyPath,
-                newState: "started",
+                newState: "starting",
             },
         });
         document.dispatchEvent(UPDATE_LOBBY_STATE);
