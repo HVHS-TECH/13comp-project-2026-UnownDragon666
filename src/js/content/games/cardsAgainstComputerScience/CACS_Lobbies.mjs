@@ -2,8 +2,8 @@ import Content from "../../CNT_Content.mjs";
 import { getRecord } from "../../../accountManager/AM_User.mjs";
 import { firebaseIO } from "../../../firebase/FB_instance.mjs";
 /**
- * @family GTI: Guess the Impostor, an extension of CNT: Content
- * @description Guess the impostor game's lobby list.
+ * @family CACS: Cards Against Computer Science, an extension of CNT: Content
+ * @description Cards Against Computer Science game's lobby list.
  *
  * Written in Term One 2026 for programming/database project
  *
@@ -11,19 +11,19 @@ import { firebaseIO } from "../../../firebase/FB_instance.mjs";
  * @class
  */
 
-export default class GuessTheImpostorLobbies extends Content {
+export default class CardsAgainstComputerScienceLobbies extends Content {
     /* **************************************** Private Fields *****************************************/
     static #secID = "s_lobbies";
     #unsubscribeToServers;
 
     /* **************************************** Public Fields *****************************************/
-    // The ID used to identify the stylesheet belonging to this page (Game Lobbies Style Sheet)
+    // The ID used to identify thse stylesheet belonging to this page (Game Lobbies Style Sheet)
     styleID = "GLSS";
     tableBody;
 
     /* **************************************** Constructor *****************************************/
     constructor() {
-        super(GuessTheImpostorLobbies.#secID);
+        super(CardsAgainstComputerScienceLobbies.#secID);
     }
 
     /* ******************************** Parent Class Method Overrides *********************************/
@@ -59,7 +59,7 @@ export default class GuessTheImpostorLobbies extends Content {
         let previousSnapshot = null;
 
         this.#unsubscribeToServers = firebaseIO.subscribeToRecord(
-            `games/guessTheImpostor/servers`,
+            `games/cardsAgainstComputerScience/servers`,
             (servers) => {
                 if (!servers) {
                     this.#populateServerList(this.tableBody);
@@ -120,7 +120,7 @@ export default class GuessTheImpostorLobbies extends Content {
     async #populateServerList(_tableBody) {
         // Read server list from the database
         const SERVERS = await firebaseIO.readRecord(
-            `games/guessTheImpostor/servers`,
+            `games/cardsAgainstComputerScience/servers`,
         );
 
         // Empty the table
@@ -138,7 +138,7 @@ export default class GuessTheImpostorLobbies extends Content {
 
         for (let [UUID] of DEAD_SERVERS) {
             await firebaseIO.deleteRecord(
-                `/games/guessTheImpostor/servers/${UUID}`,
+                `/games/cardsAgainstComputerScience/servers/${UUID}`,
             );
         }
 
@@ -209,7 +209,7 @@ export default class GuessTheImpostorLobbies extends Content {
         JOIN_BUTTON.addEventListener("click", async () => {
             // join the selected server (if the currentPlayer count is less than the maxPlayer count)
             const SERVER = await firebaseIO.readRecord(
-                `games/guessTheImpostor/servers/${_serverID}`,
+                `games/cardsAgainstComputerScience/servers/${_serverID}`,
             );
             let currentPlayers = Object.keys(SERVER.players).length;
 

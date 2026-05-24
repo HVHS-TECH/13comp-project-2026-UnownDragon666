@@ -3,11 +3,11 @@ import {
     getLobbyRecord,
     getServerID,
     initializeLobbyReference,
-} from "./GTI_LobbyReference.mjs";
+} from "./CACS_LobbyReference.mjs";
 import { getRecord } from "../../../accountManager/AM_User.mjs";
 
 /**
- * @family GTI: Guess the Impostor, an extension of CNT: Content
+ * @family CACS: Cards Against Computer Science, an extension of CNT: Content
  * @description A manager class for all game lobby related operations in the project.
  *
  * Written in Term One 2026 for programming/database project
@@ -17,7 +17,7 @@ import { getRecord } from "../../../accountManager/AM_User.mjs";
  */
 export default class LobbyManager {
     /* **************************************** Private Fields *****************************************/
-    #rootPath = `games/guessTheImpostor/servers`;
+    #rootPath = `games/cardsAgainstComputerScience/servers`;
 
     /* **************************************** Constructor *****************************************/
     /**
@@ -166,7 +166,7 @@ export default class LobbyManager {
         _addPlayer = true,
     ) {
         // Create path to the players node in the server
-        const playerRefPath = `/games/guessTheImpostor/servers/${_serverID}/players/${_playerID}`;
+        const playerRefPath = `${this.#rootPath}/${_serverID}/players/${_playerID}`;
 
         // Inject the player's details into the node
         if (_addPlayer) {
@@ -180,12 +180,10 @@ export default class LobbyManager {
 
         // create a listener to kill the lobby when everyone leaves
         firebaseIO.subscribeToRecord(
-            `/games/guessTheImpostor/servers/${_serverID}/players`,
+            `/${this.#rootPath}/${_serverID}/players`,
             (players) => {
                 if (!players || Object.keys(players).length === 0) {
-                    firebaseIO.deleteRecord(
-                        `/games/guessTheImpostor/servers/${_serverID}`,
-                    );
+                    firebaseIO.deleteRecord(`/${this.#rootPath}}/${_serverID}`);
                 }
             },
         );
@@ -209,18 +207,16 @@ export default class LobbyManager {
         try {
             // If user is the last player in the server, kill the server
             let players = await firebaseIO.readRecord(
-                `games/guessTheImpostor/servers/${_lobbyID}/players`,
+                `/${this.#rootPath}/${_lobbyID}/players`,
             );
             if (Object.keys(players).length <= 1) {
-                firebaseIO.deleteRecord(
-                    `games/guessTheImpostor/servers/${_lobbyID}`,
-                );
+                firebaseIO.deleteRecord(`/${this.#rootPath}/${_lobbyID}`);
                 return;
             }
 
             // Remove player from the players list of the lobby
             await firebaseIO.deleteRecord(
-                `games/guessTheImpostor/servers/${_lobbyID}/players/${getRecord().uid}`,
+                `${this.#rootPath}/${_lobbyID}/players/${getRecord().uid}`,
             );
         } catch (error) {
             console.error(`Error leaving server: `, error);
@@ -229,7 +225,7 @@ export default class LobbyManager {
             document.dispatchEvent(
                 new CustomEvent("navigate", {
                     detail: {
-                        content: "GuessTheImpostorLobbies",
+                        content: "CardsAgainstComputerScienceLobbies",
                     },
                 }),
             );
@@ -251,19 +247,16 @@ export default class LobbyManager {
         }
 
         let messageKey = firebaseIO.generateMessageKey(
-            `/games/guessTheImpostor/servers/${_lobbyID}/messages`,
+            `/${this.#rootPath}/${_lobbyID}/messages`,
         );
 
-        firebaseIO.updateRecord(
-            `/games/guessTheImpostor/servers/${_lobbyID}/messages`,
-            {
-                [messageKey]: {
-                    senderName: getRecord().public.username,
-                    timestamp: Date.now(),
-                    content: _message,
-                },
+        firebaseIO.updateRecord(`/${this.#rootPath}/${_lobbyID}/messages`, {
+            [messageKey]: {
+                senderName: getRecord().public.username,
+                timestamp: Date.now(),
+                content: _message,
             },
-        );
+        });
     }
 
     /////////////////////////////////////// PLACE HOLDERS
@@ -278,28 +271,6 @@ export default class LobbyManager {
     }
 
     async #setupGame() {
-        let cache = getLobbyRecord();
-        let getRandomIntIncl = (max) => {
-            const MAX = Math.floor(max);
-            return Math.floor(Math.random() * (MAX + 1));
-        };
-        // Decide the impostor
-        await firebaseIO.updateRecord(`${this.#rootPath}/${getServerID()}`, {
-            impostor: Object.entries(cache.players)[
-                getRandomIntIncl(Object.entries(cache.players).length)
-            ],
-        });
-
-        // Choose the questions (innocent and impostor)
-        let questions = await firebaseIO.readRecord(`/questions`);
-        questions = Object.entries(questions);
-        let question = questions[getRandomIntIncl(questions.length)];
-        await firebaseIO.updateRecord(`${this.#rootPath}/${getServerID()}/`, {
-            questions: {
-                question,
-            },
-        });
-
         console.log("SETUP COMPLETE");
     }
 }

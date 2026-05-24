@@ -1,6 +1,6 @@
 import { firebaseIO } from "../../../firebase/FB_instance.mjs";
 /**
- * @family GTI: Guess the impostor
+ * @family CACS: Cards Against Computer Science
  * @description Lobby reference is just a singleton module, to store the instance of the lobby and caches of the db rec.
  *
  * Written in Term One 2026 for programming/database project
@@ -22,7 +22,7 @@ export default class LobbyReference {
         this.serverID = _lobbyID;
         this.ready = new Promise((resolve) => {
             this.unsubscribeToLobby = firebaseIO.subscribeToRecord(
-                `/games/guessTheImpostor/servers/${_lobbyID}`,
+                `/games/cardsAgainstComputerScience/servers/${_lobbyID}`,
                 (data) => {
                     this.databaseCache = data;
                     resolve();

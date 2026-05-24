@@ -13,16 +13,19 @@ export default class Games extends Content {
     static #secID = "s_games";
 
     #cards = [
-        { cardID: "d_guessTheImpostor", cardText: "Who's lying?" },
+        {
+            cardID: "d_cardsAgainstComputerScience",
+            cardText: "Cards Against COMPUTER SCIENCE?",
+        },
         { cardID: "d_minesweeper", cardText: "Minesweeper" },
     ];
 
     #games = {
-        d_guessTheImpostor: {
-            title: "Who's lying?",
+        d_cardsAgainstComputerScience: {
+            title: "Cards Against COMPUTER SCIENCE",
             description:
-                "Can you find out who the impostor is, based on their answer?",
-            target: "GuessTheImpostorLobbies",
+                "Simply a game about having fun and making absurd sentences! Prove yourself as the funniest by getting the most points!",
+            target: "CardsAgainstComputerScienceLobbies",
             buttonContent: "Play Game",
         },
         d_minesweeper: {

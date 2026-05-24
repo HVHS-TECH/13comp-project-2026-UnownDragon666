@@ -11,6 +11,11 @@ AS91902 3.3 (4 Credits) & AS91906 3.7 (6 Credits)
 1. Copyright 2024 The Funnel Project Authors (https://github.com/Dicotype/Funnel)  
    This Font Software is licensed under the SIL Open Font License, Version 1.1 .
 
+**Games:**
+
+1. Cards Against Humanity is registered under a Creative Commons BY-NC-SA 4.0 license: (https://www.cardsagainsthumanity.com/#downloads)  
+   The site links to the following license: (https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode)
+
 ## Project Info:
 
 This project was written in accordance with the brief provided to us on GC. Information on this project's development may be found here:  

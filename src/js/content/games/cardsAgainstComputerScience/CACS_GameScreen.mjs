@@ -1,7 +1,7 @@
 import Content from "../../CNT_Content.mjs";
 /**
- * @family GTI: Guess the Impostor, an extension of CNT: Content
- * @description Guess the impostor game's game screen.
+ * @family CACS: Cards Against Computer Science, an extension of CNT: Content
+ * @description Cards against Computer Science game's game screen.
  *
  * Written in Term One 2026 for programming/database project
  *
@@ -9,7 +9,7 @@ import Content from "../../CNT_Content.mjs";
  * @class
  */
 
-export default class GuessTheImpostor extends Content {
+export default class CardsAgainstComputerScience extends Content {
     /* **************************************** Private Fields *****************************************/
     static #secID = "s_game";
     #lobbyPath;
@@ -20,7 +20,7 @@ export default class GuessTheImpostor extends Content {
 
     /* **************************************** Constructor *****************************************/
     constructor() {
-        super(GuessTheImpostor.#secID);
+        super(CardsAgainstComputerScience.#secID);
     }
 
     /* ******************************** Parent Class Method Overrides *********************************/

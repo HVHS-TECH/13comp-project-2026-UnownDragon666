@@ -5,10 +5,10 @@ import {
     getLobbyRecord,
     getReadyStatus,
     getServerID,
-} from "./GTI_LobbyReference.mjs";
+} from "./CACS_LobbyReference.mjs";
 
 /**
- * @family GTI: Guess the Impostor, an extension of CNT: Content
+ * @family CACS: Cards Against Computer Science, an extension of CNT: Content
  * @description The content for the current lobby that the user is in.
  *
  * Written in Term One 2026 for programming/database project
@@ -34,11 +34,8 @@ export default class Lobby extends Content {
     static #MAX_ROUND_LENGTH = 60;
     static #MIN_VOTING_LENGTH = 30;
     static #MAX_VOTING_LENGTH = 60;
-    static #MIN_IMPOSTORS = 1;
-    static #MAX_IMPOSTORS = 3;
     static #MIN_ROUNDS = 1;
     static #MAX_ROUNDS = 10;
-    static #MIN_NON_IMPOSTOR_PLAYERS = 2;
 
     // Instructions text
     static instructions = `
@@ -89,7 +86,7 @@ export default class Lobby extends Content {
     constructor() {
         super(Lobby.#secID);
         this.lobbyID = getServerID();
-        this.#lobbyPath = `/games/guessTheImpostor/servers/${this.lobbyID}`;
+        this.#lobbyPath = `/games/cardsAgainstComputerScience/servers/${this.lobbyID}`;
 
         // Setup listener for game start
         this.#unsubscribeStart = firebaseIO.subscribeToRecord(
@@ -264,7 +261,7 @@ export default class Lobby extends Content {
 
         // Create event listener and assign unsubscribe function to the "this.#unsubscribeChat" private field.
         this.#unsubscribeChat = firebaseIO.subscribeToRecord(
-            `/games/guessTheImpostor/servers/${this.lobbyID}/messages`,
+            `/games/cardsAgainstComputerScience/servers/${this.lobbyID}/messages`,
             (messages) => {
                 // Create a div with the tabContent class
                 const TAB = document.createElement("div");
@@ -375,7 +372,7 @@ export default class Lobby extends Content {
         this.#unsubscribeChat?.();
 
         this.#unsubscribeRules = firebaseIO.subscribeToRecord(
-            `/games/guessTheImpostor/servers/${this.lobbyID}/rules`,
+            `/games/cardsAgainstComputerScience/servers/${this.lobbyID}/rules`,
             (rules) => {
                 // Create a div with the tabContent class
                 const TAB = document.createElement("div");
@@ -425,18 +422,6 @@ export default class Lobby extends Content {
                 VOTING_LENGTH.querySelector("input").max =
                     Lobby.#MAX_VOTING_LENGTH;
 
-                const NUM_IMPOSTORS = super.createInput(
-                    "Number of Impostors:",
-                    rules.numOfImpostors,
-                    "number",
-                    "i_numOfImpostors",
-                    "i_numOfImpostors",
-                    "d_numOfImpostors",
-                    rules.numOfImpostors,
-                );
-                NUM_IMPOSTORS.querySelector("input").min = Lobby.#MIN_IMPOSTORS;
-                NUM_IMPOSTORS.querySelector("input").max = Lobby.#MAX_IMPOSTORS;
-
                 const NUM_ROUNDS = super.createInput(
                     "Number of Rounds:",
                     rules.numberOfRounds,
@@ -461,7 +446,6 @@ export default class Lobby extends Content {
                     MAX_PLAYERS,
                     ROUND_LENGTH,
                     VOTING_LENGTH,
-                    NUM_IMPOSTORS,
                     NUM_ROUNDS,
                 );
 
@@ -616,28 +600,6 @@ export default class Lobby extends Content {
         ) {
             alert(
                 `Voting time must be between ${Lobby.#MIN_VOTING_LENGTH} and ${Lobby.#MAX_VOTING_LENGTH} seconds!`,
-            );
-            return;
-        }
-
-        if (
-            NEW_RULES.numOfImpostors < Lobby.#MIN_IMPOSTORS ||
-            NEW_RULES.numOfImpostors > Lobby.#MAX_IMPOSTORS
-        ) {
-            alert(
-                `There can only be between ${Lobby.#MIN_IMPOSTORS} and ${Lobby.#MAX_IMPOSTORS} impostors!`,
-            );
-            return;
-        }
-
-        if (
-            NEW_RULES.numOfImpostors >
-                Object.keys(_lobbyRec.players).length -
-                    Lobby.#MIN_NON_IMPOSTOR_PLAYERS &&
-            NEW_RULES.numOfImpostors != 1
-        ) {
-            alert(
-                `There must be at least ${Lobby.#MIN_NON_IMPOSTOR_PLAYERS} non impostor players!`,
             );
             return;
         }
