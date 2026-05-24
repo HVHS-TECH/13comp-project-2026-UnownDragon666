@@ -267,10 +267,19 @@ export default class LobbyManager {
 
     async #startGame(_startEvent) {
         console.log(_startEvent);
+        console.log(getLobbyRecord().host.uid, getRecord().uid);
+        if (!(getLobbyRecord().host.uid == getRecord().uid)) return;
         await this.#setupGame();
     }
 
     async #setupGame() {
+        let cache = getLobbyRecord();
+        let serverUUID = getServerID();
+        const getRandomIntIncl = (max) => Math.floor(Math.random() * (max + 1));
+
+        // Choose first prompter
+        firebaseIO.updateRecord(`${this.#rootPath}/serverUUID`);
+
         console.log("SETUP COMPLETE");
     }
 }

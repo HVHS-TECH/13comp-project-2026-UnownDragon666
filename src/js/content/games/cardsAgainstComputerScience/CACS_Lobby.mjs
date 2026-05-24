@@ -43,18 +43,18 @@ export default class Lobby extends Content {
             <h2>How to Play</h2>
 
             <div class="instructionPhase">
-                <h3>Questions</h3>
-                <p>Everyone is given a question and must answer it in turn. One player, the impostor, is secretly given a <em>different</em> question.</p>
+                <h3>Prompt</h3>
+                <p>One person choose a prompt card, and the other players must respond to the prompt card with response cards in their hand.</p>
             </div>
 
             <div class="instructionPhase">
-                <h3>Reveal</h3>
-                <p>Once everyone has answered, go around and share your answers. Then the real question is revealed to the whole group.</p>
+                <h3>Choose Winner</h3>
+                <p>Once everyone has chosen their response, the responses are revealed, and the prompt chooser chooses the one they think is the funniest.</p>
             </div>
 
             <div class="instructionPhase">
-                <h3>Vote</h3>
-                <p>The chat unlocks! Discuss everyone's answers and figure out who gave a suspiciously different one. Use what you know about your friends: would George <em>really</em> say that?</p>
+                <h3>Next Round</h3>
+                <p>The winner of the last round chooses the next prompt! Start again from the beginning.</p>
             </div>
 
             <div class="tips"> 
@@ -516,13 +516,8 @@ export default class Lobby extends Content {
         // Get the current number of players in the lobby and check if there are enough players to start the game.
         let playerNum = Object.keys(getLobbyRecord().players).length;
         console.log("Number of players: ", playerNum);
-        // if (playerNum < Lobby.#MIN_PLAYERS) return;
-        // if (
-        //     playerNum <
-        //     getLobbyRecord().rules.numOfImpostors +
-        //         Lobby.#MIN_NON_IMPOSTOR_PLAYERS
-        // )
-        //     return;
+        if (playerNum < Lobby.#MIN_PLAYERS) return;
+        return;
 
         // If validation is successful, update the page state to started and start the game
         let UPDATE_LOBBY_STATE = new CustomEvent("updateLobbyState", {
