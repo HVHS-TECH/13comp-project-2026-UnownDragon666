@@ -278,8 +278,16 @@ export default class LobbyManager {
         const getRandomIntIncl = (max) => Math.floor(Math.random() * (max + 1));
 
         // Choose first prompter
-        firebaseIO.updateRecord(`${this.#rootPath}/serverUUID`);
+        await firebaseIO.updateRecord(`${this.#rootPath}/${serverUUID}`, {
+            arbiter: Object.keys(cache.players)[
+                getRandomIntIncl(Object.keys(cache.players).length)
+            ],
+        });
 
-        console.log("SETUP COMPLETE");
+        document.dispatchEvent("updateLobbyState", {
+            detail: {
+                content: `${this.#rootPath}/${serverUUID}`,
+            },
+        });
     }
 }

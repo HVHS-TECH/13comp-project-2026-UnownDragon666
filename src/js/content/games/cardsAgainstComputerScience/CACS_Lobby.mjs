@@ -516,8 +516,7 @@ export default class Lobby extends Content {
         // Get the current number of players in the lobby and check if there are enough players to start the game.
         let playerNum = Object.keys(getLobbyRecord().players).length;
         console.log("Number of players: ", playerNum);
-        if (playerNum < Lobby.#MIN_PLAYERS) return;
-        return;
+        // if (playerNum < Lobby.#MIN_PLAYERS) return;
 
         // If validation is successful, update the page state to started and start the game
         let UPDATE_LOBBY_STATE = new CustomEvent("updateLobbyState", {
