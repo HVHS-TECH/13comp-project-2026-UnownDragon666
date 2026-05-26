@@ -59,20 +59,20 @@ export default class Lobby extends Content {
 
             <div class="tips"> 
                 <div class="instructionTip" id="d_instructionImpostor">
-                    <h3>If you're the impostor...</h3>
-                    <p>Blend in. Give an answer that sounds plausible and don't get caught.</p>
+                    <h3>GODDAMNIT REFACTOR AND DEAL WITH THIS LATER</h3>
+                    <p>UHHHH PLACEHOLDER</p>
                 </div>
 
                 <div class="instructionTip" id="d_instructionInnocent">
-                    <h3>If you're an innocent...</h3>
-                    <p>Listen carefully during the reveal. Trust your gut.. is that <em>really</em> something Macklyn would say?</p>
+                    <h3>PEWPEWPEWPEW</h3>
+                    <p>EXPLOSION SOUND EFFECTS</p>
                 </div>
             </div>
 
             <div class="goalTip" id="d_goals"> 
                 <h3> Goal: </h3>
-                <h4>Innocents win by correctly voting out the impostor. The impostor wins by blending in and getting someone else voted out.</h4>
-                <h4>Scores are based on points! If you win (whether as impostor or innocent) you will gain a point. Impostors will get impostor points and innocents will get detective points! At the very end, your points will all be added to the leaderboard!</h4>  
+                <h4>Choose the funniest answer and get the most points!</h4>
+                <h4>Scores are based on points! If you win a round you will gain a point. At the very end, your points will all be added to the leaderboard!</h4>  
             </div> 
         </div>
     `;
@@ -92,15 +92,28 @@ export default class Lobby extends Content {
         this.#unsubscribeStart = firebaseIO.subscribeToRecord(
             `${this.#lobbyPath}/lobbyState`,
             (data) => {
-                if (data != "starting") return;
-                console.log("STARTING GAME");
-                const START = new CustomEvent("startGame", {
-                    detail: {
-                        content: this.lobbyID,
-                        newState: data,
-                    },
-                });
-                document.dispatchEvent(START);
+                if (data == "starting") {
+                    console.log("STARTING GAME");
+                    const START = new CustomEvent("startGame", {
+                        detail: {
+                            content: this.lobbyID,
+                            newState: data,
+                        },
+                    });
+                    document.dispatchEvent(START);
+                } else if (data == "started") {
+                    console.log("GAME STARTED");
+                    document.dispatchEvent(
+                        new CustomEvent("navigate", {
+                            detail: {
+                                content: "CardsAgainstComputerScience",
+                                params: {
+                                    lobbyPath: this.#lobbyPath,
+                                },
+                            },
+                        }),
+                    );
+                }
             },
         );
     }

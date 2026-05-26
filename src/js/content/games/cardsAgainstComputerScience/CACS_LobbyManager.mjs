@@ -44,7 +44,7 @@ export default class LobbyManager {
         });
 
         document.addEventListener("startGame", (event) => {
-            this.#startGame(event);
+            this.#setupGame(event);
         });
 
         document.addEventListener("leaveGame", (event) => {
@@ -259,35 +259,41 @@ export default class LobbyManager {
         });
     }
 
-    /////////////////////////////////////// PLACE HOLDERS
-
-    async kickUser(_user) {
-        console.log(`User Kicked: ${_user}`);
-    }
-
-    async #startGame(_startEvent) {
-        console.log(_startEvent);
-        console.log(getLobbyRecord().host.uid, getRecord().uid);
-        if (!(getLobbyRecord().host.uid == getRecord().uid)) return;
-        await this.#setupGame();
-    }
-
+    /**
+     * Method to set up the game, in this case, chooses the first
+     * "arbiter" (the person who chooses the prompt)
+     *
+     * @returns {Promise<void>}
+     */
     async #setupGame() {
+        // Only host sets up the game
+        if (!(getLobbyRecord().host.uid == getRecord().uid)) return;
         let cache = getLobbyRecord();
         let serverUUID = getServerID();
         const getRandomIntIncl = (max) => Math.floor(Math.random() * (max + 1));
 
-        // Choose first prompter
+        // Choose first card czar, and setup basic game paths
         await firebaseIO.updateRecord(`${this.#rootPath}/${serverUUID}`, {
-            arbiter: Object.keys(cache.players)[
+            czar: Object.keys(cache.players)[
                 getRandomIntIncl(Object.keys(cache.players).length)
             ],
+            currentRound: 1,
+            gameState: "waiting",
         });
 
-        document.dispatchEvent("updateLobbyState", {
-            detail: {
-                content: `${this.#rootPath}/${serverUUID}`,
-            },
-        });
+        document.dispatchEvent(
+            new CustomEvent("updateLobbyState", {
+                detail: {
+                    content: `${this.#rootPath}/${serverUUID}`,
+                    newState: "started",
+                },
+            }),
+        );
+    }
+
+    /////////////////////////////////////// PLACE HOLDERS
+
+    async kickUser(_user) {
+        console.log(`User Kicked: ${_user}`);
     }
 }

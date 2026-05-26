@@ -4,6 +4,7 @@ import Profile from "./CNT_Profile.mjs";
 import Games from "./CNT_Games.mjs";
 import CardsAgainstComputerScienceLobbies from "./games/cardsAgainstComputerScience/CACS_Lobbies.mjs";
 import Lobby from "./games/cardsAgainstComputerScience/CACS_Lobby.mjs";
+import CardsAgainstComputerScience from "./games/cardsAgainstComputerScience/CACS_GameScreen.mjs";
 import Admin from "./CNT_Admin.mjs";
 import ChooseMinesweeperDifficulty from "./games/minesweeper/MSG_DifficultySelect.mjs";
 import MinesweeperGameScreen from "./games/minesweeper/MSG_GameScreen.mjs";
@@ -23,6 +24,7 @@ export {
     Profile,
     Games,
     CardsAgainstComputerScienceLobbies,
+    CardsAgainstComputerScience,
     Lobby,
     Admin,
     ChooseMinesweeperDifficulty,
