@@ -1,5 +1,5 @@
 import { firebaseIO } from "../../../firebase/FB_instance.mjs";
-import { getLobbyRecord } from "./CACS_LobbyReference.mjs";
+import { getLobbyRecord, getServerID } from "./CACS_LobbyReference.mjs";
 import Content from "../../CNT_Content.mjs";
 import { getRecord } from "../../../accountManager/AM_User.mjs";
 /**
@@ -29,9 +29,9 @@ export default class CardsAgainstComputerScience extends Content {
     styleID = "GSSS";
 
     /* **************************************** Constructor *****************************************/
-    constructor(_params) {
+    constructor() {
         super(CardsAgainstComputerScience.#secID);
-        this.#lobbyPath = _params.lobbyPath;
+        this.#lobbyPath = `/games/cardsAgainstComputerScience/servers/${getServerID()}`;
     }
 
     /* ******************************** Parent Class Method Overrides *********************************/
@@ -141,6 +141,10 @@ export default class CardsAgainstComputerScience extends Content {
 
         return SIDE_BAR;
     }
+
+    #buildCardCzarDisplay() {}
+
+    #buildStandardDisplay() {}
 }
 
 class TimerController {

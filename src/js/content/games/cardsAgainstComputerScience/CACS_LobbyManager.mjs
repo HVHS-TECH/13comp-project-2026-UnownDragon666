@@ -275,7 +275,7 @@ export default class LobbyManager {
         // Choose first card czar, and setup basic game paths
         await firebaseIO.updateRecord(`${this.#rootPath}/${serverUUID}`, {
             czar: Object.keys(cache.players)[
-                getRandomIntIncl(Object.keys(cache.players).length)
+                getRandomIntIncl(Object.keys(cache.players).length - 1)
             ],
             currentRound: 1,
             gameState: "waiting",

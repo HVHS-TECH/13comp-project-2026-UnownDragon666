@@ -107,9 +107,6 @@ export default class Lobby extends Content {
                         new CustomEvent("navigate", {
                             detail: {
                                 content: "CardsAgainstComputerScience",
-                                params: {
-                                    lobbyPath: this.#lobbyPath,
-                                },
                             },
                         }),
                     );
