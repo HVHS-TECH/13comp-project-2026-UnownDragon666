@@ -69,3 +69,12 @@ export function getServerID() {
 export function getReadyStatus() {
     return currentLobby.ready;
 }
+
+/**
+ * ANOTHER FUNCTION FOR A GODDAMN RACE CONDITION FOR JOVE'S SAKE
+ */
+export async function generateLobbyCache() {
+    currentLobby.databaseCache = await firebaseIO.readRecord(
+        `/games/cardsAgainstComputerScience/servers/${currentLobby.serverID}`,
+    );
+}

@@ -1,5 +1,6 @@
 import { firebaseIO } from "../../../firebase/FB_instance.mjs";
 import {
+    generateLobbyCache,
     getLobbyRecord,
     getServerID,
     initializeLobbyReference,
@@ -280,6 +281,8 @@ export default class LobbyManager {
             currentRound: 1,
             gameState: "waiting",
         });
+
+        await generateLobbyCache();
 
         document.dispatchEvent(
             new CustomEvent("updateLobbyState", {

@@ -52,13 +52,9 @@ export default class CardsAgainstComputerScience extends Content {
 
         // If Card Czar, build Card Czar display, otherwise, build standard display
         let display;
-        console.log(
-            getLobbyRecord().czar.uid,
-            getRecord().uid,
-            getLobbyRecord().czar.uid == getRecord().uid,
-            getLobbyRecord().czar.value,
-        );
-        getLobbyRecord().czar.uid == getRecord().uid
+        let record = getLobbyRecord();
+        console.log(record, record.czar);
+        record.czar == getRecord().uid
             ? (display = this.#buildCardCzarDisplay())
             : (display = this.#buildStandardDisplay());
 
@@ -142,9 +138,15 @@ export default class CardsAgainstComputerScience extends Content {
         return SIDE_BAR;
     }
 
-    #buildCardCzarDisplay() {}
+    #buildCardCzarDisplay() {
+        console.log("Czar display");
 
-    #buildStandardDisplay() {}
+        // Section with prompts to choose from
+    }
+
+    #buildStandardDisplay() {
+        console.log("Standard");
+    }
 }
 
 class TimerController {
