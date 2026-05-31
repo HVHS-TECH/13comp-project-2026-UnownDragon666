@@ -16,6 +16,7 @@ export default class CardsAgainstComputerScience extends Content {
     /* **************************************** Private Fields *****************************************/
     static #secID = "s_game";
     #lobbyPath;
+    #cards;
 
     // Unsubscribe to firebase listener functions
     #unsubscribe = [];
@@ -46,6 +47,8 @@ export default class CardsAgainstComputerScience extends Content {
     }
 
     async buildContent() {
+        this.#cards = await firebaseIO.readRecord(`/cards`);
+
         // Components: Chat, Players list (to vote), the prompt, top bar
         const TOP_BAR = this.#buildTopBar();
         const SIDE_BAR = this.#buildSideBar();
@@ -134,15 +137,144 @@ export default class CardsAgainstComputerScience extends Content {
      */
     #buildSideBar() {
         const SIDE_BAR = document.createElement("div");
+        SIDE_BAR.id = "d_sideBar";
+
+        const CHAT_TAB = this.#createChatTab(SIDE_BAR);
 
         return SIDE_BAR;
+    }
+
+    #createChatTab(sideBarElement) {
+        // Create event listener and assign unsubscribe function to the "this.#unsubscribeChat" private field.
+        let unsubscribeChat = firebaseIO.subscribeToRecord(
+            `/${this.#lobbyPath}/messages`,
+            (messages) => {
+                // Create a div with the tabContent class
+                const TAB = document.createElement("div");
+                TAB.classList.add("tabContent");
+
+                const MESSAGES_CONTAINER = document.createElement("div");
+                MESSAGES_CONTAINER.id = "d_messagesContainer";
+
+                for (let message of Object.values(messages)) {
+                    let messageDiv = document.createElement("div");
+                    if (firebaseIO.auth.currentUser.uid == message.senderName) {
+                        messageDiv.classList.add("sentByCurrentUser");
+                    } else {
+                        messageDiv.classList.add("sentByOtherUser");
+                    }
+
+                    const SENDER = document.createElement("p");
+                    SENDER.classList.add("senderNames");
+                    message.senderName == getRecord().public.username
+                        ? (SENDER.textContent = "ME")
+                        : (SENDER.textContent = message.senderName);
+
+                    const MESSAGE = document.createElement("p");
+                    MESSAGE.textContent = message.content;
+
+                    messageDiv.append(SENDER, MESSAGE);
+                    MESSAGES_CONTAINER.append(messageDiv);
+                }
+
+                TAB.append(MESSAGES_CONTAINER);
+
+                // Create input div
+                const MESSAGE_CONTAINER = document.createElement("div");
+                MESSAGE_CONTAINER.id = "d_messageInputContainer";
+
+                const INPUT = document.createElement("input");
+                INPUT.id = "i_sendMessages";
+
+                const BUTTON = document.createElement("button");
+                BUTTON.type = "button";
+                BUTTON.textContent = "submit";
+                BUTTON.addEventListener("click", () => {
+                    const EVENT = new CustomEvent("sendMessage", {
+                        detail: {
+                            content: getServerID(),
+                            message:
+                                document.getElementById("i_sendMessages").value,
+                        },
+                    });
+                    document.dispatchEvent(EVENT);
+                });
+
+                INPUT.addEventListener("keydown", (event) => {
+                    if (event.key === "Enter") {
+                        BUTTON.click();
+                        INPUT.focus();
+                    }
+                });
+
+                MESSAGE_CONTAINER.append(INPUT, BUTTON);
+                TAB.appendChild(MESSAGE_CONTAINER);
+
+                if (sideBarElement.querySelector(".tabContent")) {
+                    sideBarElement
+                        .querySelector(".tabContent")
+                        .replaceWith(TAB);
+                } else {
+                    sideBarElement.appendChild(TAB);
+                }
+
+                window.requestAnimationFrame(() => {
+                    MESSAGES_CONTAINER.scrollTop =
+                        MESSAGES_CONTAINER.scrollHeight;
+                });
+            },
+        );
+        this.#unsubscribe.push(unsubscribeChat);
     }
 
     #buildCardCzarDisplay() {
         console.log("Czar display");
 
         // Section with prompts to choose from
+        const choosePromptSection = document.createElement("section");
+        choosePromptSection.id = "s_choosePrompt";
+
+        this.#pickAPrompt(choosePromptSection);
+
+        return choosePromptSection;
     }
+
+    #pickAPrompt(_section) {
+        // Choose from 4 prompts
+        const PROMPTS_TO_CHOOSE_FROM = 4;
+        let promptOptions = [];
+        const getRandomIntIncl = (max) => Math.floor(Math.random() * (max + 1));
+
+        while (promptOptions.length < PROMPTS_TO_CHOOSE_FROM) {
+            const PROMPT_CARD = document.createElement("div");
+
+            // Choose a random prompt
+            const entries = Object.entries(this.#cards.prompts);
+            let [key, prompt] = entries[getRandomIntIncl(entries.length - 1)];
+            if (promptOptions.some((p) => p[0] === key)) continue;
+            promptOptions.push([key, prompt]);
+
+            // Make Card
+            const PROMPT = document.createElement("p");
+            PROMPT.textContent = prompt.card;
+
+            PROMPT_CARD.append(PROMPT);
+            PROMPT_CARD.dataset.pick = prompt.pick;
+            PROMPT_CARD.dataset.key = key;
+            PROMPT_CARD.addEventListener("click", () =>
+                this.#promptChosen(PROMPT_CARD.dataset.key),
+            );
+
+            _section.append(PROMPT_CARD);
+        }
+    }
+
+    /**
+     * Handles logic for after the prompt is chosen by the Card Czar
+     *
+     * @param {String} _promptKey - Key of the prompt that the czar chose
+     */
+    #promptChosen(_promptKey) {}
 
     #buildStandardDisplay() {
         console.log("Standard");

@@ -1,0 +1,144 @@
+/**
+ * @family STY: Stylesheet
+ *
+ * @description Acts as a JS alternative to a .css file by dynamically styling elements
+ * created by other classes
+ *
+ * This STY file is for CACS_GameScreen.mjs
+ *
+ * Written in Term One 2026 for programming/database project
+ *
+ * By: Idrees Munshi
+ * @class
+ */
+export default class CardsStyles {
+    /**
+     * Apply the given style to the content layer style in index.html
+     * Styles are separated into base, component, and content layers to
+     * make the entire thing cleaner than a massive CSS file with
+     * all of them in the same thing.
+     */
+    static applyStyle() {
+        document.getElementById("contentLayerStyle").innerHTML = `
+            #s_game {
+                display: grid; 
+                grid-template-rows: auto 1fr;  
+                grid-template-columns: 1fr 600px;
+                 grid-template-areas:
+                    "topbar  topbar"
+                    "main    sidebar";
+                height: 100vh;
+                overflow: hidden;  
+            }
+
+            /* Topbar styles */
+            #s_game > div:first-child {
+                grid-area: topbar;
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                padding: 8px 20px;
+                border-bottom: 1px solid #333;
+
+
+            /* Round counter */
+            #p_roundCounterLabel {
+                font-size: 10px;
+                letter-spacing: 0.1em;
+                margin: 0;
+                line-height: 1;
+            }
+
+            #p_roundNumber {
+                font-size: 22px;
+                font-weight: 700;
+                margin: 0;
+                line-height: 1;
+            }
+
+            /* Timer */
+            #p_timer {
+                font-size: 22px;
+                font-weight: 700;
+                font-variant-numeric: tabular-nums;
+                margin: 0;
+                margin-left: auto;   /* pushes it to the right */
+            }
+
+            /* Sidebar */
+            #d_sideBar {
+                grid-area: sidebar;
+                display: flex;
+                flex-direction: column;
+                border-left: 1px solid #333;
+                overflow: hidden;
+            }
+
+            /* Tab content (chat or scores) */
+            .tabContent {
+                display: flex;
+                flex-direction: column;
+                flex: 1;
+                overflow: hidden;
+            }
+
+            /* Messages scroll area */
+            #d_messagesContainer {
+                flex: 1;
+                overflow-y: auto;
+                padding: 12px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            /* Individual message bubbles */
+            .sentByCurrentUser,
+            .sentByOtherUser {
+                max-width: 80%;
+                padding: 6px 10px;
+                border-radius: 8px;
+                font-size: 13px;
+            }
+
+            .sentByCurrentUser {
+                align-self: flex-end;
+            }
+
+            .sentByOtherUser {
+                align-self: flex-start;
+            }
+
+            .senderNames {
+                font-size: 10px;
+                margin: 0 0 2px;
+                opacity: 0.6;
+            }
+
+            /* Message input bar */
+            #d_messageInputContainer {
+                display: flex;
+                gap: 6px;
+                padding: 10px;
+                border-top: 1px solid #333;
+            }
+
+            #i_sendMessages {
+                flex: 1;
+                padding: 6px 10px;
+                border-radius: 6px;
+                border: 1px solid #555;
+                font-size: 13px;
+            }
+
+            /* ── Main display area ── */
+            #s_game > div:nth-child(3) {
+                grid-area: main;
+                overflow-y: auto;
+                padding: 20px;
+            }
+            }
+        `;
+    }
+    3;
+}

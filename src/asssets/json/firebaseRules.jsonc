@@ -48,7 +48,7 @@
                 },
             },
         },
-        "questions": {
+        "cards": {
             ".read": "auth != null",
             ".write": "false",
         },
