@@ -11,7 +11,7 @@ import MinesweeperCell from "./MGE_Cell.mjs";
 
 export default class MinesweeperBoard {
     /* **************************************** Private Fields *****************************************/
-    #cells = []; // 2D Array of cells i.e. #cells[x][y]
+    #cells = []; // 2D Array of cells i.e. #cells[y][x]
     #sizeX;
     #sizeY;
     #mineCount;
@@ -48,6 +48,7 @@ export default class MinesweeperBoard {
         }
     }
 
+    //
     #calculateAdjacency() {}
 
     #getNeighbours(_x, _y) {}
@@ -69,7 +70,13 @@ export default class MinesweeperBoard {
     }
 
     reveal(_x, _y) {
+        let changedCells = [];
+        changedCells.push(this.getCell(_x, _y));
+        
         // Flood fill logic :<
+        
+
+        // Return list of changed cells
     }
 
     toggleFlag(_x, _y) {}

@@ -65,7 +65,9 @@ export default class Minesweeper {
         }
 
         console.log(`Clicked: ${_x}_${_y}`);
-        document.getElementById(`${_x}_${_y}`).style.backgroundColor = "Black";
+        if (this.#board.getCell(_x, _y).isRevealed) return;
+
+        let changedCells = this.#board.reveal(_x, _y);
     }
 
     #onFlag() {}

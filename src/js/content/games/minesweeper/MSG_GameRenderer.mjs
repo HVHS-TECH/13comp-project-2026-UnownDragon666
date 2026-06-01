@@ -70,6 +70,12 @@ export default class MinesweeperRenderer {
             CELL_ELEMENT.classList.add("activeMineCell");
             document.dispatchEvent(new CustomEvent("gameLost", { detail: {} }));
             this.#controller.abort();
+            CELL_ELEMENT.style.backgroundColor = "Red";
+            console.log("Mine Clicked");
+        } else {
+            CELL_ELEMENT.classList.toggle("inactiveMinesweeperCell");
+            CELL_ELEMENT.classList.add("activeMinesweeperCell");
+            CELL_ELEMENT.style.backgroundColor = "Black";
         }
     }
 }

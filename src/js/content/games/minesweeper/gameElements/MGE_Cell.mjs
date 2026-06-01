@@ -1,4 +1,4 @@
-/**
+is; /**
  * @family MGE: Minesweeper Game Elements
  * @description A component of the minesweeper game that contains a cell's state
  *
