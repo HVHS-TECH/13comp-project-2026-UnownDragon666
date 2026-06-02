@@ -1,3 +1,5 @@
+import Colors from "../STY_ColorReference.mjs";
+
 /**
  * @family STY: Stylesheet
  *
@@ -60,9 +62,12 @@ export default class CardsStyles {
             #p_timer {
                 font-size: 22px;
                 font-weight: 700;
-                font-variant-numeric: tabular-nums;
                 margin: 0;
-                margin-left: auto;   /* pushes it to the right */
+                float: right;
+            }
+
+            :has(#p_timer) {
+                margin-left: auto;
             }
 
             /* Sidebar */
@@ -74,12 +79,39 @@ export default class CardsStyles {
                 overflow: hidden;
             }
 
-            /* Tab content (chat or scores) */
-            .tabContent {
+            .tab {
                 display: flex;
-                flex-direction: column;
+                gap: 6px;
+                padding: 4px;
+                background-color: #1a1a1a;
+                border-radius: 999px;
+            }
+
+            .tab button {
                 flex: 1;
-                overflow: hidden;
+                background-color: transparent;
+                border: none;
+                border-radius: 999px;
+                outline: none;
+                cursor: pointer;
+                padding: 6px 12px;
+                font-size: 0.85rem;
+                color: #aaa;
+                transition: background-color 0.2s, color 0.2s;
+            }
+
+            .tab button.active {
+                background-color: #2e2e2e;
+                color: #fff;
+            }
+
+            .tab button:hover:not(.active) {
+                color: #ddd;
+            }
+
+            /* Player List */
+            .playerAvatar {
+                border-radius: 50%; 
             }
 
             /* Messages scroll area */
@@ -132,13 +164,17 @@ export default class CardsStyles {
             }
 
             /* ── Main display area ── */
-            #s_game > div:nth-child(3) {
+            #s_game > nth-child(3) {
                 grid-area: main;
                 overflow-y: auto;
                 padding: 20px;
             }
+
+            .promptCardChoice {
+                background-color: ${Colors.Cards.backgroundColor};
+                color: ${Colors.Tabs.fontColor}
+                padding 
             }
         `;
     }
-    3;
 }

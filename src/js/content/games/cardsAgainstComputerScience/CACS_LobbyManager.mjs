@@ -262,7 +262,7 @@ export default class LobbyManager {
 
     /**
      * Method to set up the game, in this case, chooses the first
-     * "arbiter" (the person who chooses the prompt)
+     * "Czar" (the person who chooses the prompt)
      *
      * @returns {Promise<void>}
      */

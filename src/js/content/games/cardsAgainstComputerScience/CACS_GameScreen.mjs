@@ -61,7 +61,7 @@ export default class CardsAgainstComputerScience extends Content {
             ? (display = this.#buildCardCzarDisplay())
             : (display = this.#buildStandardDisplay());
 
-        this.section.append(TOP_BAR, SIDE_BAR, display);
+        this.section.append(TOP_BAR, display, SIDE_BAR);
     }
 
     /* **************************************** Private Methods *****************************************/
@@ -139,12 +139,47 @@ export default class CardsAgainstComputerScience extends Content {
         const SIDE_BAR = document.createElement("div");
         SIDE_BAR.id = "d_sideBar";
 
-        const CHAT_TAB = this.#createChatTab(SIDE_BAR);
+        const TAB_ROW = document.createElement("div");
+        TAB_ROW.classList.add("tab");
 
+        const PLAYER_LIST_BUTTON = document.createElement("button");
+        PLAYER_LIST_BUTTON.type = "button";
+        PLAYER_LIST_BUTTON.textContent = "Players";
+        PLAYER_LIST_BUTTON.classList.add("tabLinks", "active");
+
+        const CHAT_TAB_BUTTON = document.createElement("button");
+        CHAT_TAB_BUTTON.type = "button";
+        CHAT_TAB_BUTTON.textContent = "Chat";
+        CHAT_TAB_BUTTON.classList.add("tabLinks");
+
+        TAB_ROW.append(PLAYER_LIST_BUTTON, CHAT_TAB_BUTTON);
+
+        const TAB_CONTENT = document.createElement("div");
+
+        const showPlayerList = () => {
+            PLAYER_LIST_BUTTON.classList.add("active");
+            CHAT_TAB_BUTTON.classList.remove("active");
+            TAB_CONTENT.innerHTML = ``;
+            TAB_CONTENT.append(this.#buildPlayerList);
+        };
+
+        const showChat = () => {
+            CHAT_TAB_BUTTON.classList.add("active");
+            PLAYER_LIST_BUTTON.classList.remove("active");
+            TAB_CONTENT.innerHTML = ``;
+            this.#openChatTab(TAB_CONTENT);
+        };
+
+        PLAYER_LIST_BUTTON.addEventListener("click", showPlayerList);
+        CHAT_TAB_BUTTON.addEventListener("click", showChat);
+
+        showPlayerList();
+
+        SIDE_BAR.append(TAB_ROW, TAB_CONTENT);
         return SIDE_BAR;
     }
 
-    #createChatTab(sideBarElement) {
+    #openChatTab(sideBarElement) {
         // Create event listener and assign unsubscribe function to the "this.#unsubscribeChat" private field.
         let unsubscribeChat = firebaseIO.subscribeToRecord(
             `/${this.#lobbyPath}/messages`,
@@ -227,18 +262,46 @@ export default class CardsAgainstComputerScience extends Content {
         this.#unsubscribe.push(unsubscribeChat);
     }
 
-    #buildCardCzarDisplay() {
-        console.log("Czar display");
+    #buildPlayerList() {
+        const record = getLobbyRecord();
+        const czarUID = record.czar;
 
-        // Section with prompts to choose from
-        const choosePromptSection = document.createElement("section");
-        choosePromptSection.id = "s_choosePrompt";
+        const LIST = document.createElement("div");
+        LIST.id = "d_playerList";
 
-        this.#pickAPrompt(choosePromptSection);
+        for (const [uid, player] of Object.entries(record.players)) {
+            const ROW = document.creeateElement("div");
+            ROW.classList.add("playerRow");
 
-        return choosePromptSection;
+            const AVATAR = document.createElement("img");
+            AVATAR.classList.add("playerAvatar");
+            AVATAR.src = player.photoURL;
+
+            const USERNAME = document.createElement("p");
+            USERNAME.classList.add("playerName");
+            USERNAME.textContent = player.name;
+        }
     }
 
+    #buildCardCzarDisplay() {
+        const MAIN = document.createElement("section");
+        MAIN.id = "s_main";
+
+        // Section with prompts to choose from
+        const CHOOSE_PROMPT_SECTION = document.createElement("section");
+        CHOOSE_PROMPT_SECTION.id = "s_choosePrompt";
+
+        this.#pickAPrompt(CHOOSE_PROMPT_SECTION);
+
+        MAIN.append(CHOOSE_PROMPT_SECTION);
+        return MAIN;
+    }
+
+    /**
+     * Chooses prompt card options to present to Card Czar, and creates cards to dislplay on page
+     *
+     * @param {HTMLSectionElement} _section Section to append the card choices to.
+     */
     #pickAPrompt(_section) {
         // Choose from 4 prompts
         const PROMPTS_TO_CHOOSE_FROM = 4;
@@ -247,6 +310,7 @@ export default class CardsAgainstComputerScience extends Content {
 
         while (promptOptions.length < PROMPTS_TO_CHOOSE_FROM) {
             const PROMPT_CARD = document.createElement("div");
+            PROMPT_CARD.classList.add("promptCardChoice");
 
             // Choose a random prompt
             const entries = Object.entries(this.#cards.prompts);
@@ -278,6 +342,9 @@ export default class CardsAgainstComputerScience extends Content {
 
     #buildStandardDisplay() {
         console.log("Standard");
+
+        const MAIN = document.createElement("section");
+        MAIN.id = "s_main";
     }
 }
 

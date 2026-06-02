@@ -60,6 +60,11 @@ Colors.Tabs = class {
     static hoverTextColor = "#1a1025";
 };
 
+Colors.Cards = class {
+    static backgroundColor = "#231F20";
+    static fontColor = "#FFFFFF";
+};
+
 /**
  * It's just an archive of the old colors (for... i dont really know, just in case)
  */
