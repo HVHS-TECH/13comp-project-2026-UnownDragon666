@@ -25,23 +25,25 @@ export default class CardsStyles {
             #s_game {
                 display: grid; 
                 grid-template-rows: auto 1fr;  
-                grid-template-columns: 1fr 600px;
+                grid-template-columns: 1fr 400px;
                  grid-template-areas:
                     "topbar  topbar"
                     "main    sidebar";
                 height: 100vh;
                 overflow: hidden;  
+                row-gap: 1vh;
             }
 
             /* Topbar styles */
-            #s_game > div:first-child {
+            #d_topbar {
                 grid-area: topbar;
                 display: flex;
                 align-items: center;
                 gap: 16px;
                 padding: 8px 20px;
                 border-bottom: 1px solid #333;
-
+                width: 95%;
+            }
 
             /* Round counter */
             #p_roundCounterLabel {
@@ -71,12 +73,13 @@ export default class CardsStyles {
             }
 
             /* Sidebar */
-            #d_sideBar {
+            #d_sidebar {
                 grid-area: sidebar;
                 display: flex;
                 flex-direction: column;
                 border-left: 1px solid #333;
                 overflow: hidden;
+                padding: 1vh;
             }
 
             .tab {
@@ -112,6 +115,16 @@ export default class CardsStyles {
             /* Player List */
             .playerAvatar {
                 border-radius: 50%; 
+                height: 3em;
+                padding-right: 1vh;
+                margin-right: 1vw;
+            }
+
+            .playerRow {
+                display: flex;
+                flex-direction: row;
+                padding: 1vh;
+                border-bottom: 1px solid #333;
             }
 
             /* Messages scroll area */
@@ -164,7 +177,7 @@ export default class CardsStyles {
             }
 
             /* ── Main display area ── */
-            #s_game > nth-child(3) {
+            #s_main {
                 grid-area: main;
                 overflow-y: auto;
                 padding: 20px;
@@ -172,8 +185,10 @@ export default class CardsStyles {
 
             .promptCardChoice {
                 background-color: ${Colors.Cards.backgroundColor};
-                color: ${Colors.Tabs.fontColor}
-                padding 
+            }
+
+            .promptCardChoice > * {
+                color: ${Colors.Cards.fontColor};
             }
         `;
     }

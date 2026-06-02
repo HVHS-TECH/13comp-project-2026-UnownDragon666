@@ -72,6 +72,7 @@ export default class CardsAgainstComputerScience extends Content {
      */
     #buildTopBar() {
         const BAR = document.createElement("div");
+        BAR.id = "d_topbar";
 
         const ROUND_COUNTER = this.#buildRoundCounter();
         const { timer, timerControls } = this.#buildRoundTimer();
@@ -137,7 +138,7 @@ export default class CardsAgainstComputerScience extends Content {
      */
     #buildSideBar() {
         const SIDE_BAR = document.createElement("div");
-        SIDE_BAR.id = "d_sideBar";
+        SIDE_BAR.id = "d_sidebar";
 
         const TAB_ROW = document.createElement("div");
         TAB_ROW.classList.add("tab");
@@ -160,7 +161,7 @@ export default class CardsAgainstComputerScience extends Content {
             PLAYER_LIST_BUTTON.classList.add("active");
             CHAT_TAB_BUTTON.classList.remove("active");
             TAB_CONTENT.innerHTML = ``;
-            TAB_CONTENT.append(this.#buildPlayerList);
+            TAB_CONTENT.append(this.#buildPlayerList());
         };
 
         const showChat = () => {
@@ -264,13 +265,12 @@ export default class CardsAgainstComputerScience extends Content {
 
     #buildPlayerList() {
         const record = getLobbyRecord();
-        const czarUID = record.czar;
 
         const LIST = document.createElement("div");
         LIST.id = "d_playerList";
 
         for (const [uid, player] of Object.entries(record.players)) {
-            const ROW = document.creeateElement("div");
+            const ROW = document.createElement("div");
             ROW.classList.add("playerRow");
 
             const AVATAR = document.createElement("img");
@@ -280,7 +280,16 @@ export default class CardsAgainstComputerScience extends Content {
             const USERNAME = document.createElement("p");
             USERNAME.classList.add("playerName");
             USERNAME.textContent = player.name;
+
+            const SCORE = document.createElement("p");
+            SCORE.classList.add("playerScore");
+            SCORE.textContent = player.score;
+
+            ROW.append(AVATAR, USERNAME, SCORE);
+            LIST.append(ROW);
         }
+
+        return LIST;
     }
 
     #buildCardCzarDisplay() {
@@ -326,7 +335,7 @@ export default class CardsAgainstComputerScience extends Content {
             PROMPT_CARD.dataset.pick = prompt.pick;
             PROMPT_CARD.dataset.key = key;
             PROMPT_CARD.addEventListener("click", () =>
-                this.#promptChosen(PROMPT_CARD.dataset.key),
+                this.#promptChosen(PROMPT_CARD.dataset.key, _section),
             );
 
             _section.append(PROMPT_CARD);
@@ -337,8 +346,15 @@ export default class CardsAgainstComputerScience extends Content {
      * Handles logic for after the prompt is chosen by the Card Czar
      *
      * @param {String} _promptKey - Key of the prompt that the czar chose
+     * @param {HTMLSectionElement} - Section element to empty after prompt is chosen
      */
-    #promptChosen(_promptKey) {}
+    async #promptChosen(_promptKey, _section) {
+        _section.innerHTML = ``;
+
+        await firebaseIO.updateRecord(`${this.#lobbyPath}/`, {
+            currentPromptKey: _promptKey,
+        });
+    }
 
     #buildStandardDisplay() {
         console.log("Standard");

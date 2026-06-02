@@ -228,6 +228,7 @@ export default class CardsAgainstComputerScienceLobbies extends Content {
                             name: getRecord().public.username,
                             photoURL: getRecord().public.photoURL,
                             isHost: false,
+                            score: 0,
                         },
                     },
                 }),
