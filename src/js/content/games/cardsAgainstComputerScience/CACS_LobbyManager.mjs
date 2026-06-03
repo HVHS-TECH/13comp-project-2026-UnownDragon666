@@ -92,8 +92,8 @@ export default class LobbyManager {
             {
                 name: _hostRecord.public.username,
                 photoURL: _hostRecord.public.photoURL,
-                isHost: true,
                 score: 0,
+                isHost: true,
             },
             false,
             false,

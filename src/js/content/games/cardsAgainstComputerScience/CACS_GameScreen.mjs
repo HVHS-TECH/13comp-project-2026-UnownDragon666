@@ -17,6 +17,7 @@ export default class CardsAgainstComputerScience extends Content {
     static #secID = "s_game";
     #lobbyPath;
     #cards;
+    #gameState;
 
     // Unsubscribe to firebase listener functions
     #unsubscribe = [];
@@ -33,6 +34,17 @@ export default class CardsAgainstComputerScience extends Content {
     constructor() {
         super(CardsAgainstComputerScience.#secID);
         this.#lobbyPath = `/games/cardsAgainstComputerScience/servers/${getServerID()}`;
+        let unsubscribeStart = firebaseIO.subscribeToRecord(
+            `${this.#lobbyPath}/gameState`,
+            (newData) => {
+                if (!newData)
+                    console.error(
+                        "Impending Doomn Approaches (Something is wrong :<)",
+                    );
+                if (newData == "waiting") this.#gameState = "waiting";
+                if (newData == "choosing") this.#gameState = "choosing";
+            },
+        );
     }
 
     /* ******************************** Parent Class Method Overrides *********************************/
@@ -283,6 +295,7 @@ export default class CardsAgainstComputerScience extends Content {
 
             const SCORE = document.createElement("p");
             SCORE.classList.add("playerScore");
+            console.log(player);
             SCORE.textContent = player.score;
 
             ROW.append(AVATAR, USERNAME, SCORE);
@@ -353,7 +366,24 @@ export default class CardsAgainstComputerScience extends Content {
 
         await firebaseIO.updateRecord(`${this.#lobbyPath}/`, {
             currentPromptKey: _promptKey,
+            cardsToChoose: this.#cards.prompts[_promptKey].pick,
+            gameState: "choosing",
         });
+
+        const CHOSEN_PROMPT_CARD = document.createElement("div");
+        CHOSEN_PROMPT_CARD.id = "d_chosenPrompt";
+
+        const PROMPT = document.createElement("p");
+        PROMPT.textContent = this.#cards.prompts[_promptKey].card;
+
+        const CHOSEN_BY = document.createElement("p");
+        CHOSEN_BY.textContent = `Chosen by ${getLobbyRecord().players[getLobbyRecord().czar].name}`;
+
+        const PICK = document.createElement("p");
+        PICK.textContent = `Pick: ${this.#cards.prompts[_promptKey].pick}`;
+
+        CHOSEN_PROMPT_CARD.append(PROMPT, CHOSEN_BY, PICK);
+        _section.append(CHOSEN_PROMPT_CARD);
     }
 
     #buildStandardDisplay() {
