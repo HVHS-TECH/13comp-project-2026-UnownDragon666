@@ -43,6 +43,8 @@ export default class CardsAgainstComputerScience extends Content {
                     );
                 if (newData == "waiting") this.#gameState = "waiting";
                 if (newData == "choosing") this.#gameState = "choosing";
+
+                this.#updateDisplays();
             },
         );
     }
@@ -309,13 +311,17 @@ export default class CardsAgainstComputerScience extends Content {
         const MAIN = document.createElement("section");
         MAIN.id = "s_main";
 
-        // Section with prompts to choose from
-        const CHOOSE_PROMPT_SECTION = document.createElement("section");
-        CHOOSE_PROMPT_SECTION.id = "s_choosePrompt";
+        switch (this.#gameState) {
+            case "waiting":
+                // Section with prompts to choose from
+                const CHOOSE_PROMPT_SECTION = document.createElement("section");
+                CHOOSE_PROMPT_SECTION.id = "s_choosePrompt";
 
-        this.#pickAPrompt(CHOOSE_PROMPT_SECTION);
+                this.#pickAPrompt(CHOOSE_PROMPT_SECTION);
 
-        MAIN.append(CHOOSE_PROMPT_SECTION);
+                MAIN.append(CHOOSE_PROMPT_SECTION);
+            case "choosing":
+        }
         return MAIN;
     }
 
@@ -391,6 +397,52 @@ export default class CardsAgainstComputerScience extends Content {
 
         const MAIN = document.createElement("section");
         MAIN.id = "s_main";
+
+        const PROMPT_SECTION = document.createElement("section");
+        this.#buildPromptSection(PROMPT_SECTION);
+
+        const HAND_SECTION = document.createElement("section");
+
+        MAIN.append(PROMPT_SECTION, HAND_SECTION);
+        return MAIN;
+    }
+
+    #buildPromptSection(_section) {
+        switch (this.#gameState) {
+            case "waiting":
+                const MESSAGE = document.createElement("p");
+                MESSAGE.textContent =
+                    "Please wait for the Czar to choose a prompt!";
+                _section.append(MESSAGE);
+                break;
+            case "choosing":
+                const CHOSEN_PROMPT_CARD = document.createElement("div");
+                CHOSEN_PROMPT_CARD.id = "d_chosenPrompt";
+
+                let promptKey = getLobbyRecord().currentPromptKey;
+
+                const PROMPT = document.createElement("p");
+                PROMPT.textContent = this.#cards.prompts[promptKey].card;
+
+                const CHOSEN_BY = document.createElement("p");
+                CHOSEN_BY.textContent = `Chosen by ${getLobbyRecord().players[getLobbyRecord().czar].name}`;
+
+                const PICK = document.createElement("p");
+                PICK.textContent = `Pick: ${this.#cards.prompts[promptKey].pick}`;
+
+                CHOSEN_PROMPT_CARD.append(PROMPT, CHOSEN_BY, PICK);
+                _section.append(CHOSEN_PROMPT_CARD);
+                break;
+        }
+
+        return _section;
+    }
+
+    #updateDisplays() {
+        // Change the displays
+        if (getRecord().uid == getLobbyRecord().czar) {
+            document.getElementById("");
+        }
     }
 }
 
