@@ -25,6 +25,13 @@ export default class LobbyReference {
                 `/games/cardsAgainstComputerScience/servers/${_lobbyID}`,
                 (data) => {
                     this.databaseCache = data;
+
+                    document.dispatchEvent(
+                        new CustomEvent("lobbyUpdated", {
+                            detail: data,
+                        }),
+                    );
+
                     resolve();
                 },
             );
