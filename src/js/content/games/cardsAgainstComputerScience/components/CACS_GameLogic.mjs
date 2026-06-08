@@ -52,7 +52,7 @@ export default class GameLogic {
 
     async submitCards(_uid, _cards) {
         await firebaseIO.updateRecord(
-            `${this.#lobbyPath}/submittedCards/${_uid}/`,
+            `${this.#lobbyPath}/submittedCards/${_uid}`,
             { ..._cards },
         );
 
@@ -60,31 +60,49 @@ export default class GameLogic {
         const lobby = getLobbyRecord();
 
         const getRandomInt = (max) => Math.floor(Math.random() * max);
-        let lostCards = 0;
 
-        _cards.forEach(async (card) => {
-            let index = lobby.players[_uid].hand.indexOf(card);
-            await firebaseIO.deleteRecord(
-                `${this.#lobbyPath}/players/${getRecord().uid}/hand/${index}`,
-            );
-            lostCards++;
-        });
+        // Clone the player's hand so we can modify it locally
+        const hand = [...lobby.players[_uid].hand];
 
-        while (lostCards > 0) {
-            let index = getRandomInt(Object.keys(this.#cards.responses).length);
-            if (lobby.players[_uid].hand.includes(index)) continue;
-            await firebaseIO.updateRecord(
-                `${this.#lobbyPath}/players/${_uid}/hand/`,
-                index,
-            );
-            lostCards--;
+        // Remove submitted cards
+        for (const card of _cards) {
+            const index = hand.indexOf(card);
+
+            if (index === -1) {
+                console.warn("Card not found in hand:", card);
+                continue;
+            }
+
+            hand.splice(index, 1);
         }
 
-        const players = Object.keys(lobby.players).filter(
-            (uid) => uid !== lobby.czar,
+        // Draw replacement cards
+        while (hand.length < lobby.players[_uid].hand.length) {
+            const newCard = getRandomInt(
+                Object.keys(this.#cards.responses).length,
+            );
+
+            // Prevent duplicates
+            if (hand.includes(newCard)) continue;
+
+            hand.push(newCard);
+        }
+
+        // Write the entire hand back at once
+        await firebaseIO.setRecord(
+            `${this.#lobbyPath}/players/${_uid}/hand`,
+            hand,
         );
 
-        const submissions = Object.keys(lobby.submittedCards ?? {});
+        await generateLobbyCache();
+        const updatedLobby = getLobbyRecord();
+
+        const players = Object.keys(updatedLobby.players).filter(
+            (uid) => uid !== updatedLobby.czar,
+        );
+
+        const submissions = Object.keys(updatedLobby.submittedCards ?? {});
+        console.log(submissions);
 
         if (submissions.length === players.length) {
             await firebaseIO.updateRecord(this.#lobbyPath, {

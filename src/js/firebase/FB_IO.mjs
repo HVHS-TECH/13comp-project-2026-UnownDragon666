@@ -3,6 +3,7 @@ import {
     getDatabase,
     ref,
     get,
+    set,
     update,
     onValue,
     onDisconnect,
@@ -131,6 +132,21 @@ export default class FirebaseIO {
         const REF = ref(this.#database, _path);
         try {
             await update(REF, _data);
+            if (typeof _callback === "function") {
+                _callback();
+            }
+        } catch (error) {
+            console.error(
+                `Failed to update record @ ${_path}, w/ ${JSON.stringify(_data)}. See error: ${error}`,
+            );
+            throw error;
+        }
+    }
+
+    async setRecord(_path, _data, _callback = null) {
+        const REF = ref(this.#database, _path);
+        try {
+            await set(REF, _data);
             if (typeof _callback === "function") {
                 _callback();
             }
