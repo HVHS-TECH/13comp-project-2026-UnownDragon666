@@ -65,6 +65,65 @@ Colors.Cards = class {
     static fontColor = "#FFFFFF";
 };
 
+Colors.GameScreen = class {
+    /* Layout */
+    static sidebarBackground = "#f3e8ff";
+
+    /* Tabs */
+    static tabBackground = "#e7c6ff";
+    static tabActiveBackground = "#cdb4db";
+    static tabText = "#3a2e4d";
+    static tabHoverText = "#1a1025";
+    static tabActiveText = "#ffffff";
+
+    /* Chat */
+    static chatBubbleBackground = "#fff0f6";
+
+    /* Card Theme */
+    static blackCardBackground = "#231F20";
+    static blackCardText = "#FFFFFF";
+    static whiteCardBackground = "#FFFDFD";
+    static whiteCardText = "#2b2d42";
+    static promptPickColor = "#ffd166";
+
+    /* Selection */
+
+    static accentBlue = "#a0c4ff";
+    static selectedBackground = "#eef7ff";
+
+    /* Player List */
+    static playerRowHover = "#f5ecff";
+    static scoreBadgeText = "#1a1025";
+
+    /* Shadows */
+    static shadowSmall = "0 4px 10px rgba(205,180,219,.20)";
+    static shadowMedium = "0 8px 20px rgba(205,180,219,.28)";
+    static shadowLarge = "0 12px 30px rgba(205,180,219,.35)";
+    static shadowSelected = "0 12px 28px rgba(160,196,255,.35)";
+
+    /* Borders */
+    static darkBorder = "#d8c6ea";
+    static inputBorder = "#cdb4db";
+
+    /* Winner */
+    static winnerColor = "#89b4fa";
+    static winnerGlow = "0 0 16px rgba(160,196,255,.45)";
+
+    /* Game End */
+    static gameEndBackground = "#fff7fc";
+    static gameEndTitle = "#3a2e4d";
+    static gameEndWinner = "#a0c4ff";
+
+    static leaderboardBackground = "#ffffff";
+    static leaderboardRowHover = "#f5ecff";
+    static leaderboardBorder = "#cdb4db";
+
+    static gameEndScore = "#3a2e4d";
+    static gameEndButtonBackground = "#a0c4ff";
+    static gameEndButtonText = "#ffffff";
+    static gameEndButtonHover = "#89b4fa";
+};
+
 /**
  * It's just an archive of the old colors (for... i dont really know, just in case)
  */

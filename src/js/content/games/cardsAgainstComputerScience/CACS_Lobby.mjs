@@ -93,7 +93,6 @@ export default class Lobby extends Content {
             `${this.#lobbyPath}/lobbyState`,
             (data) => {
                 if (data == "starting") {
-                    console.log("STARTING GAME");
                     const START = new CustomEvent("startGame", {
                         detail: {
                             content: this.lobbyID,
@@ -102,7 +101,6 @@ export default class Lobby extends Content {
                     });
                     document.dispatchEvent(START);
                 } else if (data == "started") {
-                    console.log("GAME STARTED");
                     document.dispatchEvent(
                         new CustomEvent("navigate", {
                             detail: {
@@ -525,8 +523,7 @@ export default class Lobby extends Content {
     #startGame() {
         // Get the current number of players in the lobby and check if there are enough players to start the game.
         let playerNum = Object.keys(getLobbyRecord().players).length;
-        console.log("Number of players: ", playerNum);
-        // if (playerNum < Lobby.#MIN_PLAYERS) return;
+        //if (playerNum < Lobby.#MIN_PLAYERS) return;
 
         // If validation is successful, update the page state to started and start the game
         let UPDATE_LOBBY_STATE = new CustomEvent("updateLobbyState", {

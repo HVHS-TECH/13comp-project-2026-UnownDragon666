@@ -102,22 +102,28 @@ export default class Sidebar {
     #renderChat(_messages) {
         this.#content.innerHTML = "";
 
-        const DIV = document.createElement("div");
+        const WRAPPER = document.createElement("div");
+        WRAPPER.classList.add("chatWrapper");
+
+        const MESSAGES = document.createElement("div");
+        MESSAGES.classList.add("chatMessages");
 
         Object.values(_messages ?? {}).forEach((message) => {
             const MSG = document.createElement("p");
-
+            MSG.classList.add("chatMessage");
             MSG.textContent = `${message.senderName}: ${message.content}`;
-
-            DIV.append(MSG);
+            MESSAGES.append(MSG);
         });
 
-        this.#createInput(DIV);
+        const INPUT = this.#createInput();
 
-        this.#content.append(DIV);
+        WRAPPER.append(MESSAGES, INPUT);
+        this.#content.append(WRAPPER);
+
+        MESSAGES.scrollTop = MESSAGES.scrollHeight;
     }
 
-    #createInput(_container) {
+    #createInput() {
         const MESSAGE_CONTAINER = document.createElement("div");
         MESSAGE_CONTAINER.id = "d_messageInputContainer";
 
@@ -127,24 +133,22 @@ export default class Sidebar {
         const BUTTON = document.createElement("button");
         BUTTON.type = "button";
         BUTTON.textContent = "submit";
+
         BUTTON.addEventListener("click", () => {
             const EVENT = new CustomEvent("sendMessage", {
                 detail: {
                     content: getServerID(),
-                    message: document.getElementById("i_sendMessages").value,
+                    message: INPUT.value,
                 },
             });
             document.dispatchEvent(EVENT);
         });
 
         INPUT.addEventListener("keydown", (event) => {
-            if (event.key === "Enter") {
-                BUTTON.click();
-                INPUT.focus();
-            }
+            if (event.key === "Enter") BUTTON.click();
         });
 
         MESSAGE_CONTAINER.append(INPUT, BUTTON);
-        _container.append(MESSAGE_CONTAINER);
+        return MESSAGE_CONTAINER;
     }
 }

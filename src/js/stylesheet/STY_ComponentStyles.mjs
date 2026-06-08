@@ -49,6 +49,11 @@ export default class ComponentStyles {
             color: ${Colors.textHoverColor};
             color: ${Colors.buttonTextHoverColor};
         }
+
+        button:disabled {
+            opacity:.45;
+            cursor:not-allowed;
+        }
         `;
         document.body.appendChild(COMPONENT_LAYER_BUTTON_STYLE);
 

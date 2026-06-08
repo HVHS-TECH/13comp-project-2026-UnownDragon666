@@ -96,10 +96,11 @@ export default class CardsAgainstComputerScience extends Content {
         BAR.id = "d_topbar";
 
         const ROUND_COUNTER = this.#buildRoundCounter();
-        const { timer, timerControls } = this.#buildRoundTimer();
-        this.#timerControls = timerControls;
+        // const { timer, timerControls } = this.#buildRoundTimer();
+        // this.#timerControls = timerControls;
 
-        BAR.append(ROUND_COUNTER, timer);
+        BAR.append(ROUND_COUNTER);
+        // BAR.append(timer);
         return BAR;
     }
 
@@ -110,6 +111,7 @@ export default class CardsAgainstComputerScience extends Content {
      */
     #buildRoundCounter() {
         const DIV = document.createElement("div");
+        DIV.id = "d_roundCounter";
 
         const LABEL = document.createElement("p");
         LABEL.id = "p_roundCounterLabel";
@@ -138,39 +140,53 @@ export default class CardsAgainstComputerScience extends Content {
      *
      * @returns {Object<HTMLDivElement, TimerController>}
      */
-    #buildRoundTimer() {
-        const DIV = document.createElement("div");
-        const TIMER = document.createElement("p");
-        TIMER.textContent = "00:00";
-        TIMER.id = "p_timer";
-        DIV.append(TIMER);
+    // #buildRoundTimer() {
+    //     const DIV = document.createElement("div");
+    //     const TIMER = document.createElement("p");
+    //     TIMER.textContent = "00:00";
+    //     TIMER.id = "p_timer";
+    //     DIV.append(TIMER);
 
-        this.#timerElement = TIMER;
+    //     this.#timerElement = TIMER;
 
-        let timerController = new TimerController();
+    //     let timerController = new TimerController();
 
-        return { timer: DIV, timerControls: timerController };
-    }
+    //     return { timer: DIV, timerControls: timerController };
+    // }
 
-    #updateTimer(_lobbyData) {
-        this.#timerControls.stopTimer();
+    // startTimestampTimer(element, endTime, callback) {
+    //     this.stopTimer();
 
-        switch (_lobbyData.gameState) {
-            case "choosing":
-                this.#timerControls.startTimer(
-                    this.#timerElement,
-                    _lobbyData.rules.roundTime,
-                );
-                break;
+    //     this.#timer = setInterval(() => {
+    //         const remaining = Math.max(
+    //             0,
+    //             Math.floor((endTime - Date.now()) / 1000),
+    //         );
 
-            case "judging":
-                this.#timerControls.startTimer(this.#timerElement, 30);
-                break;
+    //         this.#totalSeconds = remaining;
 
-            default:
-                this.#timerControls.resetTimer(this.#timerElement, 0);
-        }
-    }
+    //         this.updateDisplay(element);
+
+    //         if (remaining <= 0) this.stopTimer(callback);
+    //     }, 250);
+    // }
+
+    // #updateTimer(_lobbyData) {
+    //     switch (_lobbyData.gameState) {
+    //         case "choosing":
+
+    //         case "judging":
+    //             this.#timerControls.startTimestampTimer(
+    //                 this.#timerElement,
+    //                 _lobbyData.roundEndsAt,
+    //             );
+
+    //             break;
+
+    //         default:
+    //             this.#timerControls.resetTimer(this.#timerElement, 0);
+    //     }
+    // }
 
     #updateDisplays(_lobbyData) {
         this.#mainSection.innerHTML = "";
@@ -186,7 +202,7 @@ export default class CardsAgainstComputerScience extends Content {
 
         this.#sidebar.refresh(_lobbyData);
 
-        this.#updateTimer(_lobbyData);
+        // this.#updateTimer(_lobbyData);
     }
 }
 
