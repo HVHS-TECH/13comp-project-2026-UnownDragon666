@@ -113,6 +113,7 @@ export default class FirebaseIO {
         const REF = ref(this.#database, _path);
         try {
             let snapshot = await get(REF);
+            if (!snapshot.exists()) return null;
             return snapshot.val();
         } catch (error) {
             console.error(`Read record failed: ${error}`);

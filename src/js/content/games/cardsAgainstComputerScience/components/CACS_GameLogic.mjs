@@ -142,4 +142,9 @@ export default class GameLogic {
             roundWinner: null,
         });
     }
+
+    uploadScore(_score, _uid) {
+        const PATH = `games/cardsAgainstComputerScience/scores/${_uid}`;
+        let currentScore = firebaseIO.readRecord(PATH);
+    }
 }

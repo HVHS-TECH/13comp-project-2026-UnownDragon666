@@ -248,6 +248,8 @@ export default class GameRenderer {
             (a, b) => (b[1].score ?? 0) - (a[1].score ?? 0),
         );
 
+        // EG: [["uid", {Object WIth the score}], ["uid", {Object WIth the score}], ...]
+
         const WINNER = sortedPlayers[0];
         console.log(WINNER);
 
@@ -275,6 +277,12 @@ export default class GameRenderer {
             ROW.append(NAME, SCORE);
             LEADERBOARD.append(ROW);
         });
+
+        let myGameScore = sortedPlayers.find(
+            ([uid, data]) => uid == getRecord().uid,
+        )[1].score;
+        console.log(myGameScore, getRecord().uid);
+        this.#logic.uploadScore(myGameScore, getRecord().uid);
 
         SECTION.append(LEADERBOARD);
 

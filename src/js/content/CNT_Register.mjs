@@ -220,6 +220,7 @@ export default class Register extends Content {
                         username: name,
                         pronouns: pronouns,
                         photoURL: firebaseIO.auth.currentUser.photoURL,
+                        scoreCACS: 0,
                     },
                     isAdmin: false,
                     deleted: false,
