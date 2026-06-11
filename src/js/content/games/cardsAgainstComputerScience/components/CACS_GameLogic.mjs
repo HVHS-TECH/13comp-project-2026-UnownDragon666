@@ -73,19 +73,22 @@ export default class GameLogic {
                 continue;
             }
 
+            // remove card
             hand.splice(index, 1);
-        }
 
-        // Draw replacement cards
-        while (hand.length < lobby.players[_uid].hand.length) {
-            const newCard = getRandomInt(
-                Object.keys(this.#cards.responses).length,
-            );
+            drawCard();
 
-            // Prevent duplicates
-            if (hand.includes(newCard)) continue;
-
-            hand.push(newCard);
+            let drawCard = () => {
+                const newCard = getRandomInt(
+                    Object.keys(this.#cards.responses).length,
+                );
+                // Prevent duplicates
+                if (hand.includes(newCard)) {
+                    drawCard();
+                    return;
+                }
+                hand.push(newCard);
+            };
         }
 
         // Write the entire hand back at once
@@ -112,6 +115,7 @@ export default class GameLogic {
     }
 
     async chooseWinner(_uid, _lobbyData) {
+        if (getRecord().uid !== getLobbyRecord().czar) return;
         await firebaseIO.updateRecord(this.#lobbyPath, {
             roundWinner: _uid,
             gameState: "roundEnd",
@@ -143,8 +147,11 @@ export default class GameLogic {
         });
     }
 
-    uploadScore(_score, _uid) {
-        const PATH = `games/cardsAgainstComputerScience/scores/${_uid}`;
-        let currentScore = firebaseIO.readRecord(PATH);
+    async uploadScore(_score, _uid) {
+        const PATH = `games/cardsAgainstComputerScience/scores/${_uid}/`;
+        const currentScore = await firebaseIO.readRecord(PATH);
+        await firebaseIO.updateRecord(PATH, {
+            totalScore: (currentScore ?? 0) + _score,
+        });
     }
 }
