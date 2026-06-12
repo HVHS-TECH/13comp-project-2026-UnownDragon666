@@ -8,6 +8,11 @@ export default class GameLogic {
 
     static #HAND_SIZE = 6;
 
+    /**
+     * Create a game logic instance
+     * @param {Object} _cards - The responses and prompt cards.
+     * @param {String} _lobbyPath - String containing the lobby's path.
+     */
     constructor(_cards, _lobbyPath) {
         this.#cards = _cards;
         this.#lobbyPath = _lobbyPath;
@@ -16,6 +21,13 @@ export default class GameLogic {
             this.#distributeHands();
     }
 
+    /**
+     * Called in constructor
+     *
+     * For each player in the database, make a hand with no duplicate cards, and write it to the database.
+     *
+     * @returns {Promise<void>}
+     */
     async #distributeHands() {
         // Give everyone their hands
         Object.keys(getLobbyRecord().players).forEach(async (uid) => {
@@ -39,17 +51,32 @@ export default class GameLogic {
         });
     }
 
+    /**
+     * Called by a PromptPicker card when clicked by the czar
+     *
+     * Logic for when a prompt is chosen.
+     *
+     * @param {Number} _promptKey - A key representing the index of the prompt in this.#cards.prompts
+     */
     async choosePrompt(_promptKey) {
         await firebaseIO.updateRecord(this.#lobbyPath, {
             currentPromptKey: _promptKey,
             cardsToChoose: this.#cards.prompts[_promptKey].pick,
             gameState: "choosing",
-
+            // This is a WIP :<
             roundEndsAt:
                 Date.now() + getLobbyRecord().rules.roundLengthSeconds * 1000,
         });
     }
 
+    /**
+     * Called in GameRenderer when the user submits the cards they've chosen
+     *
+     * Logic for submitting (a) card(s)
+     *
+     * @param {String} _uid - UID of user that wants to submit card(s)
+     * @param {Array<Number>} _cards - Array containing the indices of the cards that the user has played.
+     */
     async submitCards(_uid, _cards) {
         await firebaseIO.updateRecord(
             `${this.#lobbyPath}/submittedCards/${_uid}`,
@@ -114,6 +141,13 @@ export default class GameLogic {
         }
     }
 
+    /**
+     * Logic for after the round's winner is selected by the czar
+     *
+     * @param {String} _uid - UID of the user that was chosen as the winner
+     * @param {Object} _lobbyData - Snapshot of the database
+     * @returns
+     */
     async chooseWinner(_uid, _lobbyData) {
         if (getRecord().uid !== getLobbyRecord().czar) return;
         await firebaseIO.updateRecord(this.#lobbyPath, {
@@ -126,6 +160,12 @@ export default class GameLogic {
         });
     }
 
+    /**
+     *
+     * @param {*} _nextCzarUid
+     * @param {*} _round
+     * @returns
+     */
     async nextRound(_nextCzarUid, _round) {
         const lobby = getLobbyRecord();
 

@@ -35,7 +35,7 @@
     "games": {
       "cardsAgainstComputerScience": {
         "servers": {
-          ".read": "auth != null",
+          ".read": "auth != nsull",
           "$serverID": {
             ".write": "auth != null",
             "players": {

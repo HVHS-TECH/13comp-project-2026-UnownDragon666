@@ -109,13 +109,12 @@ export default class ContentManager {
      * "navigate" contains a "detail" called "content" which tells this method
      * which page to navigate to.
      *
-     * @param {object} _event - custom event object containing the navigation details for the page
+     * @param {Object} _event - custom event object containing the navigation details for the page
      *
      * @returns {Promise<void>}
      */
     async CM_navigate(_event) {
         try {
-            // Inside the "navigate" event is the name of the class I need to navigate to
             let navTarget = _event.detail.content;
             let navParams = _event.detail.params || null;
 

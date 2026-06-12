@@ -29,6 +29,7 @@ export default class AccountManager {
     /**
      * Attach listener to user's account that checks if the "deleted" flag has been set to true
      *
+     * @param {String} _uid
      */
     #attachDeletionListener(_uid) {
         let initialLoad = true;
