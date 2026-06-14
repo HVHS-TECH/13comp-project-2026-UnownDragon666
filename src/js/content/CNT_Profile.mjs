@@ -36,7 +36,6 @@ export default class Profile extends Content {
     }
 
     async buildContent() {
-        // Create nav var
         const NAV = super.createNavBar();
         this.section.appendChild(NAV);
 

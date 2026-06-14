@@ -8,6 +8,7 @@ import CardsAgainstComputerScience from "./games/cardsAgainstComputerScience/CAC
 import Admin from "./CNT_Admin.mjs";
 import ChooseMinesweeperDifficulty from "./games/minesweeper/MSG_DifficultySelect.mjs";
 import MinesweeperGameScreen from "./games/minesweeper/MSG_GameScreen.mjs";
+import Leaderboard from "./CNT_Leaderboard.mjs";
 
 /**
  * @family CNT: Content
@@ -29,4 +30,5 @@ export {
     Admin,
     ChooseMinesweeperDifficulty,
     MinesweeperGameScreen,
+    Leaderboard,
 };

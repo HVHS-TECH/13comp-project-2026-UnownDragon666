@@ -54,9 +54,6 @@ export default class Content {
      */
     buildContent() {}
 
-    // May become public instead
-    // insertNav() {}
-
     /* **************************************** Public Methods *****************************************/
 
     /**

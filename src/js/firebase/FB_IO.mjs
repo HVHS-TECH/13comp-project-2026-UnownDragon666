@@ -116,7 +116,8 @@ export default class FirebaseIO {
             if (!snapshot.exists()) return null;
             return snapshot.val();
         } catch (error) {
-            console.error(`Read record failed: ${error}`);
+            console.error(`Read record failed: ${error}
+                           While reading: ${_path}`);
         }
     }
 

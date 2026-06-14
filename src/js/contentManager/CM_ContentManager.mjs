@@ -29,10 +29,10 @@ export default class ContentManager {
     constructor(_root) {
         this.#rootDiv = _root;
         document.addEventListener("navigate", this.CM_navigate.bind(this));
-        document.addEventListener(
-            "updateState",
-            this.CM_updatePageState.bind(this),
-        );
+        // document.addEventListener(
+        //     "updateState",
+        //     this.CM_updatePageState.bind(this),
+        // );
         document.addEventListener("googleAuth", async (_event) => {
             document.querySelectorAll("button").forEach((element) => {
                 element.disabled = true;
@@ -69,21 +69,19 @@ export default class ContentManager {
         // First, remove currently displayed page's HTML:
         try {
             this.displayedContent.removeContent();
-        } catch (error) {}
+        } catch (error) {
+            console.error("unable to remove content: " + error);
+        }
 
         try {
-            // Next, create an instance of the new page content
             let page = new _content();
             await page.buildContent(_params);
 
-            // Update displayedContent
             this.displayedContent = page;
             this.currentContentClass = _content;
 
-            // Update Stylesheets before appending to DOM
             this.updateStyles(this.displayedContent.styleID);
 
-            // Now: Append this page to the DOM
             this.#rootDiv.appendChild(page.section);
         } catch (error) {
             throw new Error(error);
@@ -134,27 +132,28 @@ export default class ContentManager {
         }
     }
 
-    /**
-     * Different from CM_navigate as this does not change the class that the Content Manager reads
-     * from, rather the same class is being displayed, just a different portion of it. In this
-     * case, I have called it a different "pageState".
-     *
-     * @param {object} _event - The event containing the information for updateState i.e.
-     * which method to call to update the content of the page with the new content,
-     *
-     * @returns {Promise<void>}
-     */
-    async CM_updatePageState(_event) {
-        // This function looks for the custom "updateState" event to update the
-        // state of the currently diplayed page
-        try {
-            let methodRef = _event.detail.content; // Contains the name of the method to be called
-            await this.displayedContent.removeContent();
-            // Appends the updated page state to the new page state
-            this.displayedContent[methodRef]();
-            this.#rootDiv.appendChild(this.displayedContent.section);
-        } catch (error) {
-            console.error(`Page update resulted in error: ${error}`);
-        }
-    }
+    // Deprecated code
+    // /**
+    //  * Different from CM_navigate as this does not change the class that the Content Manager reads
+    //  * from, rather the same class is being displayed, just a different portion of it. In this
+    //  * case, I have called it a different "pageState".
+    //  *
+    //  * @param {object} _event - The event containing the information for updateState i.e.
+    //  * which method to call to update the content of the page with the new content,
+    //  *
+    //  * @returns {Promise<void>}
+    //  */
+    // async CM_updatePageState(_event) {
+    //     // This function looks for the custom "updateState" event to update the
+    //     // state of the currently diplayed page
+    //     try {
+    //         let methodRef = _event.detail.content; // Contains the name of the method to be called
+    //         await this.displayedContent.removeContent();
+    //         // Appends the updated page state to the new page state
+    //         this.displayedContent[methodRef]();
+    //         this.#rootDiv.appendChild(this.displayedContent.section);
+    //     } catch (error) {
+    //         console.error(`Page update resulted in error: ${error}`);
+    //     }
+    // }
 }
