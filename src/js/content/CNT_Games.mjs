@@ -23,8 +23,9 @@ export default class Games extends Content {
     #games = {
         d_cardsAgainstComputerScience: {
             title: "Cards Against COMPUTER SCIENCE",
-            description:
-                "Simply a game about having fun and making absurd sentences! Prove yourself as the funniest by getting the most points!",
+            description: `Simply a game about having fun and making absurd sentences! Prove yourself as the funniest by getting the most points! \n
+                Based on Cards Against Humanity, available at www.cardsagainsthumanity.com by Cards Against Humanity LLC, which is published \n
+                under an Creative Commons BY-NC-SA license.`,
             target: "CardsAgainstComputerScienceLobbies",
             buttonContent: "Play Game",
         },
