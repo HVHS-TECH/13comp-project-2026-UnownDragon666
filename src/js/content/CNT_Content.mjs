@@ -77,7 +77,7 @@ export default class Content {
                 detail: {
                     content: _target,
                     button: button,
-                    _extra,
+                    ..._extra,
                 },
             });
             document.dispatchEvent(EVENT);

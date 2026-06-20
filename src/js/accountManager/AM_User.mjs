@@ -48,3 +48,7 @@ export function initializeUser(_userRecord) {
 export function getRecord() {
     return user.currentUserRecord;
 }
+
+export function getUsername() {
+    return user.currentUserRecord.public.username;
+}

@@ -1,4 +1,5 @@
 import { firebaseIO } from "../firebase/FB_instance.mjs";
+import { getRecord } from "./AM_User.mjs";
 
 /**
  * @family AM: Account Manager
@@ -21,8 +22,12 @@ export default class AccountManager {
     /* **************************************** Constructor *****************************************/
     constructor(_auth) {
         this.#auth = _auth;
-
         this.#attachDeletionListener(_auth.uid);
+
+        document.addEventListener(
+            "updateUserData",
+            this.#updateUserData.bind(this),
+        );
     }
 
     /* **************************************** Private Methods *****************************************/
@@ -60,6 +65,31 @@ export default class AccountManager {
                 },
             });
             document.dispatchEvent(EVENT);
+        }
+    }
+
+    /**
+     * Updates user data, called by the event listener in the consructor, which waits for the "updateUserData" CustomEvent.
+     *
+     * @param {Object} _event The data update event, with details of what to update, and what to update with, as well as a handeUpdate() method to deal with the new update
+     */
+    #updateUserData(_event) {
+        const { dataPath, dataKey, getNewData } = _event.detail;
+        const newData = getNewData();
+        if (!this.#auth?.uid || !dataPath || !dataKey) {
+            console.error("Missing data for update:", {
+                uid: this.#auth?.uid,
+                dataPath,
+                dataKey,
+            });
+            return;
+        }
+        const BASE_PATH = `users/${this.#auth.uid}/${dataPath}/`;
+        try {
+            firebaseIO.updateRecord(BASE_PATH, { [dataKey]: newData });
+            _event.detail.handleUpdate?.();
+        } catch (error) {
+            console.error(error);
         }
     }
 }

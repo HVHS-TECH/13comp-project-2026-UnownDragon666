@@ -15,6 +15,7 @@ import { firebaseIO } from "../firebase/FB_instance.mjs";
 export default class ContentManager {
     /* **************************************** Private Fields *****************************************/
     #rootDiv;
+    #debug = true;
 
     /* **************************************** Public Fields *****************************************/
     displayedContent;
@@ -58,17 +59,14 @@ export default class ContentManager {
     /**
      * Displays content in the "CNT" class passed to it
      *
-     * @param {class} _content - The CNT Class to display, CNT Class is a class containing content information and
+     * @param {Class} _content - The CNT Class to display, CNT Class is a class containing content information and
      * instructions on how to make the content to diplay on the page
      *
      * @returns {Promise<void>}
      */
     async CM_displayContent(_content, _params = null) {
-        // Function replaces the current content of the page with new content
-
-        // First, remove currently displayed page's HTML:
         try {
-            this.displayedContent.removeContent();
+            this.displayedContent.removeContent?.();
         } catch (error) {
             console.error("unable to remove content: " + error);
         }
@@ -123,10 +121,13 @@ export default class ContentManager {
                 await this.displayedContent[_event.detail.state]();
                 this.#rootDiv.appendChild(this.displayedContent.section);
             }
-            console.log(
-                `%cCurrent displayed page: ${this.currentContentClass.name}`,
-                "background-color: lightpink; color: black",
-            );
+
+            this.#debug
+                ? console.log(
+                      `%cCurrent displayed page: ${this.currentContentClass.name}`,
+                      "background-color: lightpink; color: black",
+                  )
+                : null;
         } catch (error) {
             console.error(error);
         }

@@ -1,4 +1,5 @@
 import AccountManager from "../accountManager/AM_AccountManager.mjs";
+import { getRecord, getUsername } from "../accountManager/AM_User.mjs";
 import { firebaseIO } from "../firebase/FB_instance.mjs";
 import Content from "./CNT_Content.mjs";
 /**
@@ -13,6 +14,7 @@ import Content from "./CNT_Content.mjs";
 export default class Profile extends Content {
     /* **************************************** Private Fields *****************************************/
     static #secID = "s_profile";
+    #usernameElement;
     #accountManager;
     #currentUser;
 
@@ -24,7 +26,7 @@ export default class Profile extends Content {
     constructor() {
         super(Profile.#secID);
         // Instantiate account manager instance
-        this.#currentUser = firebaseIO.auth;
+        this.#currentUser = firebaseIO.auth.currentUser;
         this.#accountManager = new AccountManager(this.#currentUser);
     }
 
@@ -62,7 +64,80 @@ export default class Profile extends Content {
      */
     #buildProfileSideBar() {
         const PROFILE_CONTAINER = document.createElement("aside");
+
+        const PFP = this.#buildPFPBox();
+
+        const UPDATE = this.#buildUpdateContainer();
+
+        PROFILE_CONTAINER.append(PFP, UPDATE);
+        this.section.append(PROFILE_CONTAINER);
+    }
+
+    #buildPFPBox() {
+        const WRAPPER = document.createElement("div");
+        WRAPPER.id = "d_pfp";
+
         const PFP = document.createElement("img");
+        PFP.src = getRecord().public.photoURL;
+        PFP.id = "img_pfp";
+
+        this.#usernameElement = super.createTitle(`${getUsername()}`);
+        this.#usernameElement.id = "h_username";
+
+        WRAPPER.append(PFP, this.#usernameElement);
+        return WRAPPER;
+    }
+
+    /**
+     * Builds the HTML for the section where you can update your name
+     *
+     * @returns {HTMLDivElement}
+     */
+    #buildUpdateContainer() {
+        const WRAPPER = document.createElement("div");
+        WRAPPER.id = "d_update";
+
+        const CHANGE_NAME = super.createInput(
+            "Change username:",
+            "New username",
+            "string",
+            "i_nameChange",
+            "i_nameChange",
+            "d_changeName",
+        );
+
+        const UPDATE_BUTTON = super.createButton(
+            "Update",
+            "updateUserData",
+            null,
+            {
+                dataPath: "public",
+                dataKey: "username",
+                getNewData: () => CHANGE_NAME.querySelector("input").value,
+                handleUpdate: (() => {
+                    let newName = CHANGE_NAME.querySelector("input").value;
+                    if (
+                        !newName ||
+                        newName == (null || undefined) ||
+                        newName.trim() == ""
+                    ) {
+                        console.error("Cannot write empty name!");
+                        return;
+                    }
+
+                    if (newName.length > 20) {
+                        console.error(`username too long: ${newName}`);
+                        return;
+                    }
+
+                    this.#usernameElement.textContent = newName;
+                }).bind(this),
+            },
+        );
+        UPDATE_BUTTON.type = "button";
+
+        WRAPPER.append(CHANGE_NAME, UPDATE_BUTTON);
+        return WRAPPER;
     }
 
     /**
