@@ -45,6 +45,8 @@ export default class AdminStyles {
                 list-style: none;
                 padding: 0;
                 margin: 0;
+                height: 60%;
+                overflow-y: scroll;
             }
             
             #u_playerList li {
