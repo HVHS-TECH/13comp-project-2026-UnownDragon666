@@ -42,16 +42,17 @@ export default class Profile extends Content {
         this.section.appendChild(NAV);
 
         // Create main content container
-        const MAIN_CONTAINER = document.createElement("container");
+        const MAIN_CONTAINER = document.createElement("section");
 
         // Inside container, there are 2 sections
         // The "sidebar" (this is the profile bit)
         // And the "content" (this is the user's stats and friends)
-        this.#buildProfileSideBar();
+        const SIDEBAR = this.#buildProfileSideBar();
 
-        this.#buildProfileContent();
+        const CONTENT = await this.#buildProfileContent();
 
-        return document.getElementById(Profile.#secID);
+        MAIN_CONTAINER.append(SIDEBAR, CONTENT);
+        this.section.append(MAIN_CONTAINER);
     }
     /* **************************************** Public Methods *****************************************/
 
@@ -70,7 +71,7 @@ export default class Profile extends Content {
         const UPDATE = this.#buildUpdateContainer();
 
         PROFILE_CONTAINER.append(PFP, UPDATE);
-        this.section.append(PROFILE_CONTAINER);
+        return PROFILE_CONTAINER;
     }
 
     #buildPFPBox() {
@@ -136,14 +137,36 @@ export default class Profile extends Content {
         );
         UPDATE_BUTTON.type = "button";
 
-        WRAPPER.append(CHANGE_NAME, UPDATE_BUTTON);
+        const LOGOUT = super.createButton("Logout", "signout");
+
+        WRAPPER.append(CHANGE_NAME, UPDATE_BUTTON, LOGOUT);
         return WRAPPER;
     }
 
     /**
-     * There are 2 parts to the content:
-     * - The user's stats (and leaderboard rankings)
-     * - and the user's friends container.
+     *
+     * The user's stats
+     *
      */
-    #buildProfileContent() {}
+    async #buildProfileContent() {
+        const SECTION = document.createElement("section");
+
+        const SCORES = document.createElement("ul");
+
+        const CACS_SCORE = document.createElement("li");
+        let scoreObj = await firebaseIO.readRecord(
+            `/games/cardsAgainstComputerScience/scores/${getRecord().uid}`,
+        );
+        console.log(scoreObj);
+        if (scoreObj == null) {
+            CACS_SCORE.textContent =
+                "No score set for Cards Against Computer Science! Go give it a play. :)";
+        } else {
+            CACS_SCORE.textContent = `Total Cards Against Humanity Score: ${scoreObj.totalScore}`;
+        }
+
+        SCORES.append(CACS_SCORE);
+        SECTION.append(SCORES);
+        return SECTION;
+    }
 }

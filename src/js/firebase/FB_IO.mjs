@@ -223,7 +223,6 @@ export default class FirebaseIO {
      */
     #signOut() {
         signOut(this.auth);
-        console.log("Signed out");
         const EVENT = new CustomEvent("navigate", {
             detail: {
                 content: "Welcome",

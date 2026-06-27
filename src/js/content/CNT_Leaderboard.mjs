@@ -6,6 +6,7 @@ export default class Leaderboard extends Content {
     static #secID = "s_leaderboard";
     #mainContentContainer;
     #displayedLeaderboard = "cardsAgainstComputerScience";
+    #listeners = [];
 
     /* **************************************** Public Fields *****************************************/
     // The ID used to identify the stylesheet belonging to this page (LeaderBoard Style Sheet)
@@ -20,6 +21,7 @@ export default class Leaderboard extends Content {
     /* ******************************** Parent Class Method Overrides *********************************/
     async removeContent() {
         document.querySelectorAll("section").forEach((s) => s.remove());
+        this.#listeners.forEach((func) => func());
     }
 
     async buildContent() {
@@ -30,7 +32,12 @@ export default class Leaderboard extends Content {
         CONTAINER.id = "leaderboardContainer";
         this.section.append(this.#mainContentContainer);
 
-        await this.#renderLeaderboard(CONTAINER);
+        this.#listeners.push(
+            firebaseIO.subscribeToRecord(
+                `/games/${this.#displayedLeaderboard}/scores`,
+                async () => await this.#renderLeaderboard(CONTAINER),
+            ),
+        );
 
         this.section.append(CONTAINER);
     }
@@ -97,10 +104,10 @@ export default class Leaderboard extends Content {
         scores.sort((a, b) => b[1].totalScore - a[1].totalScore);
 
         let rank = 1;
-        scores.forEach(async ([uid, scoreObj]) => {
-            let username = (await firebaseIO.readRecord(`/users/${uid}/public`))
-                .username;
-
+        for (const [uid, scoreObj] of scores) {
+            const username = (
+                await firebaseIO.readRecord(`/users/${uid}/public`)
+            ).username;
             const ROW = this.#createTableRow(
                 rank,
                 username,
@@ -108,6 +115,6 @@ export default class Leaderboard extends Content {
             );
             rank++;
             _tableBody.append(ROW);
-        });
+        }
     }
 }
