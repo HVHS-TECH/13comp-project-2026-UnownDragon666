@@ -9,8 +9,8 @@ export default class Leaderboard extends Content {
     #listeners = [];
 
     /* **************************************** Public Fields *****************************************/
-    // The ID used to identify the stylesheet belonging to this page (LeaderBoard Style Sheet)
-    styleID = "LBSS";
+    // The ID used to identify the stylesheet belonging to this page (LeaderBoarD Stylesheet)
+    styleID = "LBDS";
 
     /* **************************************** Constructor *****************************************/
     constructor() {
@@ -44,9 +44,10 @@ export default class Leaderboard extends Content {
 
     /* **************************************** Private Methods *****************************************/
     async #renderLeaderboard(_section) {
-        const TITLE = super.createTitle("Leaderboard");
+        const TITLE = super.createTitle("Leaderboard", "leaderboardTitle");
 
         const CHOOSE_LB_CONTAINER = document.createElement("div");
+        CHOOSE_LB_CONTAINER.id = "chooseLeaderboardContainer";
 
         const CHOOSE_CACS = document.createElement("button");
         CHOOSE_CACS.type = "button";

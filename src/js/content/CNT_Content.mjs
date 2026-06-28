@@ -95,7 +95,7 @@ export default class Content {
     createTitle(_text, _id = null) {
         const TITLE = document.createElement("h1");
         TITLE.textContent = _text;
-        TITLE.id = _id;
+        TITLE.id = _id ?? "";
         return TITLE;
     }
 
