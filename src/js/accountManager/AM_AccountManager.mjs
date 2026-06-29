@@ -37,14 +37,10 @@ export default class AccountManager {
      * @param {String} _uid
      */
     #attachDeletionListener(_uid) {
-        let initialLoad = true;
         this.#unsubscribeToDeletionFlag = firebaseIO.subscribeToRecord(
-            `/users/${_uid}/`,
+            `/users/${_uid}/deleted`,
             (data) => {
-                if (initialLoad) {
-                    initialLoad = false;
-                    return;
-                }
+                if (data == false) return;
                 this.#handleAccountDeletion(data);
             },
         );
@@ -53,19 +49,16 @@ export default class AccountManager {
     /**
      * Once the deleted flag is triggered, it signals FirebaseIO to sign out the user if they are signed in
      *
-     * @param {Object} data - The updated data to check if the deletion flag has been trigerred
      */
-    #handleAccountDeletion(data) {
-        if (data == null) {
-            this.#unsubscribeToDeletionFlag?.();
-            // Fire event signalling the signout to the FirebaseIO
-            const EVENT = new CustomEvent("signout", {
-                detail: {
-                    reason: "User account has been deleted",
-                },
-            });
-            document.dispatchEvent(EVENT);
-        }
+    #handleAccountDeletion() {
+        this.#unsubscribeToDeletionFlag?.();
+        // Fire event signalling the signout to the FirebaseIO
+        const EVENT = new CustomEvent("signout", {
+            detail: {
+                reason: "User account has been deleted",
+            },
+        });
+        document.dispatchEvent(EVENT);
     }
 
     /**

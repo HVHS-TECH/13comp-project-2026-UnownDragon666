@@ -18,6 +18,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 import { initializeUser } from "../accountManager/AM_User.mjs";
 import AccountManager from "../accountManager/AM_AccountManager.mjs";
+import { firebaseIO } from "./FB_instance.mjs";
 
 /**
  * @family FB: Firebase
@@ -74,6 +75,13 @@ export default class FirebaseIO {
 
             // Store result in variable, may come in handy later.
             let result = await signInWithPopup(this.auth, provider);
+
+            let bannedUsers = await firebaseIO.readRecord(`/bannedUsers`);
+
+            if (bannedUsers?.[uid]) {
+                await signOut(this.auth);
+                return;
+            }
 
             let record = await this.readRecord(
                 `/users/${this.auth.currentUser.uid}`,

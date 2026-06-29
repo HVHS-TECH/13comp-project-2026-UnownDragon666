@@ -69,6 +69,10 @@ export default class LeaderboardStyles {
                 padding: 13px 12px;
                 font-size: 14px;
             }
+
+            tbody {
+                overflow: scroll;
+            }
         `;
     }
 }

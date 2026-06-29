@@ -400,8 +400,31 @@ export default class Admin extends Content {
             return;
 
         console.warn(`USER ${_uid} WILL BE DELETED`);
-        firebaseIO.deleteRecord(`/users/${_uid}`);
+        firebaseIO.updateRecord(`/users/${_uid}/`, {
+            deleted: true,
+        });
+        setTimeout(() => {
+            firebaseIO.deleteRecord(`/users/${_uid}`);
+        }, 1000);
     }
 
-    #confirmUserBan() {}
+    #confirmUserBan(_uid) {
+        if (
+            !confirm(
+                "Are you sure you want to do this?\nTHIS ACTION IS IRREVERSIBLE.",
+            )
+        )
+            return;
+
+        console.warn(`USER ${_uid} WILL BE BANNED`);
+        firebaseIO.updateRecord(`/bannedUsers/`, {
+            [_uid]: true,
+        });
+        firebaseIO.updateRecord(`/users/${_uid}/`, {
+            deleted: true,
+        });
+        setTimeout(() => {
+            firebaseIO.deleteRecord(`/users/${_uid}`);
+        }, 1000);
+    }
 }
