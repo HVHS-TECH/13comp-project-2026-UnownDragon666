@@ -78,7 +78,7 @@ export default class FirebaseIO {
 
             let bannedUsers = await firebaseIO.readRecord(`/bannedUsers`);
 
-            if (bannedUsers?.[uid]) {
+            if (bannedUsers?.[result.user.uid]) {
                 await signOut(this.auth);
                 return;
             }
