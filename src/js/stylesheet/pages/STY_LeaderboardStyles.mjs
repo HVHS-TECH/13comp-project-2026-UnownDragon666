@@ -22,8 +22,15 @@ export default class LeaderboardStyles {
      */
     static applyStyle() {
         document.getElementById("contentLayerStyle").innerHTML = `
+            body {
+                overflow: hidden;
+            }
+
+            #s_leaderboard {
+                height:100%;
+            }
             #leaderboardContainer {
-                max-width: 520px;
+                max-width: 45%;
                 margin: 2rem auto;
             }
 
@@ -50,7 +57,7 @@ export default class LeaderboardStyles {
                 padding: 0 12px 10px;
                 border-bottom: 0.5px solid darkslateblue;
                 text-align: left;
-                font-size: 1em; 
+                font-size: 1.5em; 
             }
 
             #tr_lbheader th:last-child {
@@ -65,13 +72,43 @@ export default class LeaderboardStyles {
                 text-align:center
             }
 
+            tbody td:nth-child(2) {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+
             tbody td {
                 padding: 13px 12px;
-                font-size: 14px;
+                font-size: 16px;
             }
 
             tbody {
                 overflow: scroll;
+            }
+
+            .img_pfpLb {
+                border-radius: 50%;
+                height: 3em;
+            }
+
+            #leaderboardScroll {
+                max-height: 500px;
+                overflow-y: auto;
+                border-radius: 8px;
+            }
+
+            #currentUser {
+                background: ${Colors.registrationFormBackgroundColor};
+                outline: 2px solid ${Colors.registrationFormBorderColor};
+                font-weight: 600;
+                outline-offset: -2px;
+                border-radius: 15px;
+            }
+
+            #currentUser .img_pfpLb {
+                border: 3px solid ${Colors.registrationInputFocusBorderColor};
+                box-shadow: 0 0 10px ${Colors.registrationInputFocusBoxShadowColor};
             }
         `;
     }

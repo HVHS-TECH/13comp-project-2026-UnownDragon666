@@ -99,7 +99,7 @@ export default class Register extends Content {
 
         const PHONENUMBER = super.createInput(
             "Please enter your phone number",
-            "022 000 0000",
+            "Format: 022 000 0000",
             "tel",
             "i_telNumInput",
             "i_telNumInput",

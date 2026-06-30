@@ -157,7 +157,7 @@ export default class Profile extends Content {
         let scoreObj = await firebaseIO.readRecord(
             `/games/cardsAgainstComputerScience/scores/${getRecord().uid}`,
         );
-        console.log(scoreObj);
+
         if (scoreObj == null) {
             CACS_SCORE.textContent =
                 "No score set for Cards Against Computer Science! Go give it a play. :)";

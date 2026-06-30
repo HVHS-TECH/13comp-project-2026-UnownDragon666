@@ -1,3 +1,4 @@
+import { getRecord } from "../accountManager/AM_User.mjs";
 import { firebaseIO } from "../firebase/FB_instance.mjs";
 import Content from "./CNT_Content.mjs";
 
@@ -63,6 +64,7 @@ export default class Leaderboard extends Content {
 
         // Leaderboard itself
         const LEADERBOARD_TABLE = document.createElement("table");
+        const THEAD = document.createElement("thead");
         const HEADER_ROW = document.createElement("tr");
         HEADER_ROW.innerHTML = `
             <th>Rank</th>
@@ -70,28 +72,42 @@ export default class Leaderboard extends Content {
             <th>Score</th>
         `;
         HEADER_ROW.id = "tr_lbheader";
+        THEAD.append(HEADER_ROW);
         const TABLE_BODY = document.createElement("tbody");
 
-        LEADERBOARD_TABLE.append(HEADER_ROW, TABLE_BODY);
+        LEADERBOARD_TABLE.append(THEAD, TABLE_BODY);
 
         await this.#populateLeaderboard(TABLE_BODY);
 
-        _section.replaceChildren(TITLE, CHOOSE_LB_CONTAINER, LEADERBOARD_TABLE);
+        const TABLE_WRAPPER = document.createElement("div");
+        TABLE_WRAPPER.id = "leaderboardScroll";
+
+        TABLE_WRAPPER.append(LEADERBOARD_TABLE);
+
+        _section.replaceChildren(TITLE, CHOOSE_LB_CONTAINER, TABLE_WRAPPER);
     }
 
-    #createTableRow(_rank, _username, _score) {
+    #createTableRow(_rank, _username, _score, _url, _uid) {
         const TR = document.createElement("tr");
 
         const RANK = document.createElement("td");
         RANK.textContent = _rank;
 
-        const USERNAME = document.createElement("td");
+        const USERNAME_DATA = document.createElement("td");
+        const IMG = document.createElement("img");
+        IMG.classList.add("img_pfpLb");
+        IMG.src = _url;
+        const USERNAME = document.createElement("p");
+        USERNAME.textContent = _username;
+        USERNAME_DATA.append(IMG, USERNAME);
+
         USERNAME.textContent = _username;
 
         const SCORE = document.createElement("td");
         SCORE.textContent = _score;
 
-        TR.append(RANK, USERNAME, SCORE);
+        TR.append(RANK, USERNAME_DATA, SCORE);
+        _uid == getRecord().uid ? (TR.id = "currentUser") : null;
         return TR;
     }
 
@@ -106,13 +122,14 @@ export default class Leaderboard extends Content {
 
         let rank = 1;
         for (const [uid, scoreObj] of scores) {
-            const username = (
-                await firebaseIO.readRecord(`/users/${uid}/public`)
-            ).username;
+            const record = await firebaseIO.readRecord(`/users/${uid}/public`);
+
             const ROW = this.#createTableRow(
                 rank,
-                username,
+                record.username,
                 scoreObj.totalScore,
+                record.photoURL,
+                uid,
             );
             rank++;
             _tableBody.append(ROW);
