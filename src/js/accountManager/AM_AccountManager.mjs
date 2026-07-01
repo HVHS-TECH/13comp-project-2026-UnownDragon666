@@ -79,8 +79,10 @@ export default class AccountManager {
         }
         const BASE_PATH = `users/${this.#auth.uid}/${dataPath}/`;
         try {
-            firebaseIO.updateRecord(BASE_PATH, { [dataKey]: newData });
-            _event.detail.handleUpdate?.();
+            const valid = _event.detail.handleUpdate?.();
+            valid
+                ? firebaseIO.updateRecord(BASE_PATH, { [dataKey]: newData })
+                : null;
         } catch (error) {
             console.error(error);
         }

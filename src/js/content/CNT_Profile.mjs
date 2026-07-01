@@ -123,15 +123,20 @@ export default class Profile extends Content {
                         newName.trim() == ""
                     ) {
                         console.error("Cannot write empty name!");
-                        return;
+                        alert("Please enter a username!");
+                        return false;
                     }
 
                     if (newName.length > 20) {
                         console.error(`username too long: ${newName}`);
-                        return;
+                        alert(
+                            "Username too long! Ensure username less than 20 characters!",
+                        );
+                        return false;
                     }
 
                     this.#usernameElement.textContent = newName;
+                    return true;
                 }).bind(this),
             },
         );
