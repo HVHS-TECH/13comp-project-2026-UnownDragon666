@@ -87,7 +87,6 @@ Colors.GameScreen = class {
     static promptPickColor = "#ffd166";
 
     /* Selection */
-
     static accentBlue = "#a0c4ff";
     static selectedBackground = "#eef7ff";
 
@@ -122,6 +121,12 @@ Colors.GameScreen = class {
     static gameEndButtonBackground = "#a0c4ff";
     static gameEndButtonText = "#ffffff";
     static gameEndButtonHover = "#89b4fa";
+};
+
+Colors.Profile = class {
+    static asideBackgroundColor = "#fff";
+    static asideBorderColor = "#ddd";
+    static pfpBorderColor = "#eee";
 };
 
 /**

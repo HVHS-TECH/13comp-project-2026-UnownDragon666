@@ -31,7 +31,7 @@ export default class LobbyManager {
         });
 
         document.addEventListener("kick", (event) => {
-            this.kickUser(event.detail.content);
+            this.kickUser(event.detail.server, event.detail.content);
         });
 
         document.addEventListener("sendMessage", (event) => {
@@ -301,9 +301,15 @@ export default class LobbyManager {
         );
     }
 
-    /////////////////////////////////////// PLACE HOLDERS
-
-    async kickUser(_user) {
+    async kickUser(_server, _user) {
         console.log(`User Kicked: ${_user}`);
+
+        const PATH = `${this.#rootPath}/${_server}/players/${_userID}`;
+
+        try {
+            await firebaseIO.deleteRecord(PATH);
+        } catch (error) {
+            console.error("Error kicking user:", error);
+        }
     }
 }

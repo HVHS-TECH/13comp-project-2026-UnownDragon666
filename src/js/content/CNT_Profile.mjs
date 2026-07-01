@@ -43,6 +43,7 @@ export default class Profile extends Content {
 
         // Create main content container
         const MAIN_CONTAINER = document.createElement("section");
+        MAIN_CONTAINER.id = "s_profileContent";
 
         // Inside container, there are 2 sections
         // The "sidebar" (this is the profile bit)
@@ -144,7 +145,9 @@ export default class Profile extends Content {
 
         const LOGOUT = super.createButton("Logout", "signout");
 
-        WRAPPER.append(CHANGE_NAME, UPDATE_BUTTON, LOGOUT);
+        const DELETE = super.createButton("Delete Account", "deleteAccount");
+
+        WRAPPER.append(CHANGE_NAME, UPDATE_BUTTON, LOGOUT, DELETE);
         return WRAPPER;
     }
 

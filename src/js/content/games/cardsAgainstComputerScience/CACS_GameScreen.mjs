@@ -51,6 +51,8 @@ export default class CardsAgainstComputerScience extends Content {
             unsubFunc();
         });
 
+        this.#sidebar.destroy();
+
         document.removeEventListener("lobbyUpdated", this.#lobbyListener);
 
         document.querySelectorAll("section").forEach((section) => {

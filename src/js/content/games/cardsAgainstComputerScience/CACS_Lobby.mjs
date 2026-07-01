@@ -159,6 +159,16 @@ export default class Lobby extends Content {
             `${this.#lobbyPath}/players`,
             (data) => {
                 this.#updatePlayerList(data, PLAYER_LIST);
+
+                if (!data || !data[getRecord().uid]) {
+                    document.dispatchEvent(
+                        new CustomEvent("navigate", {
+                            detail: {
+                                content: "CardsAgainstComputerScienceLobbies",
+                            },
+                        }),
+                    );
+                }
             },
         );
 
@@ -242,10 +252,12 @@ export default class Lobby extends Content {
                 if (uid != getRecord().uid) {
                     const KICK_BUTTON = document.createElement("button");
                     KICK_BUTTON.type = "button";
+                    KICK_BUTTON.textContent = "Kick";
                     KICK_BUTTON.addEventListener("click", () => {
                         const KICK_EVENT = new CustomEvent("kick", {
                             detail: {
                                 content: uid,
+                                server: this.lobbyID,
                             },
                         });
                         document.dispatchEvent(KICK_EVENT);
@@ -461,19 +473,22 @@ export default class Lobby extends Content {
                     ? (SUBMIT_NEW_RULES.disabled = false)
                     : (SUBMIT_NEW_RULES.disabled = true);
 
-                // Update page state to public
-                const MAKE_LOBBY_PUBLIC = document.createElement("button");
-                MAKE_LOBBY_PUBLIC.type = "button";
-                MAKE_LOBBY_PUBLIC.id = "b_publicLobby";
-                MAKE_LOBBY_PUBLIC.textContent = "Set Lobby To Public";
-                MAKE_LOBBY_PUBLIC.addEventListener("click", () => {
-                    this.#makeLobbyPublic();
-                    MAKE_LOBBY_PUBLIC.remove();
-                });
+                let MAKE_LOBBY_PUBLIC = null;
+                if (getLobbyRecord().lobbyState != "public") {
+                    // Update page state to public
+                    MAKE_LOBBY_PUBLIC = document.createElement("button");
+                    MAKE_LOBBY_PUBLIC.type = "button";
+                    MAKE_LOBBY_PUBLIC.id = "b_publicLobby";
+                    MAKE_LOBBY_PUBLIC.textContent = "Set Lobby To Public";
+                    MAKE_LOBBY_PUBLIC.addEventListener("click", () => {
+                        this.#makeLobbyPublic();
+                        MAKE_LOBBY_PUBLIC.remove();
+                    });
 
-                getRecord().uid == getLobbyRecord().host.uid
-                    ? (MAKE_LOBBY_PUBLIC.disabled = false)
-                    : (MAKE_LOBBY_PUBLIC.disabled = true);
+                    getRecord().uid == getLobbyRecord().host.uid
+                        ? (MAKE_LOBBY_PUBLIC.disabled = false)
+                        : (MAKE_LOBBY_PUBLIC.disabled = true);
+                }
 
                 // Start the game button
                 const START_GAME_BUTTON = document.createElement("button");
@@ -492,7 +507,7 @@ export default class Lobby extends Content {
                     FORM,
                     SUBMIT_NEW_RULES,
                     START_GAME_BUTTON,
-                    MAKE_LOBBY_PUBLIC,
+                    ...(MAKE_LOBBY_PUBLIC ? [MAKE_LOBBY_PUBLIC] : []),
                 );
 
                 if (document.querySelector(".tabContent")) {

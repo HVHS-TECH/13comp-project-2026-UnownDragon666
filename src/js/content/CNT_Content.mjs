@@ -139,6 +139,11 @@ export default class Content {
         return CONTAINER;
     }
 
+    /**
+     * Builds the nav bar for the main pages.
+     *
+     * @returns {HTMLNavElement}
+     */
     createNavBar() {
         try {
             // Make nav bar element

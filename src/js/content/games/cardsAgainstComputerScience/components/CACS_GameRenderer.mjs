@@ -1,16 +1,29 @@
 import PromptPicker from "./CACS_PromptPicker.mjs";
 import HandRenderer from "./CACS_HandRenderer.mjs";
 import { getRecord } from "../../../../accountManager/AM_User.mjs";
+import GameLogic from "./CACS_GameLogic.mjs";
 
 export default class GameRenderer {
     #cards;
     #logic;
 
+    /**
+     * Instantiate the GameRenderer
+     *
+     * @param {Array} _cards - Static list of cards from database.
+     * @param {GameLogic} _gameLogic - Instance of the GameLogic class
+     */
     constructor(_cards, _gameLogic) {
         this.#cards = _cards;
         this.#logic = _gameLogic;
     }
 
+    /**
+     * Method that renders the page for the card czar, depending on the state
+     *
+     * @param {Object} _lobbyData - Snapshot of the lobby in the database
+     * @returns {HTMLDivElement} - The element to display
+     */
     renderCzar(_lobbyData) {
         switch (_lobbyData.gameState) {
             case "waiting":
@@ -32,6 +45,13 @@ export default class GameRenderer {
         }
     }
 
+    /**
+     * Method to render the page for all players except the card czar.
+     *
+     * @param {Object} _lobbyData - Snapshot of lobby in database
+     * @param {String} _uid - UID of player to render
+     * @returns {HTMLDivElement} - The element to display
+     */
     renderPlayer(_lobbyData, _uid) {
         switch (_lobbyData.gameState) {
             case "waiting":
@@ -49,6 +69,11 @@ export default class GameRenderer {
         }
     }
 
+    /**
+     * Builds waiting message while Card Czar chooses the prompt card.
+     *
+     * @returns {HTMLParagraphElement}
+     */
     #waitingMessage() {
         const P = document.createElement("p");
         P.textContent = "Please wait for the Card Czar to choose a prompt.";
@@ -56,6 +81,11 @@ export default class GameRenderer {
         return P;
     }
 
+    /**
+     * Build prompt selection for card czar to pick from
+     *
+     * @returns {HTMLSectionElement}
+     */
     #renderPromptSelection() {
         const SECTION = document.createElement("section");
 
@@ -82,6 +112,13 @@ export default class GameRenderer {
         return SECTION;
     }
 
+    /**
+     * Builds a div with the prompt for this round on it.
+     *
+     * @param {Number} _promptKey - Index of card in the prompts array
+     * @param {Object} _lobbyData - Snapshot of lobby in database.
+     * @returns {HTMLDivElement} - The Card.
+     */
     #renderPromptCard(_promptKey, _lobbyData) {
         const CARD = document.createElement("div");
         CARD.classList.add("promptCard");
@@ -104,6 +141,13 @@ export default class GameRenderer {
         return CARD;
     }
 
+    /**
+     * Builds the hand of the players for the players to choose a card.
+     *
+     * @param {Object} _lobbyData - Snapshot of lobby in database.
+     * @param {String} _uid - The user's id
+     * @returns
+     */
     #renderPlayerChoosing(_lobbyData, _uid) {
         const WRAPPER = document.createElement("div");
 
@@ -133,6 +177,11 @@ export default class GameRenderer {
         return WRAPPER;
     }
 
+    /**
+     * Builds a message for after oyur cards are submitted.
+     *
+     * @returns {HTMLDivElement} - Message showing that you have played your cards
+     */
     #submittedMessage() {
         const WRAPPER = document.createElement("div");
         const P = document.createElement("p");
@@ -143,6 +192,12 @@ export default class GameRenderer {
         return WRAPPER;
     }
 
+    /**
+     * Builds the judging page, the czar is able to select the card(s) they think won.
+     *
+     * @param {Object} _lobbyData - Snapshot of lobby in database
+     * @returns
+     */
     #renderJudging(_lobbyData) {
         const SECTION = document.createElement("section");
         SECTION.id = "s_judging";
@@ -184,6 +239,12 @@ export default class GameRenderer {
         return SECTION;
     }
 
+    /**
+     * Render the winner of the roud for everyone, allows the czar to start the next round.
+     *
+     * @param {Object} _lobbyData - Snapshot of lobby in database
+     * @returns {HTMLSectionElement}
+     */
     #renderRoundEnd(_lobbyData) {
         const SECTION = document.createElement("section");
         SECTION.id = "s_roundEnd";
@@ -233,6 +294,12 @@ export default class GameRenderer {
         return SECTION;
     }
 
+    /**
+     * At the end, display everyone's scores!
+     *
+     * @param {Object} _lobbyData - Snapshot of the lobby in the database
+     * @returns
+     */
     #renderGameEnd(_lobbyData) {
         const SECTION = document.createElement("section");
         SECTION.id = "s_gameEnd";
@@ -247,8 +314,6 @@ export default class GameRenderer {
         const sortedPlayers = Object.entries(_lobbyData.players).sort(
             (a, b) => (b[1].score ?? 0) - (a[1].score ?? 0),
         );
-
-        // EG: [["uid", {Object WIth the score}], ["uid", {Object WIth the score}], ...]
 
         const WINNER = sortedPlayers[0];
         console.log(WINNER);

@@ -47,6 +47,11 @@ export function getRecord() {
     return user.currentUserRecord;
 }
 
+/**
+ * A getter to return current user's username.
+ *
+ * @returns {String} - Current user's username
+ */
 export function getUsername() {
     return user.currentUserRecord.public.username;
 }

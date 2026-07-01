@@ -28,6 +28,10 @@ export default class AccountManager {
             "updateUserData",
             this.#updateUserData.bind(this),
         );
+
+        document.addEventListener("deleteAccount", () => {
+            firebaseIO.deleteRecord(`/users/${getRecord().uid}/`);
+        });
     }
 
     /* **************************************** Private Methods *****************************************/

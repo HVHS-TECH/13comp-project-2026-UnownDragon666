@@ -58,6 +58,7 @@ export default class CardsAgainstComputerScienceLobbies extends Content {
 
         let previousSnapshot = null;
 
+        this.#unsubscribeToServers?.();
         this.#unsubscribeToServers = firebaseIO.subscribeToRecord(
             `games/cardsAgainstComputerScience/servers`,
             (servers) => {
@@ -111,12 +112,20 @@ export default class CardsAgainstComputerScienceLobbies extends Content {
 
         SERVER_LIST_TABLE.append(HEADER_ROW, TABLE_BODY);
         SERVER_LIST_SUBSECTION.append(SERVER_LIST_TABLE);
-        this.#populateServerList(TABLE_BODY);
 
         this.section.append(SERVER_LIST_SUBSECTION);
     }
 
     /* **************************************** Private Methods *****************************************/
+    /**
+     * Reads the server list in the database.
+     * - If a server has no players, it deletes the server.
+     * - Looks for all servers that are set to "public" and displays them
+     * - If no servers exist, advises the user as such.
+     *
+     * @param {HTMLTableSectionElement} _tableBody
+     * @returns {Promise<void>}
+     */
     async #populateServerList(_tableBody) {
         // Read server list from the database
         const SERVERS = await firebaseIO.readRecord(

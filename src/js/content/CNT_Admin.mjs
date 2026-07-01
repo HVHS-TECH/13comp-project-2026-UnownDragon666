@@ -408,6 +408,15 @@ export default class Admin extends Content {
         }, 1000);
     }
 
+    /**
+     * Confirms if you want to ban user. If you do, it writes the
+     * banned UID to the DB and triggers the deleted flag (which exists
+     * for the case in which a user is signed in when they are deleted)
+     * and it waits 1 second before deleting the record.
+     *
+     * @param {String} _uid - UID to ban
+     * @returns {Promise<void>}
+     */
     #confirmUserBan(_uid) {
         if (
             !confirm(

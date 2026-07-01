@@ -123,14 +123,16 @@ export default class Leaderboard extends Content {
         let rank = 1;
         for (const [uid, scoreObj] of scores) {
             const record = await firebaseIO.readRecord(`/users/${uid}/public`);
-            let name = record.username ?? "deleted user";
-            let photo;
+            let name = record?.username ?? "deleted user";
+            let photo =
+                record?.photoURL ??
+                "https://upload.wikimedia.org/wikipedia/commons/9/99/Black_square.jpg";
 
             const ROW = this.#createTableRow(
                 rank,
                 name,
                 scoreObj.totalScore,
-                record.photoURL,
+                photo,
                 uid,
             );
             rank++;

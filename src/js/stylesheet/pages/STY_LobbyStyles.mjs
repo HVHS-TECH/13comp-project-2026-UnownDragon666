@@ -6,7 +6,7 @@ import Colors from "../STY_ColorReference.mjs";
  * @description Acts as a JS alternative to a .css file by dynamically styling elements
  * created by other classes
  *
- * This STY file is for GTI_Lobby.mjs
+ * This STY file is for CACS_Lobby.mjs
  *
  * Written in Term One 2026 for programming/database project
  *

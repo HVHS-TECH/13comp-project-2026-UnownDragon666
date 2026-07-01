@@ -63,9 +63,6 @@ export default class GameLogic {
             currentPromptKey: _promptKey,
             cardsToChoose: this.#cards.prompts[_promptKey].pick,
             gameState: "choosing",
-            // This is a WIP :<
-            roundEndsAt:
-                Date.now() + getLobbyRecord().rules.roundLengthSeconds * 1000,
         });
     }
 
@@ -76,6 +73,7 @@ export default class GameLogic {
      *
      * @param {String} _uid - UID of user that wants to submit card(s)
      * @param {Array<Number>} _cards - Array containing the indices of the cards that the user has played.
+     * @returns {Promise<void>}
      */
     async submitCards(_uid, _cards) {
         await firebaseIO.updateRecord(
@@ -161,10 +159,14 @@ export default class GameLogic {
     }
 
     /**
+     * Method that runs to start the next round
+     * - If the current round is greater than the number of rounds in the rules, it ends the game.
+     * - Otherwise, it updates the DB with the id of the next czar and updates the round number,
+     * along with refreshing the game state, so the game is fresh.
      *
-     * @param {*} _nextCzarUid
-     * @param {*} _round
-     * @returns
+     * @param {String} _nextCzarUid - UID of the next card czar
+     * @param {Number} _round - The current round number
+     * @returns {Promise<void>}
      */
     async nextRound(_nextCzarUid, _round) {
         const lobby = getLobbyRecord();
@@ -187,6 +189,12 @@ export default class GameLogic {
         });
     }
 
+    /**
+     * Uploads the scores amassed this game to the database.
+     *
+     * @param {Number} _score - The score accumulated this game
+     * @param {String} _uid - UID to update
+     */
     async uploadScore(_score, _uid) {
         const PATH = `games/cardsAgainstComputerScience/scores/${_uid}/`;
         const currentScore = await firebaseIO.readRecord(PATH);

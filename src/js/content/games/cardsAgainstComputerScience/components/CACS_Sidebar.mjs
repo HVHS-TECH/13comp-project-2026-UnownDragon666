@@ -2,13 +2,22 @@ import { firebaseIO } from "../../../../firebase/FB_instance.mjs";
 import { getRecord } from "../../../../accountManager/AM_User.mjs";
 import { getLobbyRecord, getServerID } from "../CACS_LobbyReference.mjs";
 
+/**
+ * @family CACS: Cards Against Computer Science
+ * @description Class for the sidebar on the game screen.
+ *
+ * @class
+ */
+
 export default class Sidebar {
+    /* **************************************** Private Fields *****************************************/
     #root;
     #content;
     #lobbyPath;
     #unsubscribe = [];
     #activeTab = "players";
 
+    /* **************************************** Constructor *****************************************/
     constructor(_lobbyPath) {
         this.#lobbyPath = _lobbyPath;
 
@@ -18,14 +27,17 @@ export default class Sidebar {
         this.#build();
     }
 
-    get element() {
-        return this.#root;
-    }
-
+    /**
+     *  Kills all the listeners attached to the sidebar :)
+     *
+     */
     destroy() {
         this.#unsubscribe.forEach((u) => u());
     }
 
+    /**
+     * Build the sidebar
+     */
     #build() {
         const TAB_ROW = document.createElement("div");
         TAB_ROW.classList.add("tab");
@@ -57,6 +69,9 @@ export default class Sidebar {
         this.#root.append(TAB_ROW, this.#content);
     }
 
+    /**
+     * Change tabs to players list
+     */
     showPlayers() {
         this.#content.innerHTML = "";
 
@@ -79,12 +94,20 @@ export default class Sidebar {
         this.#content.append(LIST);
     }
 
+    /**
+     * If you are viewing the player list, refresh it if something changes on it.
+     *
+     * @param {Object} _lobbyData - Snapshot of the lobby in the database
+     */
     refresh(_lobbyData) {
         if (this.#activeTab === "players") {
             this.showPlayers(_lobbyData);
         }
     }
 
+    /**
+     * Changes the sidebar to chow the chat
+     */
     showChat() {
         this.#unsubscribe.forEach((u) => u());
         this.#unsubscribe = [];
@@ -99,6 +122,11 @@ export default class Sidebar {
         this.#unsubscribe.push(unsub);
     }
 
+    /**
+     * renders the chat logs and creates the HTML elements.
+     *
+     * @param {Object} _messages - Messages in the lobby
+     */
     #renderChat(_messages) {
         this.#content.innerHTML = "";
 
@@ -123,6 +151,11 @@ export default class Sidebar {
         MESSAGES.scrollTop = MESSAGES.scrollHeight;
     }
 
+    /**
+     * Creates the input for sending messages
+     *
+     * @returns {HTMLDivElement}
+     */
     #createInput() {
         const MESSAGE_CONTAINER = document.createElement("div");
         MESSAGE_CONTAINER.id = "d_messageInputContainer";

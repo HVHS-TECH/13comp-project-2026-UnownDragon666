@@ -161,7 +161,14 @@ export default class Register extends Content {
             this.#displayError(
                 "Please ensure your name has no spaces! Thank you!",
             );
-            return; // Return if username has whitespace (i.e. contains special characters)
+            return;
+        }
+
+        if (name.length > 20) {
+            this.#displayError(
+                "Please ensure your name is no longer than 20 characters! Thank you!",
+            );
+            return;
         }
 
         // Test if age between 5 and 125 inclusive
